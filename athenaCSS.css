@@ -1,0 +1,15 @@
+
+
+.athena-Bookmark-li:hover{
+    background-color:cyan;
+    /*cursor: pointer;*/
+}
+
+.athena-Panel-li:hover{
+    background-color:rgb(108, 117, 117);
+    cursor: pointer;
+}
+
+.athena-ICON:hover{
+    cursor: pointer;
+}
