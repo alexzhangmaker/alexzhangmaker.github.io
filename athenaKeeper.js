@@ -527,6 +527,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("document.addEventListener DOMContentLoaded");
 
     gloablAthena = await loadAthenaJSON('https://alexzhangmaker.github.io/json/athenaBookmarks.json') ;
+    let localAthena = loadAthenaFromLocal() ;
+    let localTime = new Date(localAthena.meta.timestamp) ;
+    let serverTime = new Date(localAthena.meta.timestamp) ;
+    if(localTime>serverTime){
+        gloablAthena = localAthena ;
+    }
 
     renderPanel(gloablAthena,'idAthenaPanel') ;
 
@@ -544,7 +550,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     //tbLocalStorage() ;
-    loadAthenaFromLocal() ;
+    
 });
 
 //https://alexzhangmaker.github.io/json/athenaBookmarks.json
@@ -555,12 +561,6 @@ async function loadAthenaJSON(url){
     return jsonAthena ;
 }
 
-//https://stackoverflow.com/questions/27730224/how-to-upload-json-file-to-google-drive-using-google-javascript-librarygapi
-//https://github.com/RickMohr/jsGoogleDriveDemo
-async function uploadAthenaJSON(jsonAthena,url){
-    const APIKey = "AIzaSyCkX2knhdqaJpvIVLx2MQ9i_tGpVhbyc-A" ;
-
-}
 
 let jsonLogs=[] ;
 const logKey = "AthenaLogs" ;
@@ -588,6 +588,10 @@ function logLocalStorage(nOpCode,jsonBookmark,cChannelID,cTagID){
 
 function syncAthenaToLocalStorage(){
     //gloablAthena
+    if(gloablAthena.meta.timestamp ==""){
+        let objMoment = new Date() ;
+        gloablAthena.meta.timestamp = objMoment.toLocaleTimeString() ;
+    }
     localStorage.setItem(athenaKey, JSON.stringify(gloablAthena));
 }
 
@@ -597,7 +601,9 @@ function loadAthenaFromLocal(){
     console.log(jsonAthena.meta) ;
     console.log(jsonAthena.data.mustHave) ;
     console.log(jsonAthena.data.channels) ;
-
+    //let localAthenaTime = new Date(jsonAthena.meta.timestamp) ;
+    //if(jsonAthena.meta.timestamp)
+    return jsonAthena ;
 }
 
 function tbLocalStorage(){
@@ -614,5 +620,14 @@ function tbLocalStorage(){
     logLocalStorage(1,jsonBookmark,cChannelID,cTagID) ;
 
     syncAthenaToLocalStorage() ;
+
+}
+
+
+
+//https://stackoverflow.com/questions/27730224/how-to-upload-json-file-to-google-drive-using-google-javascript-librarygapi
+//https://github.com/RickMohr/jsGoogleDriveDemo
+async function uploadAthenaJSON(jsonAthena,url){
+    const APIKey = "AIzaSyCkX2knhdqaJpvIVLx2MQ9i_tGpVhbyc-A" ;
 
 }
