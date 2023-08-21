@@ -543,7 +543,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         tagModal.querySelector(".modal-title").innerText = 'Athena Bookmark Editor';
     });
 
-    testLocalStorage() ;
+    //tbLocalStorage() ;
+    loadAthenaFromLocal() ;
 });
 
 //https://alexzhangmaker.github.io/json/athenaBookmarks.json
@@ -590,7 +591,16 @@ function syncAthenaToLocalStorage(){
     localStorage.setItem(athenaKey, JSON.stringify(gloablAthena));
 }
 
-function testLocalStorage(){
+function loadAthenaFromLocal(){
+    let cAthena = localStorage.getItem(athenaKey);
+    let jsonAthena = JSON.parse(cAthena) ;
+    console.log(jsonAthena.meta) ;
+    console.log(jsonAthena.data.mustHave) ;
+    console.log(jsonAthena.data.channels) ;
+
+}
+
+function tbLocalStorage(){
 
     let jsonBookmark = {
         "bookmarkID":"bookmark001",
