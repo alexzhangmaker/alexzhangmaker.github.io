@@ -521,6 +521,9 @@ async function AthenaLogOperation(nOpCode,jsonBookmark,cChannelID,cTagID){
 
      //
      logLocalStorage(nOpCode,jsonBookmark,cChannelID,cTagID) ;
+
+     //
+     syncAthenaToLocalStorage() ;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -599,7 +602,7 @@ function syncAthenaToLocalStorage(){
         gloablAthena.meta.timestamp = objMoment.toLocaleTimeString() ;
     }else{
         let objAthenaTime = new Date(gloablAthena.meta.timestamp) ;
-        if(objMoment>objAthenaTime) gloablAthena.meta.timestamp = objMoment.toLocaleTimeString() ;
+        if(objMoment>objAthenaTime) gloablAthena.meta.timestamp = objMoment.toString() ;
     }
     localStorage.setItem(athenaKey, JSON.stringify(gloablAthena));
 }
