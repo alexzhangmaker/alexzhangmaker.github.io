@@ -535,7 +535,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         syncAthenaToLocalStorage();
     }else{
         let localTime = new Date(localAthena.meta.timestamp) ;
-        let serverTime = new Date(localAthena.meta.timestamp) ;
+        let serverTime = new Date(gloablAthena.meta.timestamp) ;
         if(localTime>serverTime){
             gloablAthena = localAthena ;
         }
