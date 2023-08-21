@@ -516,8 +516,11 @@ function AthenaAddBookmark(jsonBookmark,cChannelID,cTagID){
 
 }
 
-function AthenaLogOperation(nOpCode,jsonBookmark,cChannelID,cTagID){
+async function AthenaLogOperation(nOpCode,jsonBookmark,cChannelID,cTagID){
      console.log('about to log Operation so that backend server can rebuild data') ;
+
+     //
+     logLocalStorage(nOpCode,jsonBookmark,cChannelID,cTagID) ;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -539,6 +542,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Change modal title
         tagModal.querySelector(".modal-title").innerText = 'Athena Bookmark Editor';
     });
+
+    testLocalStorage() ;
 });
 
 //https://alexzhangmaker.github.io/json/athenaBookmarks.json
@@ -547,4 +552,57 @@ async function loadAthenaJSON(url){
     const jsonAthena = await response.json();
     console.log(JSON.stringify(jsonAthena,null,3));
     return jsonAthena ;
+}
+
+//https://stackoverflow.com/questions/27730224/how-to-upload-json-file-to-google-drive-using-google-javascript-librarygapi
+//https://github.com/RickMohr/jsGoogleDriveDemo
+async function uploadAthenaJSON(jsonAthena,url){
+    const APIKey = "AIzaSyCkX2knhdqaJpvIVLx2MQ9i_tGpVhbyc-A" ;
+
+}
+
+let jsonLogs=[] ;
+const logKey = "AthenaLogs" ;
+const athenaKey = "AthenaData"
+
+function logLocalStorage(nOpCode,jsonBookmark,cChannelID,cTagID){
+    console.log(`logLocalStorage: ${nOpCode},${JSON.stringify(jsonBookmark,null,3)},${cChannelID},${cTagID}`) ;
+    //let cLog = `log: ${nOpCode},${JSON.stringify(jsonBookmark,null,3)},${cChannelID},${cTagID}` ;
+    let jsonLog = {
+        "code":nOpCode,
+        "bookmark":JSON.stringify(jsonBookmark,null,3),
+        "ChannelID":cChannelID,
+        "tagID":cTagID
+    } ;
+
+    let cLogs = localStorage.getItem(logKey);
+    if(cLogs != null){
+        jsonLogs = JSON.parse(cLogs) ;
+    }
+    jsonLogs.push(jsonLog) ;
+
+    localStorage.setItem(logKey, JSON.stringify(jsonLogs));
+
+}
+
+function syncAthenaToLocalStorage(){
+    //gloablAthena
+    localStorage.setItem(athenaKey, JSON.stringify(gloablAthena));
+}
+
+function testLocalStorage(){
+
+    let jsonBookmark = {
+        "bookmarkID":"bookmark001",
+        "title":"Quizizzz",
+        "url":"https://www.google.com",
+        "description":"the best search web app for life long learning",
+        "date":"20230819"
+    } ;
+    let cChannelID = 'testChannel001';
+    let cTagID = 'testTag001' ;
+    logLocalStorage(1,jsonBookmark,cChannelID,cTagID) ;
+
+    syncAthenaToLocalStorage() ;
+
 }
