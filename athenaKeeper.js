@@ -523,7 +523,7 @@ function AthenaLogOperation(nOpCode,jsonBookmark,cChannelID,cTagID){
 document.addEventListener("DOMContentLoaded", () => {
     console.log("document.addEventListener DOMContentLoaded");
 
-    gloablAthena = loadAthenaJSON('https://alexzhangmaker.github.io/json/athenaBookmarks.json') ;
+    gloablAthena = await loadAthenaJSON('https://alexzhangmaker.github.io/json/athenaBookmarks.json') ;
 
     renderPanel(gloablAthena,'idAthenaPanel') ;
 
