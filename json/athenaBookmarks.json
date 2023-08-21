@@ -7,7 +7,7 @@
     "data":{
         "mustHave":[
             {
-                "appName":"Googe Search",
+                "appName":"Googe",
                 "url":"https://www.google.com"
             },{
                 "appName":"Googe Transalte",
@@ -21,7 +21,15 @@
             {
                 "channelID":"Channel_1",
                 "channelTitle":"个人爱好",
-                "tags":[]
+                "tags":[{
+                    "tagID":"Channel_1__tag001",
+                    "tagTitle":"跑步",
+                    "Bookmarks":[]
+                 },{
+                     "tagID":"Channel_1__tag002",
+                     "tagTitle":"羽毛球",
+                     "Bookmarks":[]
+                 }]
              },
             {
                "channelID":"Channel_2",

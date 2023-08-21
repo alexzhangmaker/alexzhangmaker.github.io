@@ -522,6 +522,9 @@ function AthenaLogOperation(nOpCode,jsonBookmark,cChannelID,cTagID){
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("document.addEventListener DOMContentLoaded");
+
+    gloablAthena = loadAthenaJSON('https://alexzhangmaker.github.io/json/athenaBookmarks.json') ;
+
     renderPanel(gloablAthena,'idAthenaPanel') ;
 
     var tagModal = document.getElementById("idModalAddBookmark");
@@ -537,3 +540,11 @@ document.addEventListener("DOMContentLoaded", () => {
         tagModal.querySelector(".modal-title").innerText = 'Athena Bookmark Editor';
     });
 });
+
+//https://alexzhangmaker.github.io/json/athenaBookmarks.json
+async function loadAthenaJSON(url){
+    const response = await fetch(url);
+    const jsonAthena = await response.json();
+    console.log(JSON.stringify(jsonAthena,null,3));
+    return jsonAthena ;
+}
