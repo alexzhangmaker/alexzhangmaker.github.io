@@ -528,11 +528,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     gloablAthena = await loadAthenaJSON('https://alexzhangmaker.github.io/json/athenaBookmarks.json') ;
     let localAthena = loadAthenaFromLocal() ;
-    let localTime = new Date(localAthena.meta.timestamp) ;
-    let serverTime = new Date(localAthena.meta.timestamp) ;
-    if(localTime>serverTime){
-        gloablAthena = localAthena ;
+    if(localAthena == null){
+        syncAthenaToLocalStorage();
+    }else{
+        let localTime = new Date(localAthena.meta.timestamp) ;
+        let serverTime = new Date(localAthena.meta.timestamp) ;
+        if(localTime>serverTime){
+            gloablAthena = localAthena ;
+        }
     }
+    
 
     renderPanel(gloablAthena,'idAthenaPanel') ;
 
@@ -588,22 +593,29 @@ function logLocalStorage(nOpCode,jsonBookmark,cChannelID,cTagID){
 
 function syncAthenaToLocalStorage(){
     //gloablAthena
+    let objMoment = new Date() ;
+
     if(gloablAthena.meta.timestamp ==""){
-        let objMoment = new Date() ;
         gloablAthena.meta.timestamp = objMoment.toLocaleTimeString() ;
+    }else{
+        let objAthenaTime = new Date(gloablAthena.meta.timestamp) ;
+        if(objMoment>objAthenaTime) gloablAthena.meta.timestamp = objMoment.toLocaleTimeString() ;
     }
     localStorage.setItem(athenaKey, JSON.stringify(gloablAthena));
 }
 
 function loadAthenaFromLocal(){
     let cAthena = localStorage.getItem(athenaKey);
-    let jsonAthena = JSON.parse(cAthena) ;
-    console.log(jsonAthena.meta) ;
-    console.log(jsonAthena.data.mustHave) ;
-    console.log(jsonAthena.data.channels) ;
-    //let localAthenaTime = new Date(jsonAthena.meta.timestamp) ;
-    //if(jsonAthena.meta.timestamp)
-    return jsonAthena ;
+    if(cAthena!=null){
+        let jsonAthena = JSON.parse(cAthena) ;
+        console.log(jsonAthena.meta) ;
+        console.log(jsonAthena.data.mustHave) ;
+        console.log(jsonAthena.data.channels) ;
+        //let localAthenaTime = new Date(jsonAthena.meta.timestamp) ;
+        //if(jsonAthena.meta.timestamp)
+        return jsonAthena ;
+    }
+    return null ;
 }
 
 function tbLocalStorage(){
