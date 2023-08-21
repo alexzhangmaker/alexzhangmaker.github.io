@@ -520,7 +520,7 @@ function AthenaLogOperation(nOpCode,jsonBookmark,cChannelID,cTagID){
      console.log('about to log Operation so that backend server can rebuild data') ;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     console.log("document.addEventListener DOMContentLoaded");
 
     gloablAthena = await loadAthenaJSON('https://alexzhangmaker.github.io/json/athenaBookmarks.json') ;
