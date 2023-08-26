@@ -14,8 +14,8 @@
       "sizes": "64x64",
       "type": "image/png"
     }, {
-      "src": "images/icons/internet-128128.png",
-      "sizes": "128x128",
+      "src": "images/icons/internet-144144.png",
+      "sizes": "144x144",
       "type": "image/png"
     }],
   "start_url": "/indexPWA.html",
