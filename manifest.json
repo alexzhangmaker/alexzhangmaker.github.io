@@ -9,7 +9,11 @@
       "src": "images/icons/internet-3232.png",
       "sizes": "32x32",
       "type": "image/png"
-    },{
+    }, {
+        "src": "images/icons/internet-4848.png",
+        "sizes": "48x48",
+        "type": "image/png"
+      },{
       "src": "images/icons/internet-6464.png",
       "sizes": "64x64",
       "type": "image/png"
