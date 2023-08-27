@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bootstrap Full Width Jumbotron</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+ 
+<!-- require the plugin files -->
+<link href="../Lab/zabuto_calendar.min.css" rel="stylesheet">
+<script src="../Lab/zabuto_calendar.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../Lab/webfonts/uicons-solid-rounded.css">
+
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+
+<!-- APP Manifest -->
+
+</head>
+<body>
+
+    <div class="py-5 mb-4 bg-light">
+        <div class="container">
+            <h1>Learn to Create Websites</h1>
+            <p class="lead">In today's world internet is the most popular way of connecting with the people. At <a href="https://www.tutorialrepublic.com" target="_blank">tutorialrepublic.com</a> you will learn the essential of web development technologies along with real life practice example, so that you can create your own website to connect with the people around the world.</p>
+            <p><a href="https://www.tutorialrepublic.com" target="_blank" class="btn btn-primary btn-lg">Start learning today</a></p>
+        </div>
+
+    </div>
+
+    <div class="container"> 
+        <!-- define an element -->
+        <!-- alter the apppearance -->
+
+        <a href="https://www.zabuto.com/dev/calendar/demo/" target="_blank">zabuto calendar</a>
+        <div id="demo-calendar-apppearance" style="width: 60%;"></div>
+
+        <script>
+            $(document).ready(function () {
+                $("#demo-calendar-apppearance").zabuto_calendar({
+                    header_format: '[year] ===> [month]',
+                    week_starts: 'sunday',
+                    show_days: true,
+                    today_markup: '<span class="badge bg-primary">[day]</span>',
+                    navigation_markup: {
+                        prev: '<i class="fi  fi-sr-angle-circle-left"></i>',
+                        next: '<i class="fi  fi-sr-angle-circle-right"></i>'
+                    }
+                });
+            });
+        </script>
+
+        <br>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
+
+
+        <a href="https://fullcalendar.io/docs/initialize-globals" target="_blank">fullcalendar</a>
+
+        <div id='calendar' style="width: 100%;max-height: 400px;"></div>
+        <script>
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var calendarEl = document.getElementById('calendar');
+
+                jsonEvents=[
+                    {
+                        "title": "All Day Event",
+                        "start": "2023-08-01"
+                    },
+                    {
+                        "title": "Long Event",
+                        "start": "2023-08-07",
+                        "end": "2023-08-10"
+                    },
+                    {
+                        "groupId": "999",
+                        "title": "Repeating Event",
+                        "start": "2023-08-09T16:00:00+00:00"
+                    },
+                    {
+                        "groupId": "999",
+                        "title": "Repeating Event",
+                        "start": "2023-08-16T16:00:00+00:00"
+                    },
+                    {
+                        "title": "Conference",
+                        "start": "2023-08-26",
+                        "end": "2023-08-28"
+                    },
+                    {
+                        "title": "Meeting",
+                        "start": "2023-08-27T10:30:00+00:00",
+                        "end": "2023-08-27T12:30:00+00:00"
+                    },
+                    {
+                        "title": "Lunch",
+                        "start": "2023-08-27T12:00:00+00:00"
+                    },
+                    {
+                        "title": "Birthday Party",
+                        "start": "2023-08-28T07:00:00+00:00"
+                    },
+                    {
+                        "url": "http:\/\/google.com\/",
+                        "title": "Click for Google",
+                        "start": "2023-08-28"
+                    }
+                ];
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    headerToolbar: {
+                            left: "prev,next today",
+                            center: "title",
+                            right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth"
+                        },
+                        timeZone: 'UTC',
+                        initialView: 'dayGridMonth',
+                        events: jsonEvents,/*'/api/demo-feeds/events.json',*/
+                        editable: true,
+                        selectable: true
+                        });
+
+                calendar.render();
+            });
+      
+          </script>
+
+        <table id="example" class="table table-striped" style="width:100%"></table>
+        <p>Quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
+    </div>
+
+    <script>
+        const dataSet = [
+    ['Tiger Nixon', 'System Architect', 'Edinburgh', '5421', '2011/04/25', '$320,800'],
+    ['Garrett Winters', 'Accountant', 'Tokyo', '8422', '2011/07/25', '$170,750'],
+    ['Ashton Cox', 'Junior Technical Author', 'San Francisco', '1562', '2009/01/12', '$86,000'],
+    ['Cedric Kelly', 'Senior Javascript Developer', 'Edinburgh', '6224', '2012/03/29', '$433,060'],
+    ['Airi Satou', 'Accountant', 'Tokyo', '5407', '2008/11/28', '$162,700'],
+    ['Brielle Williamson', 'Integration Specialist', 'New York', '4804', '2012/12/02', '$372,000'],
+    ['Herrod Chandler', 'Sales Assistant', 'San Francisco', '9608', '2012/08/06', '$137,500'],
+    ['Rhona Davidson', 'Integration Specialist', 'Tokyo', '6200', '2010/10/14', '$327,900'],
+    ['Colleen Hurst', 'Javascript Developer', 'San Francisco', '2360', '2009/09/15', '$205,500'],
+    ['Sonya Frost', 'Software Engineer', 'Edinburgh', '1667', '2008/12/13', '$103,600'],
+    ['Jena Gaines', 'Office Manager', 'London', '3814', '2008/12/19', '$90,560'],
+    ['Quinn Flynn', 'Support Lead', 'Edinburgh', '9497', '2013/03/03', '$342,000'],
+    ['Charde Marshall', 'Regional Director', 'San Francisco', '6741', '2008/10/16', '$470,600'],
+    ['Haley Kennedy', 'Senior Marketing Designer', 'London', '3597', '2012/12/18', '$313,500'],
+    ['Tatyana Fitzpatrick', 'Regional Director', 'London', '1965', '2010/03/17', '$385,750'],
+    ['Michael Silva', 'Marketing Designer', 'London', '1581', '2012/11/27', '$198,500'],
+    ['Paul Byrd', 'Chief Financial Officer (CFO)', 'New York', '3059', '2010/06/09', '$725,000'],
+    ['Gloria Little', 'Systems Administrator', 'New York', '1721', '2009/04/10', '$237,500'],
+    ['Bradley Greer', 'Software Engineer', 'London', '2558', '2012/10/13', '$132,000'],
+    ['Dai Rios', 'Personnel Lead', 'Edinburgh', '2290', '2012/09/26', '$217,500'],
+    ['Jenette Caldwell', 'Development Lead', 'New York', '1937', '2011/09/03', '$345,000'],
+    ['Yuri Berry', 'Chief Marketing Officer (CMO)', 'New York', '6154', '2009/06/25', '$675,000'],
+    ['Caesar Vance', 'Pre-Sales Support', 'New York', '8330', '2011/12/12', '$106,450'],
+    ['Doris Wilder', 'Sales Assistant', 'Sydney', '3023', '2010/09/20', '$85,600'],
+    ['Angelica Ramos', 'Chief Executive Officer (CEO)', 'London', '5797', '2009/10/09', '$1,200,000'],
+    ['Gavin Joyce', 'Developer', 'Edinburgh', '8822', '2010/12/22', '$92,575'],
+    ['Jennifer Chang', 'Regional Director', 'Singapore', '9239', '2010/11/14', '$357,650'],
+    ['Brenden Wagner', 'Software Engineer', 'San Francisco', '1314', '2011/06/07', '$206,850'],
+    ['Fiona Green', 'Chief Operating Officer (COO)', 'San Francisco', '2947', '2010/03/11', '$850,000'],
+    ['Shou Itou', 'Regional Marketing', 'Tokyo', '8899', '2011/08/14', '$163,000'],
+    ['Michelle House', 'Integration Specialist', 'Sydney', '2769', '2011/06/02', '$95,400'],
+    ['Suki Burks', 'Developer', 'London', '6832', '2009/10/22', '$114,500'],
+    ['Prescott Bartlett', 'Technical Author', 'London', '3606', '2011/05/07', '$145,000'],
+    ['Gavin Cortez', 'Team Leader', 'San Francisco', '2860', '2008/10/26', '$235,500'],
+    ['Martena Mccray', 'Post-Sales support', 'Edinburgh', '8240', '2011/03/09', '$324,050'],
+    ['Unity Butler', 'Marketing Designer', 'San Francisco', '5384', '2009/12/09', '$85,675'],
+];
+ 
+new DataTable('#example', {
+    columns: [
+        { title: 'Name' },
+        { title: 'Position' },
+        { title: 'Office' },
+        { title: 'Extn.' },
+        { title: 'Start date' },
+        { title: 'Salary' }
+    ],
+    data: dataSet
+});
+    </script>
+</body>
+</html>
