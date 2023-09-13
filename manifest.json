@@ -30,14 +30,12 @@
   "theme_color": "#2F3BA2",
 
   "share_target": {
-    "name": "Bookmark",
-    "share_target": {
-      "action": "/bookmark",
-      "method": "POST",
-      "enctype": "multipart/form-data",
-      "params": {
-        "url": "link"
-      }
+    "action": "/share-target/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
     }
   }
 }
