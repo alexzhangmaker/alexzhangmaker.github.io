@@ -591,7 +591,30 @@ div.dataTables_wrapper {
           </div>
       </div>
   </nav>
-        
+
+  <div class="m-4" style="font-family: 'Roboto',sans-serif;" id="webCompPortfolio">
+    <!----
+    <div class="card  mb-3 rounded shadow-lg">
+        <div class="card-header  bg-transparent border-success"><h5>signpost Portfolio</h5></div>
+        <div class="card-body overflow-auto">
+          <table id="tbl_signpostPortfolio" class="table  table-responsive table-fixed table-hover" width="100%"></table>
+        </div>
+        <div class="card-footer bg-transparent border-success">
+            <div class="footer-container">
+              <div class="footer-items">
+                <span class="material-symbols-outlined">home</span>
+                <span class="material-symbols-outlined">add_circle</span>
+                <span class="material-symbols-outlined">login</span>
+              </div>
+              <div class="footer-items">
+                <span class="material-symbols-outlined">key</span>
+              </div>
+            </div>
+        </div>
+    </div>
+    -->
+  </div>
+
 <div class="m-4 border" style="font-family: 'Roboto',sans-serif;" style="padding-top: 100px;margin-top: 100px;">
 
         <div class="m-4">
@@ -1316,7 +1339,7 @@ div.dataTables_wrapper {
  <h4>Dividend component</h4>
 
   <div class="m-4" style="font-family: 'Roboto',sans-serif;">
-    <div class="card  mb-3 rounded shadow-lg"">
+    <div class="card  mb-3 rounded shadow-lg">
         <div class="card-header  bg-transparent border-success"><h5>Historical Dividend</h5></div>
         <div class="card-body overflow-auto">
           <table id="example" class="table  table-responsive table-fixed table-hover" width="100%"></table>
@@ -1674,7 +1697,7 @@ div.dataTables_wrapper {
 
 
 
-
+  <script src="./signpostPortfolio.js"></script>
 
   <script>
       //refer :https://freefrontend.com/bootstrap-cards/
@@ -1763,9 +1786,9 @@ const columnsDef=[
   {title:"AVG PRICE"},
   {title:"DIV YIELD"},
   {title:"ANN DIV"},
-  {title:"EARNING/SHARE"},
-  {title:"FFO/SHARE"},
-  {title:"DEBT/SHARE"},
+  {title:"EARNING/s"},
+  {title:"FFO/s"},
+  {title:"DEBT/s"},
   {
     defaultContent: '<span class="material-symbols-outlined">delete</span>'
    },
@@ -1792,6 +1815,27 @@ const dataRec = [
     */
 
 
+
+    $('#tbl_signpostPortfolio').DataTable( {
+            dom: 'Bfrtip',
+            columnDefs: [
+                {
+                    targets: 1,
+                    className: 'noVis'
+                }
+            ],
+            buttons: [
+                {
+                    extend: 'colvis',
+                    columns: ':not(.noVis)'
+                }
+            ],
+            columns: columnsDef,
+            data: dataRec,
+            fixedColumns: {right: 1},
+            scrollX: true
+    });
+
     $('#example').DataTable( {
             dom: 'Bfrtip',
             columnDefs: [
@@ -1815,7 +1859,14 @@ const dataRec = [
 }) ;
 
 
-        
+
+
+
+$( document ).ready(function() {
+    console.log( "ready!" );
+    
+    renderPortfolio(document.getElementById('webCompPortfolio'),'myPortfolio','idMyPortfolio') ;
+});
 
   //refer: https://live.datatables.net/xijecupo/1/edit
   </script>
