@@ -30,12 +30,24 @@
   "theme_color": "#2F3BA2",
 
   "share_target": {
-    "action": "/share-target/",
-    "method": "GET",
+    "action": "http://127.0.0.1:8080/",
+    "enctype": "multipart/form-data",
+    "method": "POST",
     "params": {
       "title": "title",
       "text": "text",
-      "url": "url"
+      "url": "url",
+      "files": [
+        {
+          "name": "media[]",
+          "accept": [
+            "audio/*",
+            "image/*",
+            "video/*",
+            "application/json"
+          ]
+        }
+      ]
     }
   }
 }
