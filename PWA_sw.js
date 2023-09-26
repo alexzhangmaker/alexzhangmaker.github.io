@@ -5,7 +5,8 @@ console.log('PWA service worker 注册成功')
 self.addEventListener('install', (event) => {
   // 安装回调的逻辑处理
   //缓存需要的资源，signpost而言就是哪些主要的JSON文件
-  console.log('service worker 安装成功') ;
+  let cTime = new Date() ;
+  console.log('service worker 安装成功:'+cTime.toLocaleString()) ;
   /**
    here to cache data
    */
@@ -40,6 +41,9 @@ self.addEventListener('install', (event) => {
 
 
 self.addEventListener('activate', function(event) {
+  let cTime = new Date() ;
+  console.log('service worker activate:'+cTime.toLocaleString()) ;
+ 
   var cacheAllowlist = ['pages-cache-v1', 'blog-posts-cache-v1'];
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
@@ -57,7 +61,6 @@ self.addEventListener('activate', function(event) {
 
 self.addEventListener('fetch', event => {
   console.log('service worker 抓取请求成功: ' + event.request.url)
-
   
   event.respondWith(
     caches.match(event.request).then(function(response) {
