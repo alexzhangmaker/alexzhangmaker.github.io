@@ -40,7 +40,7 @@ self.addEventListener('activate', function(event) {
   let cTime = new Date() ;
   console.log('service worker activate:'+cTime.toLocaleString()) ;
  
-  var cacheAllowlist = ['pages-cache-v1', 'blog-posts-cache-v1'];
+  var cacheAllowlist = ['pages-cache-v1', 'blog-posts-cache-v1','signpostCache'];
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(
