@@ -13,7 +13,6 @@ self.addEventListener('install', (event) => {
    var cacheName = 'signpostCache';
    var urlsToCache = [
     'https://alexzhangmaker.github.io/indexPWA.html',
-    'https://alexzhangmaker.github.io/styles.css',
     'https://alexzhangmaker.github.io/signpostPortfolio.js',
     'https://alexzhangmaker.github.io/signpostMessage.js',
     'https://alexzhangmaker.github.io/signpostNews.js',
