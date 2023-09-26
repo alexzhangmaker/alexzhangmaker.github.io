@@ -9,37 +9,52 @@ self.addEventListener('install', (event) => {
   /**
    here to cache data
    */
-  /*
+   var cacheName = 'signpostCache';
+   var urlsToCache = [
+    '/',
+    '/indexPWA.html',
+    '/styles.css',
+    '/signpostPortfolio.js',
+    '/signpostMessage.js',
+    '/signpostNews.js',
+    '/signpostDividends.js',
+    '/signpostCompanyKPI.js'
+   ];
+  
    event.waitUntil(
-    caches.open('signpostCache').then(async function(cache) {
-      return cache.addAll([
-        '/',
-        '/indexPWA.html',
-        '/styles.css',
-        '/script.js',
-        '/logo.png',
-      ]).catch(function(error) {
-        console.log('资源缓存失败:', error);
+     caches.open(cacheName)
+     .then(async function(cache){
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache).catch(function(error) {
+          console.log('资源缓存失败:', error);
       });
     })
   );
-  */
-})
+}) ;
 
-self.addEventListener('activate', () => {
-  // 激活回调的逻辑处理
-  console.log('service worker 激活成功') ;
-})
 
+self.addEventListener('activate', function(event) {
+  var cacheAllowlist = ['pages-cache-v1', 'blog-posts-cache-v1'];
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheAllowlist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
 
 
 self.addEventListener('fetch', event => {
   console.log('service worker 抓取请求成功: ' + event.request.url)
 
-  /*
+  
   event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
+    caches.match(event.request).then(function(response) {
         // 缓存中有对应的资源，直接返回
         if (response) {
           return response;
@@ -50,6 +65,7 @@ self.addEventListener('fetch', event => {
       })
   );
 
+  /*
   const url = new URL(event.request.url);
   // If this is an incoming POST request for the
   // registered "action" URL, respond to it.
@@ -64,12 +80,14 @@ self.addEventListener('fetch', event => {
   */
 });
 
+
+/*
 async function saveBookmark(link){
   console.log(link) ;
   return "https://www.google.com/" ;
 }
 
-/*
+
 self.addEventListener('message', function handler(event: MessageEvent<any>) {
   console.log(event.data)
 })

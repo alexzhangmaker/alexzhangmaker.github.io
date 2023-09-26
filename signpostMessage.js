@@ -17,5 +17,37 @@ function renderMessage(tagContainer,cContent,cSource){
 
     let tagMessageBox = document.createElement('div') ;
     tagContainer.appendChild(tagMessageBox) ;
+    tagMessageBox.classList.add("m-4") ;
+    tagMessageBox.style.fontFamily = "'Roboto',sans-serif;" ;
     tagMessageBox.outerHTML = cHTML ;
+
+    applyMessageCSS() ;
+}
+
+
+function applyMessageCSS(){
+    const tagCSSStyle = document.createElement('style');
+    tagCSSStyle.type = 'text/css';
+
+    tagCSSStyle.textContent = `
+        .blockquote-custom {
+            position: relative;
+            font-size: 1.1rem;
+        }
+        
+        .blockquote-custom-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -25px;
+            left: 50px;
+        }
+    `;
+
+    document.head.appendChild(tagCSSStyle);
+
 }

@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1 , viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<!-- possible content values: default, black or black-translucent -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<title>signpost PWA</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+<link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" rel="stylesheet">
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+
+
+
+
+
+
+<!-- APP Manifest -->
+<link rel="manifest" href="/manifest.json">
+    <style>
+        .grey-bg {  
+    background-color: #F5F7FA;
+}
+
+
+
+.demo_part3 .card {
+    border: none;
+    border-radius: 10px
+}
+
+.demo_part3 .c-details span {
+    font-weight: 300;
+    font-size: 13px
+}
+
+.demo_part3 .icon {
+    width: 50px;
+    height: 50px;
+    background-color: #eee;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 39px
+}
+
+.demo_part3 .badge span {
+    background-color: #fffbec;
+    width: 60px;
+    height: 25px;
+    padding-bottom: 3px;
+    border-radius: 5px;
+    display: flex;
+    color: #fed85d;
+    justify-content: center;
+    align-items: center
+}
+
+.demo_part3 .progress {
+    height: 10px;
+    border-radius: 10px
+}
+
+.demo_part3 .progress div {
+    background-color: red
+}
+
+.demo_part3 .text1 {
+    font-size: 14px;
+    font-weight: 600
+}
+
+.demo_part3 .text2 {
+    color: #a5aec0
+}
+
+
+.blockquote-custom {
+  position: relative;
+  font-size: 1.1rem;
+}
+
+.blockquote-custom-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -25px;
+  left: 50px;
+}
+
+:root {
+  --gridHeight: 60px;
+  --gridHeightKPI: calc(var(--gridHeight) * 1.2) ;
+  --gridHeightLogo:calc(var(--gridHeight) * 3) ;
+  --gridHeightFoot: var(--gridHeight) ;
+
+
+  --spCardBaseFont: 16px;
+
+}
+
+
+/*below for Company Dashboard card*/
+
+body {
+  background-color: lightblue;
+  
+}
+
+
+.companyDashboard {  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 0.5fr;
+  gap: 2px 2px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "CompanyLogo KPIPart_1 KPIPart_2 KPIPart_3 KPIPart_4 KPIPart_5"
+    "CompanyLogo KPIPart_6 KPIPart_7 KPIPart_8 KPIPart_9 KPIPart_10"
+    "OpertaionMenu OpertaionMenu OpertaionMenu OpertaionMenu OpertaionMenu OpertaionMenu";
+  
+  /*border-style: solid;*/
+}
+
+.CompanyLogo { 
+  grid-area: CompanyLogo; 
+  height: var(--gridHeightLogo) ;
+  /*border-style: solid;*/
+  
+  /*下面的代码用来把内部的元素居中布置的*/
+  display: flex;
+  justify-content:left ;    /*水平居中*/
+  align-items: center;        /*垂直居中*/
+}
+
+.KPIPart_1 { 
+  grid-area: KPIPart_1; 
+  height: var(--gridHeightKPI) ;
+  /*border-style: solid;*/
+}
+
+.KPIPart_2 { 
+  grid-area: KPIPart_2;
+  height: var(--gridHeightKPI) ;
+  /*border-style: solid;*/
+}
+
+.KPIPart_3 {
+  grid-area: KPIPart_3;
+  height: var(--gridHeightKPI) ;
+  /*border-style: solid;*/
+}
+
+.KPIPart_4 { 
+  grid-area: KPIPart_4; 
+  height: var(--gridHeightKPI) ;
+  /*border-style: solid;*/
+}
+
+.KPIPart_5 { 
+  grid-area: KPIPart_5; 
+  height: var(--gridHeightKPI) ;
+  /*border-style: solid;*/
+}
+
+.KPIPart_6 { 
+  grid-area: KPIPart_6; 
+  height: var(--gridHeightKPI) ;
+  /*border-style: solid;*/
+}
+
+.KPIPart_7 { 
+  grid-area: KPIPart_7; 
+  height: var(--gridHeightKPI) ;
+  /*border-style: solid;*/
+}
+
+.KPIPart_8 { 
+  grid-area: KPIPart_8; 
+  height: var(--gridHeightKPI) ;
+  /*border-style: solid;*/
+}
+
+.KPIPart_9 { 
+  grid-area: KPIPart_9; 
+  height: var(--gridHeightKPI) ;
+  /*border-style: solid;*/
+}
+
+.KPIPart_10 { 
+  grid-area: KPIPart_10; 
+  height: var(--gridHeightKPI) ;
+  /*border-style: solid;*/
+}
+
+.OpertaionMenu { 
+  grid-area: OpertaionMenu; 
+  height: var(--gridHeightFoot) ;
+  /*border-style: solid;*/
+  
+  
+  display: flex;
+  /*justify-content:center ;*//*水平居中*/
+  align-items: center;        /*垂直居中*/
+}
+
+.KPI_UL-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: stretch;
+  align-content: normal;
+}
+
+.KPIul {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  /*background-color: grey;*/
+  
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+
+}
+
+
+.liKPI{
+  font-size:1.5rem ;
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+}
+
+.footer-items:nth-child(1) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+}
+
+.footer-items:nth-child(2) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+}
+
+
+
+.companyInfo {  
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 2px 2px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "companylogo companyTicker"
+    "companylogo companyName";
+  width: 260px;
+  height: 180px ;
+}
+
+.companylogoDIV { 
+  grid-area: companylogo; 
+  /*border-style: solid;*/
+  
+  display: flex;
+  justify-content:center ;/*水平居中*/
+  align-items: center;        /*垂直居中*/
+}
+
+.companyTicker { 
+  grid-area: companyTicker; 
+  /*border-style: solid;*/
+  
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: stretch;
+  align-content: normal;
+}
+
+.companyName { 
+  grid-area: companyName; 
+  /*border-style: solid;*/
+}
+
+.centerIMG{
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.todo-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: stretch;
+  align-content: normal;
+}
+
+.todo-items:nth-child(1) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+  margin-right:10px;
+}
+
+.todo-items:nth-child(2) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+  margin-right:10px;
+}
+
+.todo-items:nth-child(3) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+  margin-right:10px;
+}
+
+.todo-items:nth-child(4) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+  margin-right:10px;
+}
+
+.todo-items:nth-child(5) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+  margin-right:10px;
+}
+
+
+/*for event message cards*/
+
+.spTextBase{
+  font-size:var(--spCardBaseFont) ;
+}
+
+.spTextSmall{
+  font-size: calc(var(--spCardBaseFont) * 0.8) ;
+}
+
+.spIMG{
+  height:calc(var(--spCardBaseFont) * 1.8 ) ;
+}
+
+.centerIMG{
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+
+
+
+
+.header-container {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: normal;
+  align-content: normal;
+  /*background-color: #bbdefb;*/
+  width: 100%;/*600px;*/
+  height: 60px;
+  /*border-style: solid;*/
+  /*padding: 2px;*/
+  gap: 5px;
+}
+
+.header-items:nth-child(1) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+  width: 80px;/*10%;*/
+  /*border-style: solid;*/
+  position: relative;
+}
+
+.header-items:nth-child(2) {
+  display: block;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+  width: 70%;
+  /*border-style: solid;*/
+}
+
+.header-items:nth-child(3) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+  width: 60px;/*10%;*/
+  /*border-style: solid;*/
+  
+}
+
+
+.CenterContainer {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    /*border: 2px solid #006100; */
+}
+
+.centered-element {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+
+.footer-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+}
+
+.footer-items:nth-child(1) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+}
+
+.footer-items:nth-child(2) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+}
+
+/*for portfolio table*/
+
+.footer-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+}
+
+.footer-items:nth-child(1) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+}
+
+.footer-items:nth-child(2) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+}
+
+th, td { 
+  white-space: nowrap; 
+}
+
+div.dataTables_wrapper {
+  width: 1240px;
+  margin: 0 auto;
+}
+
+    </style>
+</head>
+<body>
+
+  <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+          <a href="#" class="navbar-brand">
+              <img src="images/logo_athena.svg" height="28" alt="CoolBrand">
+          </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+              <div class="navbar-nav">
+                  <a href="#" class="nav-item nav-link active">Home</a>
+                  <a href="#" class="nav-item nav-link">Profile</a>
+                  <a href="#" class="nav-item nav-link">Messages</a>
+                  <a href="#" class="nav-item nav-link disabled" tabindex="-1">Reports</a>
+              </div>
+              <div class="navbar-nav ms-auto">
+                  <a href="#" class="nav-item nav-link">Login</a>
+              </div>
+          </div>
+      </div>
+  </nav>
+
+  <div class="m-4" style="font-family: 'Roboto',sans-serif;" id="webCompPortfolio">
+    <!----
+    <div class="card  mb-3 rounded shadow-lg">
+        <div class="card-header  bg-transparent border-success"><h5>signpost Portfolio</h5></div>
+        <div class="card-body overflow-auto">
+          <table id="tbl_signpostPortfolio" class="table  table-responsive table-fixed table-hover" width="100%"></table>
+        </div>
+        <div class="card-footer bg-transparent border-success">
+            <div class="footer-container">
+              <div class="footer-items">
+                <span class="material-symbols-outlined">home</span>
+                <span class="material-symbols-outlined">add_circle</span>
+                <span class="material-symbols-outlined">login</span>
+              </div>
+              <div class="footer-items">
+                <span class="material-symbols-outlined">key</span>
+              </div>
+            </div>
+        </div>
+    </div>
+    -->
+  </div>
+
+
+
+
+<div class="m-4 border" style="font-family: 'Roboto',sans-serif;" id="webCompMessage">
+    <!----
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <blockquote class="blockquote blockquote-custom bg-white p-5 shadow rounded">
+                <div class="blockquote-custom-icon bg-info shadow-sm"><i class="bx bxl-dribbble"></i></div>
+                <p class="mb-0 mt-2 font-italic">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo <a href="#" class="text-info">@consequat</a>."</p>
+                <footer class="blockquote-footer pt-4 mt-4 border-top">Someone famous in
+                    <cite title="Source Title">Source Title</cite>
+                </footer>
+            </blockquote>
+        </div>
+    </div>
+
+    -->
+    <div class="row">
+      <div class="col-lg-6 mx-auto">
+          <blockquote class="blockquote blockquote-custom bg-white p-5 shadow rounded">
+              <div class="blockquote-custom-icon bg-info shadow-sm"><i class="bx bxl-dribbble"></i></div>
+              <p class="mb-0 mt-2 font-italic">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo <a href="#" class="text-info">@consequat</a>."</p>
+              <footer class="blockquote-footer pt-4 mt-4 border-top">Someone famous in
+                  <cite title="Source Title">Source Title</cite>
+              </footer>
+          </blockquote>
+      </div>
+  </div>
+</div>
+
+<!---
+<h4>Not Ok component</h4>
+<div class="m-4" style="font-family: 'Roboto',sans-serif;">
+
+    <div class="card mb-3 rounded shadow-lg" style="max-height:25rem">
+     <div class="card-header bg-transparent"> 
+       <h5>Company Dashboard</h5>
+     </div>
+      
+     <div class="card-body overflow-auto">
+       <div class="companyDashboard">
+         
+         <div class="CompanyLogo">
+           <div class="companyInfo">
+             <div class="companylogoDIV">
+               <img class="centered-element"src="https://www.brookfield.com/sites/default/files/styles/menu_feature/public/images/2022-12/brookfield-logo-nav-icon.png?h=79b747b9&itok=0jhwdxx-" alt="Girl in a jacket" height="60px">
+             </div>
+             <div class="companyTicker">BN:US</div>
+             <div class="companyName">Brookfield.co</div>
+           </div>
+         </div>
+         <div class="KPIPart_1 KPI_UL-container">
+           <ul class="KPIul">
+             <li class="box-green">Stock Price</li>
+             <li class="box-red liKPI">52.40</li>
+           </ul>
+         </div>
+         <div class="KPIPart_2 KPI_UL-container">
+           <ul class="KPIul">
+             <li class="box-green">Total Cost</li>
+             <li class="box-red liKPI">52.40</li>
+           </ul>
+         </div>
+         <div class="KPIPart_3 KPI_UL-container">
+           <ul class="KPIul">
+             <li class="box-green">Shares</li>
+             <li class="box-red liKPI">2000</li>
+           </ul>
+         </div>
+         <div class="KPIPart_4 KPI_UL-container">
+         <ul class="KPIul">
+             <li class="box-green">Earning</li>
+             <li class="box-red liKPI">152.40</li>
+           </ul>
+             
+           </div>
+         <div class="KPIPart_5 KPI_UL-container">
+         <ul class="KPIul">
+             <li class="box-green">Dividend Yield</li>
+             <li class="box-red liKPI">7.32%</li>
+           </ul>
+             
+           </div>
+         <div class="KPIPart_6 KPI_UL-container">
+         <ul class="KPIul">
+             <li class="box-green">FFO/Share</li>
+             <li class="box-red liKPI">$2.40</li>
+           </ul>
+         </div>
+         <div class="KPIPart_7 KPI_UL-container">
+         <ul class="KPIul">
+             <li class="box-green">DE/Share</li>
+             <li class="box-red liKPI">2.40</li>
+           </ul>
+             
+           </div>
+         <div class="KPIPart_8 KPI_UL-container">
+         <ul class="KPIul">
+             <li class="box-green">Debt/Share</li>
+             <li class="box-red liKPI">12.40</li>
+           </ul>
+             
+           </div>
+         <div class="KPIPart_9 KPI_UL-container">
+         <ul class="KPIul">
+             <li class="box-green">FRE/Share</li>
+             <li class="box-red liKPI">2.40</li>
+           </ul>
+         </div>
+         <div class="KPIPart_10 KPI_UL-container">
+         <ul class="KPIul">
+             <li class="box-green">DE YoY Growth</li>
+             <li class="box-red liKPI">16%</li>
+           </ul>
+             
+           </div>
+         <div class="OpertaionMenu todo-container">
+           <div class="todo-items">
+             <span class="material-symbols-outlined">search</span>
+             <span>Add to watch list</span>
+           </div>
+           
+                     <div class="todo-items">
+             <span class="material-symbols-outlined">favorite</span>
+             <span>Add to watch list</span>
+           </div>
+           
+                     <div class="todo-items">
+             <span class="material-symbols-outlined">grade</span>
+             <span>Add to watch list</span>
+           </div>
+           
+                     <div class="todo-items">
+             <span class="material-symbols-outlined">login</span>
+             <span>Add to watch list</span>
+           </div>
+           
+           <div class="todo-items">
+             <span class="material-symbols-outlined">
+ shopping_cart_checkout
+ </span>
+             <span>Add to shooping cart</span>
+           </div>
+           
+         </div>
+       </div>
+     </div>
+      
+     <div class="card-footer bg-transparent">
+     
+       <div class="footer-container">
+         <div class="footer-items">
+           <span class="material-symbols-outlined">home</span>
+           <span class="material-symbols-outlined">add_circle</span>
+           <span class="material-symbols-outlined">login</span>
+         </div>
+         <div class="footer-items">
+           <span class="material-symbols-outlined">key</span>
+         </div>
+       </div>
+      </div>
+   </div>
+ </div>
+ -->
+
+ <div class="m-4" style="font-family: 'Roboto',sans-serif;" id="webCompNews">
+    <div class="card mb-3 rounded shadow-lg" style="max-height:25rem">
+        <div class="card-header bg-transparent border-success">      
+            <div class="header-container">
+              <div class="header-items">
+                <img class=" spIMG centered-element" src="https://www.brookfield.com/sites/default/files/styles/menu_feature/public/images/2022-12/brookfield-logo-nav-icon.png?h=79b747b9&itok=0jhwdxx-" alt="Girl in a jacket" height="20px">
+              </div>
+              <div class="header-items">
+                <div class="CenterContainer">2023/08/27, LA,USA.  CNBC report</div>
+              </div>
+              <div class="header-items">
+                <div class="CenterContainer">
+                  <span class="material-symbols-outlined">delete</span>
+                </div>
+              </div>
+            </div>
+        </div>
+      
+        <div class="card-body overflow-auto">
+          <h5 class="card-title">Thorne HealthTech jumps on $10.20 per share deal to go private</h5>
+          <p class="card-text">Thorne HealthTech (NASDAQ:THRN), a New York-based developer of health and wellness products, added ~29% pre-market Monday after announcing an agreement to be acquired by investment firm L Catterton for $10.20 per share in cash.</p>
+        </div>
+
+        <div class="card-footer bg-transparent border-success">
+            <div class="footer-container">
+                <div class="footer-items">
+                  <span class="material-symbols-outlined">home</span>
+                  <span class="material-symbols-outlined">add_circle</span>
+                  <span class="material-symbols-outlined">login</span>
+                </div>
+                <div class="footer-items">
+                  <span class="material-symbols-outlined">key</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!---
+    <div class="card mb-3 rounded shadow-lg" style="max-height:25rem">
+      <div class="card-header bg-transparent border-success">      
+          <div class="header-container">
+            <div class="header-items">
+              <img class=" spIMG centered-element" src="https://www.brookfield.com/sites/default/files/styles/menu_feature/public/images/2022-12/brookfield-logo-nav-icon.png?h=79b747b9&itok=0jhwdxx-" alt="Girl in a jacket" height="20px">
+            </div>
+            <div class="header-items">
+              <div class="CenterContainer">2023/08/27, LA,USA.  CNBC report001</div>
+            </div>
+            <div class="header-items">
+              <div class="CenterContainer">
+                <span class="material-symbols-outlined">delete</span>
+              </div>
+            </div>
+          </div>
+      </div>
+    
+      <div class="card-body overflow-auto">
+        <h5 class="card-title">Thorne HealthTech jumps on $10.20 per share deal to go private</h5>
+        <p class="card-text">Thorne HealthTech (NASDAQ:THRN), a New York-based developer of health and wellness products, added ~29% pre-market Monday after announcing an agreement to be acquired by investment firm L Catterton for $10.20 per share in cash.</p>
+      </div>
+
+      <div class="card-footer bg-transparent border-success">
+          <div class="footer-container">
+              <div class="footer-items">
+                <span class="material-symbols-outlined">home</span>
+                <span class="material-symbols-outlined">add_circle</span>
+                <span class="material-symbols-outlined">login</span>
+              </div>
+              <div class="footer-items">
+                <span class="material-symbols-outlined">key</span>
+              </div>
+          </div>
+      </div>
+    </div>
+    --->
+ </div>
+ <!---
+ <div class="m-4" style="font-family: 'Roboto',sans-serif;">
+  <div class="card mb-3 rounded shadow-lg" style="max-height:25rem">
+      <div class="card-header bg-transparent border-success">      
+          <div class="header-container">
+            <div class="header-items">
+              <img class=" spIMG centered-element" src="https://www.brookfield.com/sites/default/files/styles/menu_feature/public/images/2022-12/brookfield-logo-nav-icon.png?h=79b747b9&itok=0jhwdxx-" alt="Girl in a jacket" height="20px">
+            </div>
+            <div class="header-items">
+              <div class="CenterContainer">2023/08/27, LA,USA.  CNBC report</div>
+            </div>
+            <div class="header-items">
+              <div class="CenterContainer">
+                <span class="material-symbols-outlined">delete</span>
+              </div>
+            </div>
+          </div>
+      </div>
+    
+      <div class="card-body overflow-auto">
+        <h5 class="card-title">Thorne HealthTech jumps on $10.20 per share deal to go private</h5>
+        <p class="card-text">Thorne HealthTech (NASDAQ:THRN), a New York-based developer of health and wellness products, added ~29% pre-market Monday after announcing an agreement to be acquired by investment firm L Catterton for $10.20 per share in cash.</p>
+      </div>
+
+      <div class="card-footer bg-transparent border-success">
+          <div class="footer-container">
+              <div class="footer-items">
+                <span class="material-symbols-outlined">home</span>
+                <span class="material-symbols-outlined">add_circle</span>
+                <span class="material-symbols-outlined">login</span>
+              </div>
+              <div class="footer-items">
+                <span class="material-symbols-outlined">key</span>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="m-4" style="font-family: 'Roboto',sans-serif;">
+  <div class="card mb-3 rounded shadow-lg" style="max-height:25rem">
+      <div class="card-header bg-transparent border-success">      
+          <div class="header-container">
+            <div class="header-items">
+              <img class=" spIMG centered-element" src="https://www.brookfield.com/sites/default/files/styles/menu_feature/public/images/2022-12/brookfield-logo-nav-icon.png?h=79b747b9&itok=0jhwdxx-" alt="Girl in a jacket" height="20px">
+            </div>
+            <div class="header-items">
+              <div class="CenterContainer">2023/08/27, LA,USA.  CNBC report</div>
+            </div>
+            <div class="header-items">
+              <div class="CenterContainer">
+                <span class="material-symbols-outlined">delete</span>
+              </div>
+            </div>
+          </div>
+      </div>
+    
+      
+      <div class="card-body overflow-auto">
+        <h5 class="card-title">Thorne HealthTech jumps on $10.20 per share deal to go private</h5>
+        <p class="card-text">Thorne HealthTech (NASDAQ:THRN), a New York-based developer of health and wellness products, added ~29% pre-market Monday after announcing an agreement to be acquired by investment firm L Catterton for $10.20 per share in cash.</p>
+      </div>
+
+      <div class="card-footer bg-transparent border-success">
+          <div class="footer-container">
+              <div class="footer-items">
+                <span class="material-symbols-outlined">home</span>
+                <span class="material-symbols-outlined">add_circle</span>
+                <span class="material-symbols-outlined">login</span>
+              </div>
+              <div class="footer-items">
+                <span class="material-symbols-outlined">key</span>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+---->
+
+ <h4>Dividend component</h4>
+ <div class="m-4" style="font-family: 'Roboto',sans-serif;" id="webCompDividends">
+ </div>
+
+
+  <h4>KPI component</h4>
+  <div class="m-4" style="font-family: 'Roboto',sans-serif;" id="webCompCompanyKPI">
+    <!--
+      <div class="card mb-3 rounded shadow-lg">
+            <div class="card-header bg-transparent border-success"><h5>Brookfield Corporation</h5></div>
+            <div class="card-body overflow-auto">
+                <div class="container-lg">
+                  <div class="row border">
+
+                      <div class="col-xl-2 col-md-2 col-xxl-2 border">
+                        <div class="container-lg border">
+                          <p>Box 1</p>
+                        </div>
+                      </div>
+                    
+                      <div class="col-xl-10 col-md-10 col-xxl-10">
+                        <div class="container-lg">
+                          <div class="row border">
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border KPI_UL-container">
+                                    <ul class="KPIul">
+                                      <li class="box-green">Stock Price</li>
+                                      <li class="box-red liKPI">52.40</li>
+                                    </ul>  
+                                </div>
+                            
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                  <ul class="KPIul">
+                                    <li class="box-green">Stock Price</li>
+                                    <li class="box-red liKPI">52.40</li>
+                                  </ul> 
+                                </div>
+
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                    <ul class="KPIul">
+                                      <li class="box-green">Stock Price</li>
+                                      <li class="box-red liKPI">52.40</li>
+                                    </ul> 
+                                </div>
+
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                  <ul class="KPIul">
+                                    <li class="box-green">Stock Price</li>
+                                    <li class="box-red liKPI">52.40</li>
+                                  </ul> 
+                                </div>
+
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                  <ul class="KPIul">
+                                    <li class="box-green">Stock Price</li>
+                                    <li class="box-red liKPI">52.40</li>
+                                  </ul> 
+                                </div>
+
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                  <ul class="KPIul">
+                                        <li class="box-green">Stock Price</li>
+                                        <li class="box-red liKPI">52.40</li>
+                                      </ul> 
+                                </div>
+
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                    <ul class="KPIul">
+                                      <li class="box-green">Stock Price</li>
+                                      <li class="box-red liKPI">52.40</li>
+                                    </ul> 
+                                </div>
+
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                  <ul class="KPIul">
+                                    <li class="box-green">Stock Price</li>
+                                    <li class="box-red liKPI">52.40</li>
+                                  </ul> 
+                                </div>
+
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                  <ul class="KPIul">
+                                    <li class="box-green">Stock Price</li>
+                                    <li class="box-red liKPI">52.40</li>
+                                  </ul> 
+                                </div>
+
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                  <ul class="KPIul">
+                                    <li class="box-green">Stock Price</li>
+                                    <li class="box-red liKPI">52.40</li>
+                                  </ul> 
+                                </div>
+
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                  <ul class="KPIul">
+                                    <li class="box-green">Stock Price</li>
+                                    <li class="box-red liKPI">52.40</li>
+                                  </ul> 
+                                </div>
+
+                                <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                                  <ul class="KPIul">
+                                    <li class="box-green">Stock Price</li>
+                                    <li class="box-red liKPI">52.40</li>
+                                  </ul> 
+                                </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                  </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-success"></div>
+      </div>
+    -->
+  </div>
+
+  <!---
+  <div class="m-4" style="font-family: 'Roboto',sans-serif;">
+    <div class="card mb-3 rounded shadow-lg">
+      <div class="card-header bg-transparent border-success"><h5>Brookfield Asset Management</h5></div>
+      
+      <div class="card-body overflow-auto">
+        <div class="container-lg">
+          <div class="row border">
+
+              <div class="col-xl-2 col-md-2 col-xxl-2 border">
+                <div class="container-lg border">
+                  <p>Box 1</p>
+                </div>
+              </div>
+            
+              <div class="col-xl-10 col-md-10 col-xxl-10">
+                <div class="container-lg">
+                  <div class="row border">
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border KPI_UL-container">
+                            <ul class="KPIul">
+                              <li class="box-green">Stock Price</li>
+                              <li class="box-red liKPI">52.40</li>
+                            </ul>  
+                        </div>
+                    
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                            <ul class="KPIul">
+                              <li class="box-green">Stock Price</li>
+                              <li class="box-red liKPI">52.40</li>
+                            </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                                <li class="box-green">Stock Price</li>
+                                <li class="box-red liKPI">52.40</li>
+                              </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                            <ul class="KPIul">
+                              <li class="box-green">Stock Price</li>
+                              <li class="box-red liKPI">52.40</li>
+                            </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+                  </div>
+                </div>
+              </div>
+              
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer bg-transparent border-success"></div>
+    </div>
+  </div>
+
+  <div class="m-4" style="font-family: 'Roboto',sans-serif;">
+    <div class="card mb-3 rounded shadow-lg">
+      <div class="card-header bg-transparent border-success"><h5>Brookfield Renewable Partner</h5></div>
+      
+      <div class="card-body overflow-auto">
+        <div class="container-lg">
+          <div class="row border">
+
+              <div class="col-xl-2 col-md-2 col-xxl-2 border">
+                <div class="container-lg border">
+                  <p>Box 1</p>
+                </div>
+              </div>
+            
+              <div class="col-xl-10 col-md-10 col-xxl-10">
+                <div class="container-lg">
+                  <div class="row border">
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border KPI_UL-container">
+                            <ul class="KPIul">
+                              <li class="box-green">Stock Price</li>
+                              <li class="box-red liKPI">52.40</li>
+                            </ul>  
+                        </div>
+                    
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                            <ul class="KPIul">
+                              <li class="box-green">Stock Price</li>
+                              <li class="box-red liKPI">52.40</li>
+                            </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                                <li class="box-green">Stock Price</li>
+                                <li class="box-red liKPI">52.40</li>
+                              </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                            <ul class="KPIul">
+                              <li class="box-green">Stock Price</li>
+                              <li class="box-red liKPI">52.40</li>
+                            </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+
+                        <div class="col-xl-4 col-md-6 col-xxl-3 border">
+                          <ul class="KPIul">
+                            <li class="box-green">Stock Price</li>
+                            <li class="box-red liKPI">52.40</li>
+                          </ul> 
+                        </div>
+                  </div>
+                </div>
+              </div>
+              
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer bg-transparent border-success"></div>
+    </div>
+  </div>
+  --->
+
+
+
+
+  <script src="./signpostPortfolio.js"></script>
+  <script src="./signpostMessage.js"></script>
+  <script src="./signpostNews.js"></script>
+  <script src="./signpostDividends.js"></script>
+  <script src="./signpostCompanyKPI.js"></script>
+
+
+  <script>
+      if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function() {
+              navigator.serviceWorker.register('/PWA_sw.js').then(function(registration) {
+                  // Registration was successful
+                  console.log('ServiceWorker registration successful with scope: ', registration.scope);
+              }, function(err) {
+                  // registration failed :(
+                  console.log('ServiceWorker registration failed: ', err);
+              });
+          });
+      }
+  </script>
+
+  <script>
+
+
+
+
+
+
+$( document ).ready(function() {
+    console.log( "ready!" );
+    
+    renderPortfolio(document.getElementById('webCompPortfolio'),'myPortfolio','idMyPortfolio') ;
+    renderMessage(document.getElementById('webCompMessage'),"我选择上文所示sell put。如果没有行权的话，收益是7.47/（90-7.47）=9.05%，7.47是我收到的权利金，（90-7.47）是我为行权预留的现金。如果换算成年化收益率的话，大概是9.05%*3=27%，这个收益率我是满足的","CNBC news Report, 2023/09/13") ;
+
+    let cSource = "2023/08/27, LA,USA.  CNBC report --1" ;
+    let cTitle = "Brrokfield jumps on $10.20 per share deal to go private" ;
+    let cContent = "Thorne HealthTech (NASDAQ:THRN), a New York-based developer of health and wellness products, added ~29% pre-market Monday after announcing an agreement to be acquired by investment firm L Catterton for $10.20 per share in cash." ;
+      
+    renderNews(document.getElementById('webCompNews'),cSource,cTitle,cContent) ;
+
+    renderDividends(document.getElementById('webCompDividends'),'Centurion.Dividends','tbl_Dividends') ;
+
+    renderCompanyKPI(document.getElementById('webCompCompanyKPI'),null) ;
+    renderCompanyKPI(document.getElementById('webCompCompanyKPI'),null) ;
+
+});
+
+  //refer: https://live.datatables.net/xijecupo/1/edit
+  </script>
+</body>
+</html>
