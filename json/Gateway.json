@@ -1,0 +1,77 @@
+{
+    "meta":{
+        "application":"athena",
+        "version":"1.0.01",
+        "author":"alexszhang@gmail.com",
+        "user":"alexszhang@gmail.com",
+        "timestamp":"Mon Aug 21 2023 21:16:43 GMT+0700 (中南半岛时间)"
+    },
+    "data":{
+        "mustHave":[
+            {
+                "appName":"Googe",
+                "url":"https://www.google.com"
+            },{
+                "appName":"Googe Transalte",
+                "url":"https://www.google.com"
+            },{
+                "appName":"Googe Classroom",
+                "url":"https://classroom.google.com"
+            }
+        ],
+        "Folders":[
+            {
+                "id":"0001",
+                "type":"Gateway.Folder",
+                "title":"个人爱好",
+                "Contents":[
+                    {
+                        "id":"00002",
+                        "type":"Gateway.Bookmark",
+                        "title":"Brookfield",
+                        "url":"https://www.brookfield.com"
+                    },
+                    {
+                        "id":"00003",
+                        "type":"Gateway.Bookmark",
+                        "title":"Brookfield",
+                        "url":"https://www.brookfield.com"
+                    },
+                    {
+                        "id":"00011",
+                        "type":"Gateway.Folder",
+                        "title":"JavaScript",
+                        "Contents":[
+
+                        ]
+                    }
+                ]
+            },
+            {
+                "id":"00004",
+                "type":"Gateway.Bookmark",
+                "title":"BAM",
+                "url":"https://www.google.com"
+            },
+            {
+                "id":"00005",
+                "type":"Gateway.Folder",
+                "title":"个人爱好",
+                "Contents":[
+                    {
+                        "id":"00006",
+                        "type":"Gateway.Bookmark",
+                        "title":"Brookfield",
+                        "url":"https://www.brookfield.com"
+                    },
+                    {
+                        "id":"00007",
+                        "type":"Gateway.Bookmark",
+                        "title":"Brookfield",
+                        "url":"https://www.brookfield.com"
+                    }
+                ]
+            }
+        ]
+    }
+}

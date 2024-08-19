@@ -1,0 +1,40 @@
+html {
+
+        margin: 0;
+        width:100vw;
+        height:100vh;
+        overflow-y: hidden; 
+        overflow-x: hidden;
+    }
+
+    body {
+        /*font-family: 'Montserrat', sans-serif;*/
+        font-family: 'Aref Ruqaa';
+
+        width:100vw;
+        height:100vh;
+        overflow-y: hidden; 
+        overflow-x: hidden; 
+        font-size: 16px;
+        margin: 0;
+    }
+
+    * {
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .larkRoot{
+        width:100vw;
+        height:100vh;
+        overflow-y: hidden; 
+        overflow-x: hidden; 
+        background-color: bisque;
+        padding: 0px;
+        margin: 0px;
+
+       
+    }
