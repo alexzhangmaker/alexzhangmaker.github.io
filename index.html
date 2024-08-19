@@ -22,9 +22,9 @@
 
         .leftPanel{
             width:20% ;
-            height:100% ;
+            height:100vh ;
             overflow-x: hidden;
-            overflow-y: auto;
+            overflow-y: hidden;
 
             display: flex;
             flex-direction: column;
@@ -55,11 +55,18 @@
                     background-color:blue;
                 }
                 */
+                .headerToolBar{
+                    width:100% ;
+                    height:1.5rem ;
+                    flex-grow: 0 ;
+                    background-color:chocolate;
+                }
                 .folderBrowser{
                     width:100% ;
                     flex-grow: 1;
                     background-color: darkgrey;
-
+                    overflow-x: hidden;
+                    overflow-y: auto;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
@@ -67,7 +74,7 @@
                 }
                 .bottomToolBar{
                     width:100% ;
-                    height:20px ;
+                    height:1.5rem ;
                     flex-grow: 0 ;
                     background-color: brown;
                 }
@@ -117,12 +124,7 @@
         </div>
         <div class="rightPanel">
             <style>
-                .headerToolBar{
-                    width:100% ;
-                    height:20px ;
-                    flex-grow: 0 ;
-                    background-color:chocolate;
-                }
+                
                 .mainCanvas{
                     width:100% ;
                     flex-grow: 1 ;
@@ -172,14 +174,51 @@
         function gwRenderFolder(jsonFolder,tagParent){
             let tagBookFolder = document.createElement('details') ;
             tagBookFolder.innerHTML=`
-                    <summary>
-                        <i class="bi-folder2-open"></i>
-                        ${jsonFolder.title}
+                    <style>
+                        .folderSummary{
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: space-between;
+                        }
+                        .folderSummary:hover{
+                            background-color:bisque;
+                        }
+
+                        .folderSummary #idBTNMore{
+                            visibility: hidden;
+                        }
+                        .folderSummary:hover #idBTNMore{
+                            visibility: visible;
+                        }
+
+                        .folderSummary #idFolderCounter{
+                            visibility: visible;
+                            font-size:0.65em ;
+                        }
+                        .folderSummary:hover #idFolderCounter{
+                            visibility: hidden;
+                        }
+
+                    </style>
+                    <summary class="folderSummary">
+                        <span>
+                            <i class="bi-folder2-open"></i>
+                            ${jsonFolder.title}
+                        </span>
+                        <div>
+                            <span id="idFolderCounter">32</span>
+                            <i class="bi-three-dots" id="idBTNMore"></i>   
+                        </div>                
                     </summary>
                     <ul></ul>
             ` ;
             tagParent.appendChild(tagBookFolder) ;
             tagBookFolder.classList.add('folder') ;
+
+            tagBookFolder.querySelector('#idBTNMore').addEventListener('click',(event)=>{
+                event.preventDefault() ;
+                alert('TBD') ;
+            }) ;
 
             for(let i=0;i<jsonFolder.Contents.length;i++){
                 if(jsonFolder.Contents[i].type == 'Gateway.Folder'){

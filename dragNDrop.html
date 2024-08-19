@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gateway.Bookmarks</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+<link rel="stylesheet" href="./css/larkRoot.css">
+<link rel="stylesheet" href="./css/contextMenu.css">
+
+<style>
+    [draggable] {
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        /* Required to make elements draggable in old WebKit */
+        -khtml-user-drag: element;
+        -webkit-user-drag: element;
+    }
+
+    .larkDroppable {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .larkDraggable {
+        margin: 5px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        cursor: grab;
+        transition: border-top 0.2s;
+    }
+
+    .larkDraggable:active {
+        cursor: grabbing;
+    }
+
+</style>
+
+</head>
+
+<body>
+    <ul id="draggable-list" class="larkDroppable">
+        <li draggable="true" class="larkDraggable">Item 1</li>
+        <li draggable="true" class="larkDraggable">item2</li>
+        <li draggable="true" class="larkDraggable">Item 3</li>
+        <li draggable="true" class="larkDraggable">Item 4</li>
+    </ul>
+    <div id="idConsole"></div>
+    <ul class="larkDroppable">
+        <li draggable="true">Item 3.1</li>
+        <li draggable="true"  class="larkDraggable">Item 4.1</li>
+        <li draggable="true">Item 5.1</li>
+        <li draggable="true" class="larkDraggable">Item 6.1</li> 
+        <li draggable="true">Item 7.1</li>
+        <li  draggable="true"  class="larkDraggable">
+            dddd
+            <ul id="draggable-list-2">
+                <li>Item --1</li>
+                <li draggable="true">item --2</li>
+                <li draggable="true" class="larkDraggable">Item --3</li>
+                <li draggable="true">Item --4</li>
+            </ul>
+        </li>
+        <li draggable="true">Item 8.1</li>
+
+    </ul>
+
+<script>
+    function logIt(text){
+        document.querySelector('#idConsole').innerText = text ;
+    }
+
+    // Select the list and all list items
+    const items = document.querySelectorAll('.larkDraggable');
+
+    let draggedItem = null;
+
+    logIt(`#:${items.length}`) ;
+    for(let i=0;i<items.length;i++){
+        let item = items[i] ;
+        item.addEventListener('dragstart', function(event) {
+            draggedItem = event.target;
+            setTimeout(() => {
+                event.target.style.display = 'none';
+            }, 0);
+        });
+
+        // When dragging over other items
+        item.addEventListener('dragover', function(e) {
+            e.preventDefault(); // Prevent default to allow drop
+        });
+
+        // When the dragging enters a new list item
+        item.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+            item.style.borderTop = '2px solid #3498db';
+        });
+
+        // When dragging leaves a list item
+        item.addEventListener('dragleave', function() {
+            item.style.borderTop = '';
+        });
+
+        // When the item is dropped
+        item.addEventListener('drop', function(event) {
+            //let ddItem = event.target ;
+            event.target.style.borderTop = '';
+            if (draggedItem !== this) {
+                //list.insertBefore(draggedItem, this);
+                let parentNode = event.target.parentNode ;
+                if(parentNode.classList.contains('larkDroppable')){
+                    parentNode.insertBefore(draggedItem, this);
+                    draggedItem.style.display = 'block';
+                }
+                
+            }
+        });
+
+        // When the drag ends
+        item.addEventListener('dragend', function() {
+            setTimeout(() => {
+                draggedItem.style.display = 'block';
+                draggedItem = null;
+            }, 0);
+        });
+    }
+
+</script>
+</body>
+</html>

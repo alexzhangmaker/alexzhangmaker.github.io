@@ -79,6 +79,18 @@ let jsonGateway = {
 
                 "title": "ePUBKit",
                 "url": "https://epubkit.app/zh/"
+             },
+             {
+                "id": "2514831755550233",
+                "type":"Gateway.Bookmark",
+                "title": "todo",
+                "url": "http://124.156.193.78:8080/app_todo.html"
+             },
+             {
+                "id": "2514831755550233",
+                "type":"Gateway.Bookmark",
+                "title": "我的图书馆",
+                "url": "https://falconcnx.online:8082/larkCollectionsV2.html"
              }
         ],
         "Folders":[
@@ -1562,52 +1574,6 @@ let jsonGateway = {
             },{
                 "id":"0001",
                 "type":"Gateway.Folder",
-                "title":"雪球媒体频道",
-                "Contents":[
-                    {
-                        "id": "bookmark001",
-                        "title": "莉莉安78的专栏",
-                        "url": "https://xueqiu.com/7178218145/column"
-                     },
-                     {
-                        "id": "bookmark002",
-                        "title": "HenryX1e的专栏",
-                        "url": "https://xueqiu.com/2952477688/column"
-                     },
-                     {
-                        "id": "bookmark003",
-                        "title": "肖恩的专栏",
-                        "url": "https://xueqiu.com/8950748023/column"
-                     },
-                     {
-                        "id": "bookmark004",
-                        "title": "会聊股票的球球",
-                        "url": "https://xueqiu.com/1675038558/column"
-                     },
-                     {
-                        "id": "bookmark005",
-                        "title": "六亿居士的专栏",
-                        "url": "https://xueqiu.com/9391624441/column"
-                     },
-                     {
-                        "id": "bookmark006",
-                        "title": "东先生的专栏",
-                        "url": "https://xueqiu.com/3552430478/column"
-                     },
-                     {
-                        "id": "bookmark007",
-                        "title": "大铲Dachan的专栏",
-                        "url": "https://xueqiu.com/4429312974/column"
-                     },
-                     {
-                        "id": "bookmark008",
-                        "title": "明大教主的专栏",
-                        "url": "https://xueqiu.com/8959134488/column"
-                     }
-                ]
-            },{
-                "id":"0001",
-                "type":"Gateway.Folder",
                 "title":"SeekingAlpha频道",
                 "Contents":[
                     {
@@ -1866,63 +1832,8 @@ let jsonGateway = {
                         "url": "https://seekingalpha.com/symbol/NEP"
                      }
                 ]
-            },{
-                "id":"0001",
-                "type":"Gateway.Folder",
-                "title":"保险与另类投资",
-                "Contents":[
-                    {
-                        "id": "bookmark001",
-                        "title": "BN.SA",
-                        "url": "https://seekingalpha.com/symbol/BN"
-                     },
-                     {
-                        "id": "bookmark002",
-                        "title": "BAM.SA",
-                        "url": "https://seekingalpha.com/symbol/BAM"
-                     },
-                     {
-                        "id": "bookmark003",
-                        "title": "BX.SA",
-                        "url": "https://seekingalpha.com/symbol/BX"
-                     },
-                     {
-                        "id": "bookmark004",
-                        "title": "UNH.SA",
-                        "url": "https://seekingalpha.com/symbol/UNH"
-                     },
-                     {
-                        "id": "bookmark005",
-                        "title": "ARES.SA",
-                        "url": "https://seekingalpha.com/symbol/ARES"
-                     },
-                     {
-                        "id": "bookmark006",
-                        "title": "MKL.SA",
-                        "url": "https://seekingalpha.com/symbol/MKL"
-                     },
-                     {
-                        "id": "bookmark007",
-                        "title": "中国平安.XQ",
-                        "url": "https://xueqiu.com/S/SH601318"
-                     },
-                     {
-                        "id": "bookmark008",
-                        "title": "中国太保.XQ",
-                        "url": "https://xueqiu.com/S/02601"
-                     },
-                     {
-                        "id": "bookmark009",
-                        "title": "中国太平.XQ",
-                        "url": "https://xueqiu.com/S/00966"
-                     },
-                     {
-                        "id": "bookmark0010",
-                        "title": "3in.fool",
-                        "url": "https://www.fool.co.uk/tickers/lse-3in/"
-                     }
-                ]
-            },{
+            },
+            {
                 "id":"0001",
                 "type":"Gateway.Folder",
                 "title":"指数基金",
@@ -2078,7 +1989,43 @@ let jsonGateway = {
                         "id": "3600614578296613",
                         "title": "ARE",
                         "url": "https://seekingalpha.com/symbol/ARE"
-                     }
+                     },{
+                        "id":"0001",
+                        "type":"Gateway.Folder",
+                        "title":"科技行业",
+                        "Contents":[
+                            {
+                                "id": "bookmark001",
+                                "title": "Google.SA",
+                                "url": "https://seekingalpha.com/symbol/GOOG"
+                             },
+                             {
+                                "id": "bookmark002",
+                                "title": "Facebook.SA",
+                                "url": "https://seekingalpha.com/symbol/META"
+                             },
+                             {
+                                "id": "bookmark003",
+                                "title": "Oracle.SA",
+                                "url": "https://seekingalpha.com/symbol/ORC"
+                             },
+                             {
+                                "id": "bookmark004",
+                                "title": "MU.SA",
+                                "url": "https://seekingalpha.com/symbol/MU"
+                             },
+                             {
+                                "id": "bookmark005",
+                                "title": "Tencent.XQ",
+                                "url": "https://xueqiu.com/S/00388"
+                             },
+                             {
+                                "id": "bookmark006",
+                                "title": "alibaba.XQ",
+                                "url": "https://xueqiu.com/S/09988"
+                             }
+                        ]
+                    }
                 ]
             },{
                 "id":"0001",
@@ -2098,8 +2045,113 @@ let jsonGateway = {
             },{
                 "id":"0001",
                 "type":"Gateway.Folder",
-                "title":"Tutoring Apps",
-                "Contents":[]
+                "title":"财务管理",
+                "Contents":[
+                    {
+                        "id":"0001",
+                        "type":"Gateway.Folder",
+                        "title":"雪球媒体频道",
+                        "Contents":[
+                            {
+                                "id": "bookmark001",
+                                "title": "莉莉安78的专栏",
+                                "url": "https://xueqiu.com/7178218145/column"
+                             },
+                             {
+                                "id": "bookmark002",
+                                "title": "HenryX1e的专栏",
+                                "url": "https://xueqiu.com/2952477688/column"
+                             },
+                             {
+                                "id": "bookmark003",
+                                "title": "肖恩的专栏",
+                                "url": "https://xueqiu.com/8950748023/column"
+                             },
+                             {
+                                "id": "bookmark004",
+                                "title": "会聊股票的球球",
+                                "url": "https://xueqiu.com/1675038558/column"
+                             },
+                             {
+                                "id": "bookmark005",
+                                "title": "六亿居士的专栏",
+                                "url": "https://xueqiu.com/9391624441/column"
+                             },
+                             {
+                                "id": "bookmark006",
+                                "title": "东先生的专栏",
+                                "url": "https://xueqiu.com/3552430478/column"
+                             },
+                             {
+                                "id": "bookmark007",
+                                "title": "大铲Dachan的专栏",
+                                "url": "https://xueqiu.com/4429312974/column"
+                             },
+                             {
+                                "id": "bookmark008",
+                                "title": "明大教主的专栏",
+                                "url": "https://xueqiu.com/8959134488/column"
+                             }
+                        ]
+                    },
+                    {
+                        "id":"0001",
+                        "type":"Gateway.Folder",
+                        "title":"保险与另类投资",
+                        "Contents":[
+                            {
+                                "id": "bookmark001",
+                                "title": "BN.SA",
+                                "url": "https://seekingalpha.com/symbol/BN"
+                             },
+                             {
+                                "id": "bookmark002",
+                                "title": "BAM.SA",
+                                "url": "https://seekingalpha.com/symbol/BAM"
+                             },
+                             {
+                                "id": "bookmark003",
+                                "title": "BX.SA",
+                                "url": "https://seekingalpha.com/symbol/BX"
+                             },
+                             {
+                                "id": "bookmark004",
+                                "title": "UNH.SA",
+                                "url": "https://seekingalpha.com/symbol/UNH"
+                             },
+                             {
+                                "id": "bookmark005",
+                                "title": "ARES.SA",
+                                "url": "https://seekingalpha.com/symbol/ARES"
+                             },
+                             {
+                                "id": "bookmark006",
+                                "title": "MKL.SA",
+                                "url": "https://seekingalpha.com/symbol/MKL"
+                             },
+                             {
+                                "id": "bookmark007",
+                                "title": "中国平安.XQ",
+                                "url": "https://xueqiu.com/S/SH601318"
+                             },
+                             {
+                                "id": "bookmark008",
+                                "title": "中国太保.XQ",
+                                "url": "https://xueqiu.com/S/02601"
+                             },
+                             {
+                                "id": "bookmark009",
+                                "title": "中国太平.XQ",
+                                "url": "https://xueqiu.com/S/00966"
+                             },
+                             {
+                                "id": "bookmark0010",
+                                "title": "3in.fool",
+                                "url": "https://www.fool.co.uk/tickers/lse-3in/"
+                             }
+                        ]
+                    }
+                ]
             },{
                 "id":"0001",
                 "type":"Gateway.Folder",
