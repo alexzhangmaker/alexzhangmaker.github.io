@@ -21,21 +21,23 @@
 
     .larkDroppable {
         list-style-type: none;
-        padding: 0;
+        /*padding: 0;*/
     }
 
     .larkDraggable {
-        margin: 5px;
+        /*margin: 5px;
         padding: 10px;
         background-color: #f0f0f0;
         border: 1px solid #ccc;
-        cursor: grab;
+        cursor: grab;*/
         transition: border-top 0.2s;
     }
 
+    /*
     .larkDraggable:active {
         cursor: grabbing;
     }
+    */
 
 </style>
 
@@ -73,60 +75,72 @@
         document.querySelector('#idConsole').innerText = text ;
     }
 
-    // Select the list and all list items
-    const items = document.querySelectorAll('.larkDraggable');
+    let globalDraggedItem = null;
 
-    let draggedItem = null;
+    enbaleDragNDrop('.larkDraggable') ;
 
-    logIt(`#:${items.length}`) ;
-    for(let i=0;i<items.length;i++){
-        let item = items[i] ;
-        item.addEventListener('dragstart', function(event) {
-            draggedItem = event.target;
-            setTimeout(() => {
-                event.target.style.display = 'none';
-            }, 0);
-        });
+    function enbaleDragNDrop(cssContainer){
+        // Select the list and all list items
+        const items = document.querySelectorAll(cssContainer);
 
-        // When dragging over other items
-        item.addEventListener('dragover', function(e) {
-            e.preventDefault(); // Prevent default to allow drop
-        });
 
-        // When the dragging enters a new list item
-        item.addEventListener('dragenter', function(e) {
-            e.preventDefault();
-            item.style.borderTop = '2px solid #3498db';
-        });
+        logIt(`#:${items.length}`) ;
+        for(let i=0;i<items.length;i++){
+            let item = items[i] ;
+            item.addEventListener('dragstart', function(event) {
+                globalDraggedItem = event.target;
+                setTimeout(() => {
+                    event.target.style.display = 'none';
+                }, 0);
+            });
 
-        // When dragging leaves a list item
-        item.addEventListener('dragleave', function() {
-            item.style.borderTop = '';
-        });
+            // When dragging over other items
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault(); // Prevent default to allow drop
+            });
 
-        // When the item is dropped
-        item.addEventListener('drop', function(event) {
-            //let ddItem = event.target ;
-            event.target.style.borderTop = '';
-            if (draggedItem !== this) {
-                //list.insertBefore(draggedItem, this);
-                let parentNode = event.target.parentNode ;
-                if(parentNode.classList.contains('larkDroppable')){
-                    parentNode.insertBefore(draggedItem, this);
-                    draggedItem.style.display = 'block';
+            // When the dragging enters a new list item
+            item.addEventListener('dragenter', function(e) {
+                e.preventDefault();
+                item.style.borderTop = '2px solid #3498db';
+            });
+
+            // When dragging leaves a list item
+            item.addEventListener('dragleave', function() {
+                item.style.borderTop = '';
+            });
+
+            // When the item is dropped
+            item.addEventListener('drop', function(event) {
+                //let ddItem = event.target ;
+                event.target.style.borderTop = '';
+                if(globalDraggedItem==null){
+                    console.log('null globalDraggedItem');
+                    return ;
                 }
-                
-            }
-        });
+                if (globalDraggedItem !== this) {
+                    //list.insertBefore(globalDraggedItem, this);
+                    let parentNode = event.target.parentNode ;
+                    if(parentNode.classList.contains('larkDroppable')){
+                        parentNode.insertBefore(globalDraggedItem, this);
+                        globalDraggedItem.style.display = 'block';
+                        globalDraggedItem = null ;
+                    }
+                    
+                }
+            });
 
-        // When the drag ends
-        item.addEventListener('dragend', function() {
-            setTimeout(() => {
-                draggedItem.style.display = 'block';
-                draggedItem = null;
-            }, 0);
-        });
+            // When the drag ends
+            item.addEventListener('dragend', function() {
+                setTimeout(() => {
+                    globalDraggedItem.style.display = 'block';
+                    globalDraggedItem = null;
+                }, 0);
+            });
+        }
     }
+
+    
 
 </script>
 </body>

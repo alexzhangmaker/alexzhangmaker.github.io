@@ -43,6 +43,11 @@
             justify-content: space-between;
             align-items:flex-start;
         }
+
+        .larkSelected{
+            background-color: black;
+            color: azure;
+        }
     </style>
     <div class="larkRoot flexBox_h">
         <div class="leftPanel">
@@ -59,27 +64,64 @@
                     width:100% ;
                     height:1.5rem ;
                     flex-grow: 0 ;
-                    background-color:chocolate;
+                    /*background-color:chocolate;*/
+
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    font-size: 1.2em;
+                    padding-left: 10px;
+                    padding-right: 10px;
+
                 }
                 .folderBrowser{
                     width:100% ;
                     flex-grow: 1;
-                    background-color: darkgrey;
+                    background-color: rgb(243, 232, 232);
                     overflow-x: hidden;
-                    overflow-y: auto;
+                    overflow-y: hidden;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
                     align-items: center;
+
+                    padding-left: 10px;
+                    padding-right: 10px;
                 }
                 .bottomToolBar{
                     width:100% ;
-                    height:1.5rem ;
+                    height:2rem ;
                     flex-grow: 0 ;
-                    background-color: brown;
+                    /*background-color: brown;*/
+                    font-size: 1.2em;
+
+                    display: flex;
+                    flex-direction: row;
+                    justify-content:center;
+                    align-items:center;
+                    align-content: center;
+
+                }
+
+                .larkBTN{
+                    font-size: 24px;
+                }
+
+                .larkBTN:hover{
+                    cursor: pointer;
                 }
             </style>
-            <div class="headerToolBar"></div>
+            <div class="headerToolBar">
+                <div>
+                    <i class="bi-person-circle"></i>
+                    <span>alexszhang@gmail.com</span>
+                </div>
+                <div>
+                    <i class="bi-plus larkBTN"></i>
+                </div>
+            </div>
             <div class="folderBrowser">
                 <style>
                     .mustHave{
@@ -87,19 +129,23 @@
                         width:100% ;
                         height:200px;
                         flex-grow: 0;
-                        overflow-y: auto;
+                        overflow-y: hidden;
                         overflow-x: hidden;
                     }
                     .Folders{
-                        background-color:cadetblue;
+                        background-color:rgb(209, 207, 217);
                         width:100% ;
-                        flex-grow: 1;
+                        flex-grow: 0;
                         overflow-y: auto;
                         overflow-x: hidden;
                     }
 
                     .bookmark:hover{
                         cursor:pointer ;
+                    }
+
+                    .Folders details{
+                        width:100% ;
                     }
 
                     .folder:hover{
@@ -120,7 +166,9 @@
                 <div class="mustHave"></div>
                 <div class="Folders"></div>
             </div>
-            <div class="bottomToolBar"></div>
+            <div class="bottomToolBar">
+                <i class="bi-gear-wide-connected"></i>
+            </div>
         </div>
         <div class="rightPanel">
             <style>
@@ -131,7 +179,14 @@
                     background-color:bisque;
                 }
             </style>
-            <div class="headerToolBar">right panel toolbar</div>
+            <div class="headerToolBar">
+                <div>
+                    <i class="bi-list"></i>
+                </div>
+                <div>
+                    <i class="bi-plus-lg"></i>
+                </div>
+            </div>
             <div class="mainCanvas">main canvas</div>
         </div>
     </div>
@@ -163,11 +218,25 @@
             ` ;
             tagParent.appendChild(tagBookMark) ;
             tagBookMark.classList.add('bookmark') ;
+
+            tagBookMark.classList.add('larkDraggable') ;
+            tagBookMark.setAttribute('draggable', true);
+
             //bookmark
             tagBookMark.dataset.url = jsonBookmark.url ;
             tagBookMark.addEventListener('click',(event)=>{
-                let url = event.target.closest('li').dataset.url ;
-                window.open(url, '_blank').focus();
+                let tagBookMark = event.target.closest('li') ;
+                let url = tagBookMark.dataset.url ;
+                let tagCurSelected = document.querySelector('.larkSelected') ;
+                if(tagCurSelected!=null){
+                    if(tagCurSelected!= tagBookMark){
+                        tagCurSelected.classList.remove('larkSelected') ;
+                    }
+                }
+                tagBookMark.classList.add('larkSelected') ;
+                if(tagCurSelected!=tagBookMark){
+                    window.open(url, '_blank').focus();
+                }
             }) ;
         }
 
@@ -214,6 +283,22 @@
             ` ;
             tagParent.appendChild(tagBookFolder) ;
             tagBookFolder.classList.add('folder') ;
+            tagBookFolder.querySelector('ul').classList.add('larkDroppable');
+
+
+            tagBookFolder.addEventListener('click',(event)=>{
+
+                let tagBookFolder = event.target.closest('details') ;
+                let tagCurSelected = document.querySelector('.larkSelected') ;
+                if(tagCurSelected!=null){
+                    if(tagCurSelected!= tagBookFolder){
+                        tagCurSelected.classList.remove('larkSelected') ;
+                    }
+                }
+                tagBookFolder.classList.add('larkSelected') ;
+
+
+            }) ;
 
             tagBookFolder.querySelector('#idBTNMore').addEventListener('click',(event)=>{
                 event.preventDefault() ;
@@ -257,6 +342,70 @@
         }
 
         gwRenderDesktop(jsonGateway,'.folderBrowser') ;
+    </script>
+    <script>
+        let globalDraggedItem = null;
+
+        enbaleDragNDrop('.larkDraggable') ;
+
+        function enbaleDragNDrop(cssContainer){
+            // Select the list and all list items
+            const items = document.querySelectorAll(cssContainer);
+
+            for(let i=0;i<items.length;i++){
+                let item = items[i] ;
+                item.addEventListener('dragstart', function(event) {
+                    globalDraggedItem = event.target;
+                    setTimeout(() => {
+                        event.target.style.display = 'none';
+                    }, 0);
+                });
+
+                // When dragging over other items
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault(); // Prevent default to allow drop
+                });
+
+                // When the dragging enters a new list item
+                item.addEventListener('dragenter', function(e) {
+                    e.preventDefault();
+                    item.style.borderTop = '2px solid #3498db';
+                });
+
+                // When dragging leaves a list item
+                item.addEventListener('dragleave', function() {
+                    item.style.borderTop = '';
+                });
+
+                // When the item is dropped
+                item.addEventListener('drop', function(event) {
+                    //let ddItem = event.target ;
+                    event.target.style.borderTop = '';
+                    if(globalDraggedItem==null){
+                        console.log('null globalDraggedItem');
+                        return ;
+                    }
+                    if (globalDraggedItem !== this) {
+                        //list.insertBefore(globalDraggedItem, this);
+                        let parentNode = event.target.parentNode ;
+                        if(parentNode.classList.contains('larkDroppable')){
+                            parentNode.insertBefore(globalDraggedItem, this);
+                            //globalDraggedItem.style.display = 'block';
+                            //globalDraggedItem = null ;
+                        }
+                        
+                    }
+                });
+
+                // When the drag ends
+                item.addEventListener('dragend', function() {
+                    setTimeout(() => {
+                        globalDraggedItem.style.display = 'block';
+                        globalDraggedItem = null;
+                    }, 0);
+                });
+            }
+        }
     </script>
 </body>
 </html>
