@@ -23,6 +23,7 @@
         .leftPanel{
             width:20% ;
             height:100vh ;
+            flex-grow: 0;
             overflow-x: hidden;
             overflow-y: hidden;
 
@@ -35,6 +36,7 @@
         .rightPanel{
             width:80% ;
             height:100% ;
+            flex-grow: 1;
             overflow-x: hidden;
             overflow-y: auto;
 
@@ -115,11 +117,11 @@
             </style>
             <div class="headerToolBar">
                 <div>
-                    <i class="bi-person-circle"></i>
+                    <i class="bi-person-circle larkBTN" id="idBTNPersonal"></i>
                     <span>alexszhang@gmail.com</span>
                 </div>
                 <div>
-                    <i class="bi-plus larkBTN"></i>
+                    <i class="bi-plus larkBTN" id="idBTNPlusFolder"></i>
                 </div>
             </div>
             <div class="folderBrowser">
@@ -167,7 +169,7 @@
                 <div class="Folders"></div>
             </div>
             <div class="bottomToolBar">
-                <i class="bi-gear-wide-connected"></i>
+                <i class="bi-gear-wide-connected larkBTN" id="idBTNSetting"></i>
             </div>
         </div>
         <div class="rightPanel">
@@ -178,22 +180,34 @@
                     flex-grow: 1 ;
                     background-color:bisque;
                 }
+
+                .mainFootBar{
+                    width:100% ;
+                    height:2rem ;
+                    flex-grow: 0 ;
+                    background-color: cadetblue;
+                    font-size: 1.2em;
+                }
             </style>
             <div class="headerToolBar">
                 <div>
-                    <i class="bi-list"></i>
+                    <i class="bi-list larkBTN" id="idBTNToggleLeftPannel"></i>
                 </div>
                 <div>
-                    <i class="bi-plus-lg"></i>
+                    <i class="bi-plus larkBTN" id="idBTNPlusContent"></i>
                 </div>
             </div>
-            <div class="mainCanvas">main canvas</div>
+            <div class="mainCanvas">
+                <h2>main canvas</h2>
+                <div class="container">
+                    <h1 style="text-align: center;padding: 12px;">自定义右键菜单，请右键查看菜单效果</h1>
+                     <!-- 填充内容 -->
+                </div>
+            </div>
+            <div class="mainFootBar">footbar</div>
         </div>
     </div>
-    <div class="container">
-        <h1 style="text-align: center;padding: 12px;">自定义右键菜单，请右键查看菜单效果</h1>
-         <!-- 填充内容 -->
-    </div>
+    
     <script src="./js/larkContextMenu.js"></script>
     <script src="./js/ContextMenuData.js"></script>
     <script src="./js/jsonGateway.js"></script>
@@ -209,6 +223,31 @@
     </script>
 
     <script>
+        document.querySelector('#idBTNToggleLeftPannel').addEventListener('click',(event)=>{
+            let tagLeftPanel = document.querySelector('.leftPanel') ;
+            //tagLeftPanel.classList.toggle('noShow') ;
+            if(tagLeftPanel.classList.contains('noShow')){
+                tagLeftPanel.classList.remove('noShow') ;
+            }else{
+                tagLeftPanel.classList.add('noShow') ;
+            }
+        }) ;
+
+        document.querySelector('#idBTNPlusFolder').addEventListener('click',(event)=>{
+            alert('idBTNPlusFolder TBD') ;
+        }) ;
+
+        document.querySelector('#idBTNPersonal').addEventListener('click',(event)=>{
+            alert('idBTNPersonal TBD') ;
+        }) ;
+
+        document.querySelector('#idBTNSetting').addEventListener('click',(event)=>{
+            alert('idBTNSetting TBD') ;
+        }) ;
+        
+        document.querySelector('#idBTNPlusContent').addEventListener('click',(event)=>{
+            alert('idBTNPlusContent TBD') ;
+        }) ;
 
         function gwRenderBookmark(jsonBookmark,tagParent){
             let tagBookMark = document.createElement('li') ;
