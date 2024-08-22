@@ -69,14 +69,12 @@ let jsonGateway = {
              {
                 "id": "3259595408911759",
                 "type":"Gateway.Bookmark",
-
                 "title": "VISA.CMU",
                 "url": "https://ird.cmu.ac.th/visa-online/main/index.php"
              },
              {
                 "id": "2514831755550233",
                 "type":"Gateway.Bookmark",
-
                 "title": "ePUBKit",
                 "url": "https://epubkit.app/zh/"
              },
@@ -112,11 +110,24 @@ let jsonGateway = {
                         "url":"https://www.brookfield.com"
                     },
                     {
-                        "id":"00011",
+                        "id":"0000000011",
                         "type":"Gateway.Folder",
                         "title":"JavaScript",
                         "Contents":[
-
+                           {
+                              "id": "bookmark002",
+                              "type":"Gateway.Bookmark",
+      
+                              "title": "Quizlet",
+                              "url": "https://quizlet.com/alexszhang/folders/ucis-g10-history/sets"
+                           },
+                           {
+                              "id": "bookmark004",
+                              "type":"Gateway.Bookmark",
+      
+                              "title": "commonlit",
+                              "url": "https://www.commonlit.org/en"
+                           }
                         ]
                     },
                     {
@@ -213,7 +224,7 @@ let jsonGateway = {
                 ]
             },
             {
-                "id":"0001",
+                "id":"0002",
                 "type":"Gateway.Folder",
                 "title":"Lifelong Learning",
                 "Contents":[
@@ -297,7 +308,7 @@ let jsonGateway = {
                 ]
             },
             {
-                "id":"0001",
+                "id":"0003",
                 "type":"Gateway.Folder",
                 "title":"Centurion",
                 "Contents":[
@@ -374,7 +385,7 @@ let jsonGateway = {
                 ]
             },
             {
-                "id":"0001",
+                "id":"0004",
                 "type":"Gateway.Folder",
                 "title":"awesome",
                 "Contents":[
@@ -416,7 +427,7 @@ let jsonGateway = {
                 ]
             },
             {
-                "id":"0001",
+                "id":"0005",
                 "type":"Gateway.Folder",
                 "title":"signpost.Apps",
                 "Contents":[
@@ -443,7 +454,7 @@ let jsonGateway = {
                      }
                 ]
             },{
-                "id":"0001",
+                "id":"0006",
                 "type":"Gateway.Folder",
                 "title":"Web.info",
                 "Contents":[
@@ -526,7 +537,7 @@ let jsonGateway = {
                      }
                 ]
             },{
-                "id":"0001",
+                "id":"0007",
                 "type":"Gateway.Folder",
                 "title":"Cloud.Console",
                 "Contents":[
@@ -602,7 +613,7 @@ let jsonGateway = {
                      }
                 ]
             },{
-                "id":"0001",
+                "id":"0008",
                 "type":"Gateway.Folder",
                 "title":"Ext.Chrome",
                 "Contents":[
@@ -653,7 +664,7 @@ let jsonGateway = {
                      }
                 ]
             },{
-                "id":"0001",
+                "id":"0009",
                 "type":"Gateway.Folder",
                 "title":"node.js",
                 "Contents":[
@@ -804,7 +815,7 @@ let jsonGateway = {
                      }
                 ]
             },{
-                "id":"0001",
+                "id":"00010",
                 "type":"Gateway.Folder",
                 "title":"Flutter",
                 "Contents":[

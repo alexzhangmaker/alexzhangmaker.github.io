@@ -34,3 +34,14 @@ let jsonMenu = [
                 ] 
             },
         ] ;
+
+/*
+const contextMenus = new ContextMenus({
+    className: '.container', 
+    menu:jsonMenu
+}) ;
+console.log(contextMenus);
+contextMenus.on((item, evt) => {
+    console.log(item, evt);
+}) ;
+*/
