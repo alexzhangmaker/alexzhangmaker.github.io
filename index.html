@@ -134,6 +134,7 @@
         width:100% ;
         height:200px;
         flex-grow: 0;
+        flex-shrink: 0;
         overflow-y: auto;
         overflow-x: hidden;
     }
@@ -244,6 +245,22 @@
         visibility: visible;
     }
 
+    .folderSummary #idBTNEdit{
+        visibility: hidden;
+    }
+    .folderSummary:hover #idBTNEdit{
+        visibility: visible;
+    }
+
+    .folderSummary #idBTNDelete{
+        visibility: hidden;
+    }
+    .folderSummary:hover #idBTNDelete{
+        visibility: visible;
+    }
+    
+    
+
     .folderSummary #idFolderCounter{
         visibility: visible;
         font-size:0.65em ;
@@ -267,7 +284,7 @@
     }
 
     .boxToolbar{
-        width:20% ;
+        width:25% ;
     }
 
     .toolVisibilty{

@@ -121,7 +121,6 @@ function renderBookMark(jsonBookMark){
 
             <div class="boxBookmarkMeta">
                 <span>${jsonBookMark.title}</span>
-                <div>Brookfield homepage ....</div>
                 <div>${jsonBookMark.url}</div>
             </div>
             <div class="boxToolbar toolVisibilty">
@@ -155,7 +154,6 @@ function renderBookMark(jsonBookMark){
     tagBookMark.querySelector('.bi-pencil-square').addEventListener('click',(event)=>{
         alert('bi-pencil-square')
         event.preventDefault() ;
-
     }) ;
 
     
@@ -197,6 +195,7 @@ function renderFolderContents(jsonFolder){
     }
 }
 
+
 function gwRenderFolder(jsonFolder,tagParent){
     let tagBookFolder = document.createElement('details') ;
     tagBookFolder.innerHTML=`
@@ -205,9 +204,12 @@ function gwRenderFolder(jsonFolder,tagParent){
                     <i class="bi-folder2-open"></i>
                     ${jsonFolder.title}
                 </span>
-                <div>
-                    <span id="idFolderCounter">32</span>
+                <div  class="boxToolbar toolVisibilty">
+                    <i class="bi-trash-fill" id="idBTNDelete"></i>
+                    <i class="bi-pencil-square" id="idBTNEdit"></i>
                     <i class="bi-three-dots" id="idBTNMore"></i>   
+                    <span id="idFolderCounter">32</span>
+
                 </div>
             </summary>
             <ul></ul>
@@ -253,6 +255,22 @@ function gwRenderFolder(jsonFolder,tagParent){
     tagBookFolder.querySelector('#idBTNMore').addEventListener('click',(event)=>{
         event.preventDefault() ;
         alert('TBD') ;
+    }) ;
+
+    
+    tagBookFolder.querySelector('#idBTNDelete').addEventListener('click',(event)=>{
+        
+        event.preventDefault() ;
+        //alert('TBD') ;
+        let tagBookFolder = null ;
+        if(event.target.tagName == 'DETAILS'){
+            tagBookFolder = event.target ;
+        }else{
+            tagBookFolder = event.target.closest('details') ;
+        }
+
+        tagBookFolder.remove() ;
+
     }) ;
 
     tagBookFolder.addEventListener('dragstart', function(event) {
@@ -314,7 +332,6 @@ function gwRenderFolder(jsonFolder,tagParent){
                 moveBookmark(jsonGateway,bookmarkID,folderID) ;
                 globalDraggedItem.remove() ;
             }
-            
         }
         /*
         if(event.target.classList.contains('larkDroppable')){
