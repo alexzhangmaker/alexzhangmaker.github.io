@@ -1,0 +1,77 @@
+
+
+.boxBookmark{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    width:80% ;
+}
+
+.boxBookmarkMeta{
+    width:80% ;
+}
+
+.boxToolbar{
+    width:25% ;
+}
+
+.toolVisibilty{
+    visibility: hidden;
+}
+
+.boxBookmark:hover{
+    cursor: pointer;
+}
+
+.boxBookmark:hover .toolVisibilty{
+    visibility:visible;
+}
+
+
+
+.mainFootBar{
+    width:100% ;
+    height:2rem ;
+    flex-grow: 0 ;
+    background-color: cadetblue;
+    font-size: 1.2em;
+}
+
+.larkAppTile{
+    width:25% ;
+    height:200px ;
+    display: flex;
+    flex-direction: column;
+}
+
+#idSchedulePanel{
+    width:50% ;
+    display: flex;
+    flex-direction: column;
+    height:100% ;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#idCalendar{
+    width:100% ;
+    flex-grow: 0;
+}
+
+
+
+
+#idCalendar .fc-toolbar-title{
+    font-size: 1.2em;
+}
+
+#idTODO{
+    width:100% ;
+    flex-grow: 0;
+}
+
+#idtodo_txt{
+    font-size: 0.95em;
+    width: calc(100% - 24px) ;
+}
