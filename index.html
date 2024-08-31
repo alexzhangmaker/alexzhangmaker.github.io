@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="./css/larkFW.css">
 <link rel="stylesheet" href="./css/larkCanvas.css">
 <link rel="stylesheet" href="./css/larkUtility.css">
+<link rel="stylesheet" href="./css/larkDialog.css">
+
 
 
 <link rel="stylesheet" href="./css/contextMenu.css">
@@ -83,16 +85,96 @@
         </div>
     </div>
     
+    <div>
+        <style>
+            .larkDlg{
+                width:100% ;
+                height:100% ;
+                padding-left: 10px;
+                padding-right: 10px;                    
+                display: flex;
+                flex-direction: column;
+            }
+
+            .larkDlgHeader{
+                display: flex;
+                flex-direction: row;
+                height:48px ;
+                align-items: center;
+                justify-content: flex-start;
+                
+
+                flex-grow: 0;
+                flex-shrink: 0;
+            }
+            .larkDlgTitle{
+                font-size: 1.5em;
+                font-weight: 600;
+
+                flex-grow: 1;
+            }
+
+            .larkDlgHeaderBar{
+                flex-grow: 0;
+
+            }
+
+            .larkDlgBody{
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+            }
+
+
+            .larkDlgFooter{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-end;
+                gap:20px;
+
+                height:48px ;
+
+                flex-grow: 0;
+                flex-shrink: 0;
+            }
+
+            .larkDlgFooter button{
+                height:1.5em ;
+                background-color: white;
+            }
+        </style>
+        <dialog id="idDlgWorkbench">
+            
+            <div class="larkDlg">
+                <div class="larkDlgHeader">
+                    <div class="larkDlgTitle">Title goes here</div>
+                    <div class="larkDlgHeaderBar">
+                        <i class="bi-x-square larkBTN"></i>
+                    </div>
+                </div>
+                <div class="larkDlgBody">
+                    <input type="text" id="idBMTitle" name="lname" style="width:100%;height:1.2em;">
+                    <input type="text" id="idBMURI" name="lname" style="width:100%;height:1.2em;">
+                    <input type="text" id="idBMDescription" name="lname" style="width:100%;height:1.2em;">
+
+                </div>
+                <div class="larkDlgFooter">
+                    <button id="idBTNCloseDlg"><i class="bi-x larkBTN"></i>close</button>
+                    <button id="idBTNDlgCheck"><i class="bi-check2-square larkBTN"></i>check</button>
+                </div>
+            </div>
+        </dialog>
+    
+    </div>
     <script src="./js/larkContextMenu.js"></script>
     <script src="./js/ContextMenuData.js"></script>
     <script src="./js/jsonGateway.js"></script>
     <script src="./js/larkNavigator.js"></script>
     <script src="./js/larkCanvas_Gateway.js"></script>
+    <script src="./js/larkDialogs.js"></script>
 
     <script>
-
-
-        
 
         function gwRenderDesktop(jsonGateway,cssRootElement){
             let tagRoot=document.querySelector(cssRootElement) ;

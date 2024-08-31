@@ -1,0 +1,46 @@
+dialog {
+    margin: 0px;/*10% auto;*/
+    width: 60vw;
+    height:60vh ;
+    /*max-width: 450px;*/
+    background-color: #fff;
+    /*padding: 34px;*/
+    border: 0;
+    border-radius: 5px;
+
+    /*to center the dialog in the screen*/
+    /*refer https://stackoverflow.com/questions/1205457/how-to-design-a-css-for-a-centered-floating-confirm-dialog */
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+  }
+
+  dialog > p {
+    text-align: center;
+    margin: 0;
+  }
+  dialog > p:first-of-type {
+    margin: 0 auto 20px;
+    font-size: 32px;
+    font-weight: 600;
+  }
+  dialog > button {
+    margin: 20px auto;
+  }
+
+
+.ui-dialog-shadow { 
+    /*box-shadow: 0 0 0 7px rgba(0,0,0,0.1); */
+    /*
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    */
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+
+    /*refer: https://cssgenerator.org/box-shadow-css-generator.html*/
+}
+

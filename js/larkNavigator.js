@@ -216,7 +216,8 @@ document.querySelector('#idBTNPersonal').addEventListener('click',(event)=>{
 }) ;
 
 document.querySelector('#idBTNSetting').addEventListener('click',(event)=>{
-    alert('idBTNSetting TBD') ;
+
+    dlgWorkBench() ;
 }) ;
 
 
@@ -294,10 +295,20 @@ function renderFolderContents(jsonFolder){
     tagBMContainer.innerHTML = `` ;
     for(let i=0 ;i<jsonFolder.Contents.length;i++){
         if(jsonFolder.Contents[i].type == "Gateway.Bookmark"){
-            let tagBookmark = renderBookMark(jsonFolder.Contents[i]) ;
-            tagBMContainer.appendChild(tagBookmark) ;
+            let tagBookmark = renderBookMark(jsonFolder.Contents[i],tagBMContainer) ;
+            //tagBMContainer.appendChild(tagBookmark) ;
         }
     }
+}
+
+function dlgCheckFunc(jsonData){
+    let jsonChange = {
+        operation:'changeTitle',
+        itemID:jsonData.itemID,
+        title:jsonData.title
+    } ;
+    logChange(jsonChange) ;
+    readyToCheckIn() ;
 }
 
 
@@ -305,14 +316,16 @@ function gwRenderFolder(jsonFolder,tagParent,tagSibling=null){
     let tagBookFolder = document.createElement('details') ;
     tagBookFolder.innerHTML=`
             <summary class="folderSummary">
-                <span>
+                <div>
                     <i class="bi-folder2-open"></i>
-                    ${jsonFolder.title}
-                </span>
+                    <span>
+                        ${jsonFolder.title}
+                    </span>
+                </div>
                 <div  class="boxToolbar toolVisibilty">
                     <i class="bi-trash-fill" id="idBTNDelete"></i>
                     <i class="bi-pencil-square" id="idBTNEdit"></i>
-                    <i class="bi-three-dots" id="idBTNMore"></i>   
+                    <i class="bi-node-plus" id="idBTNMore"></i>   
                     <span id="idFolderCounter">32</span>
                 </div>
             </summary>
@@ -357,9 +370,40 @@ function gwRenderFolder(jsonFolder,tagParent,tagSibling=null){
         renderFolderContents(jsonItem) ;
     }) ;
 
+    tagBookFolder.querySelector('#idBTNEdit').addEventListener('click',(event)=>{
+        //alert('idBTNEdit TBD') ;
+        let jsonDlg={
+            checkFunc:"dlgCheckFunc",
+            folderID:tagBookFolder.dataset.larkID,
+            folder:tagBookFolder,
+            folderName:tagBookFolder.querySelector('.folderSummary').querySelector('span').innerText
+        } ;
+        renderDlg_FolderEdit(jsonDlg) ;
+    }) ;
+
     tagBookFolder.querySelector('#idBTNMore').addEventListener('click',(event)=>{
         event.preventDefault() ;
-        alert('TBD') ;
+        event.stopPropagation() ;
+
+        let jsonFolder = {
+            "id": uuid(),
+            "type": "Gateway.Folder",
+            "title": "...new folder",
+            "Contents": []
+        } ;
+
+        let jsonChange = {
+            operation:'plusFolder',
+            parentID:tagBookFolder.dataset.larkID,
+            siblingID:'',
+            folder:jsonFolder       /* json of the new plus folder */
+        } ;
+
+        gwRenderFolder(jsonFolder,tagBookFolder.querySelector('ul')) ;
+
+        logChange(jsonChange) ;
+        readyToCheckIn() ;
+
     }) ;
 
     
@@ -395,20 +439,22 @@ function gwRenderFolder(jsonFolder,tagParent,tagSibling=null){
     });
 
     // When the dragging enters a new list item
-    tagBookFolder.addEventListener('dragenter', function(e) {
-        e.preventDefault();
+    tagBookFolder.addEventListener('dragenter', function(event) {
+        event.preventDefault();
+        event.stopPropagation() ;
         tagBookFolder.style.borderTop = '2px solid #3498db';
     });
 
     // When dragging leaves a list item
-    tagBookFolder.addEventListener('dragleave', function() {
+    tagBookFolder.addEventListener('dragleave', function(event) {
+        event.stopPropagation() ;
         tagBookFolder.style.borderTop = '';
     });
 
     // When the item is dropped
     tagBookFolder.addEventListener('drop', function(event) {
         console.log(event) ;
-        event.target.style.borderTop = '';
+        tagBookFolder/*event.target*/.style.borderTop = '';
         //event.preventDefault() ;
         event.stopPropagation() ;
         if(globalDraggedItem == null){
@@ -659,10 +705,7 @@ function checkInsertFolder(jsonChange){
         alert('folder not found, sth wrong') ;
         return ;
     }
-    console.log('_grabFolderForMoving---------->') ;
     console.log(jsonFolder) ;
-    console.log('_grabFolderForMoving----------<<<<<<') ;
-
 
     for(let i=0;i<globalNavigator.data.Folders.length;i++){
         if(globalNavigator.data.Folders[i].id == jsonChange.siblingID){
@@ -686,6 +729,66 @@ function checkMoveBookmark(jsonChange){
     _moveBookmark(jsonChange.bookmarkID,jsonChange.folderID) ;
 }
 
+
+function checkRemoveBookmark(jsonChange){
+    for(let i=0;i<globalNavigator.data.Folders.length;i++){
+        if(globalNavigator.data.Folders[i].id == jsonChange.bookmarkID){
+            globalNavigator.data.Folders.splice(i,1) ;
+            return ;
+        }
+
+        if(globalNavigator.data.Folders[i].type == "Gateway.Folder"){
+            let removeBM = _removeBookmark(globalNavigator.data.Folders[i],jsonChange.bookmarkID) ;
+            if(removeBM != null) return ;
+        }
+    }
+
+    alert('not found Bookmark to remove') ;
+}
+
+
+/*
+let jsonChange = {
+        operation:'plusBookmark',
+        parentID:'',                
+        bookmark:jsonBookmark       
+    } ;
+*/
+
+function checkPlusBookmark(jsonChange){
+    let jsonFolder = findJSONUsingID(jsonChange.parentID) ;
+    if(jsonFolder!=null){
+        jsonFolder.Contents.push(jsonChange.bookmark) ;
+    }else{
+        globalNavigator.data.Folders.push(jsonChange.bookmark) ;
+    }
+}
+
+
+function checkChangeTitle(jsonChange){
+    let jsonNode = findJSONUsingID(jsonChange.itemID) ;
+    if(jsonNode == null){
+        alert('not found,sth wrong') ;
+        return ;
+    }
+
+    jsonNode.title = jsonChange.title ;
+}
+
+
+function checkChangeBMMeta(jsonChange){
+    let jsonNode = findJSONUsingID(jsonChange.itemID) ;
+    if(jsonNode == null){
+        alert('not found,sth wrong') ;
+        return ;
+    }
+
+    jsonNode.title = jsonChange.title ;
+    jsonNode.data.url = jsonChange.url ;
+    jsonNode.data.extendData = jsonChange.description ;
+}
+
+
 function checkInChanges(){
     for(let i=0;i<globalChanges.length;i++){
         switch(globalChanges[i].operation){
@@ -698,8 +801,20 @@ function checkInChanges(){
             case "insertFolderBefore":
                 checkInsertFolder(globalChanges[i]) ;
                 break ;
+            case "plusBookmark":
+                checkPlusBookmark(globalChanges[i]) ;
+                break ;
             case "moveBookmark":
                 checkMoveBookmark(globalChanges[i]) ;
+                break ;
+            case "removeBookmark":
+                checkRemoveBookmark(globalChanges[i]) ;
+                break ;
+            case "changeTitle":
+                checkChangeTitle(globalChanges[i]) ;
+                break ;
+            case "changeBookmarkMeta":
+                checkChangeBMMeta(globalChanges[i]) ;
                 break ;
             default:
                 break ;

@@ -1,7 +1,18 @@
 
 
+function dlgCheckBMFunc(jsonData){
+    let jsonChange = {
+        operation:'changeBookmarkMeta',
+        itemID:jsonData.bookmarkID,
+        title:jsonData.bookmarkTitle,
+        url:jsonData.bookmarkURL,
+        description:jsonData.bookmarkNote
+    } ;
+    logChange(jsonChange) ;
+    readyToCheckIn() ;
+}
 
-function renderBookMark(jsonBookMark){
+function renderBookMark(jsonBookMark,tagBMContainer){
     console.log(`will render ${JSON.stringify(jsonBookMark,null,3)}`) ;
     let tagBookMark =document.createElement('li') ;
     tagBookMark.innerHTML = `
@@ -11,8 +22,8 @@ function renderBookMark(jsonBookMark){
             </div>
 
             <div class="boxBookmarkMeta">
-                <span>${jsonBookMark.title}</span>
-                <div>${jsonBookMark.data.url}</div>
+                <span id="idBMTitle">${jsonBookMark.title}</span>
+                <div id="idBMURL">${jsonBookMark.data.url}</div>
             </div>
             <div class="boxToolbar toolVisibilty">
                 <i class="bi-google"></i>
@@ -23,6 +34,7 @@ function renderBookMark(jsonBookMark){
         
     ` ;
 
+    tagBMContainer.appendChild(tagBookMark) ;
     tagBookMark.classList.add('larkDraggable') ;
     tagBookMark.setAttribute('draggable', true);
 
@@ -41,9 +53,27 @@ function renderBookMark(jsonBookMark){
         let tagBookmark = event.target.closest('li') ;
         tagBookmark.remove() ;
         event.preventDefault() ;
+        let jsonChange = {
+            operation:'removeBookmark',
+            bookmarkID:tagBookmark.dataset.larkID
+        } ;
+        logChange(jsonChange) ;
+        readyToCheckIn() ;
+
     }) ;
+
+
     tagBookMark.querySelector('.bi-pencil-square').addEventListener('click',(event)=>{
-        alert('bi-pencil-square')
+
+        let jsonBMDlg={
+            checkFunc:"dlgCheckBMFunc",
+            bookmarkID:tagBookMark.dataset.larkID,
+            bookmark:tagBookMark,
+            bookmarkTitle:tagBookMark.querySelector('#idBMTitle').innerText,
+            bookmarkNote:'tbd',
+            bookmarkURL:tagBookMark.querySelector('#idBMURL').innerText
+        } ;
+        renderDlg_BMEdit(jsonBMDlg) ;
         event.preventDefault() ;
     }) ;
 
@@ -73,3 +103,40 @@ function renderBookMark(jsonBookMark){
 
     return tagBookMark ;
 }
+
+
+document.querySelector('#idBTNPlusApp').addEventListener('click',(event)=>{
+
+    let tagCurSelected = document.querySelector('.larkSelected') ;
+    let tagBookmarksUL = null ;
+    if(tagCurSelected!=null){
+        //tagBookmarksUL = tagCurSelected.querySelector('ul') ;
+        //idBookmarks
+        tagBookmarksUL = document.querySelector('#idBookmarks')
+    }else{
+        tagBookmarksUL = document.querySelector('#idFoldersUL') ;
+    }
+
+    let jsonBookmark={
+        "id": uuid(),
+        "type": "Gateway.Bookmark",
+        "title": "new bookmark...",
+        "data": {
+         "url": "https://www.google.com"
+        }
+     };
+
+     //gwRenderBookmark(jsonBookmark,tagBookmarksUL) ;
+     renderBookMark(jsonBookmark,tagBookmarksUL) ;
+
+    let jsonChange = {
+        operation:'plusBookmark',
+        parentID:'',                /* '' stand for root section, no parent */
+        bookmark:jsonBookmark       /* json of the new plus folder */
+    } ;
+    if(tagCurSelected!=null){
+        jsonChange.parentID = tagCurSelected.dataset.larkID ;
+    }
+     logChange(jsonChange) ;
+     readyToCheckIn() ;
+}) ;
