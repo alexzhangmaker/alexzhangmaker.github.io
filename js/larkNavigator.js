@@ -11,6 +11,7 @@ let globalNavigator= {
     },
     "data": {
        "mustHave": [
+        /*
           {
              "id": "f007a853-d95f-49a6-8521-c7391fa60079",
              "type": "Gateway.Bookmark",
@@ -28,6 +29,7 @@ let globalNavigator= {
                 "url": "http://127.0.0.1:8081/studyJourney.html"
              }
           }
+          */
        ],
        "Folders": [
           {
@@ -139,9 +141,38 @@ let globalNavigator= {
     }
 };
 
-let globalChanges=[] ;
 
+let globalChanges=[] ;
 let _global_OnClickBookmark = 'onClickBookmark' ;
+
+function gwRenderNavigator(jsonGateway,cssRootElement){
+    let tagRoot=document.querySelector(cssRootElement) ;
+    let tagMustHave = tagRoot.querySelector('.mustHave') ;
+    let tagFolders = tagRoot.querySelector('.Folders') ;
+
+    tagMustHave.innerHTML = `<ul></ul>` ;
+
+    if(jsonGateway.data.mustHave.length>0){
+        let tagMustHaveUL = tagMustHave.querySelector('ul') ;
+        for(let i=0;i<jsonGateway.data.mustHave.length;i++){
+            gwRenderBookmark(jsonGateway.data.mustHave[i],tagMustHaveUL) ;
+        }
+    }else{
+        tagMustHave.classList.add('noShow') ;
+    }
+    
+
+    tagFolders.innerHTML = `<ul id="idFoldersUL"></ul>` ;
+    let tagFoldersUL = tagFolders.querySelector('ul') ;
+    for(i=0;i<jsonGateway.data.Folders.length;i++){
+        if(jsonGateway.data.Folders[i].type == "Gateway.Folder"){
+            gwRenderFolder(jsonGateway.data.Folders[i],tagFoldersUL) ;
+        }else{
+            gwRenderBookmark(jsonGateway.data.Folders[i],tagFoldersUL) ;
+        }
+    }
+}
+
 
 function onClickBookmark(jsonBookmark){
     window.open(jsonBookmark.data.url, '_blank').focus();
