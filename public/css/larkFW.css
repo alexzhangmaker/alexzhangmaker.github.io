@@ -1,0 +1,203 @@
+
+.larkRoot{
+    width:100vw;
+    height:100vh;
+    overflow-y: hidden; 
+    overflow-x: hidden; 
+    /*background-color: bisque;*/
+    padding: 0px;
+    margin: 0px;
+
+    /*
+    display: flex;
+    flex-direction: row;
+    */
+}
+
+
+.leftPanel{
+    width:20% ;
+    height:100vh ;
+    flex-grow: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    background-color:lightcyan;
+    /*border-right: black;
+    border-style: solid;
+    */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rightPanel{
+    width:80% ;
+    height:100% ;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items:flex-start;
+}
+
+
+.headerToolBar{
+    width:100% ;
+    height:48px ;
+    flex-grow: 0 ;
+    /*background-color:chocolate;*/
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 1.2em;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.bottomToolBar{
+    width:100% ;
+    height:48px ;
+    flex-grow: 0 ;
+    /*background-color: brown;*/
+    font-size: 1.2em;
+
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+    align-items:center;
+    align-content: center;
+}
+
+
+.PanelNavigator{
+    width:100% ;
+    flex-grow: 1;
+    max-height: calc(100vh - 96px);
+    /*background-color: rgb(243, 232, 232);*/
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;/*space-between;*/
+    align-items: center;
+    gap: 5px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+.PanelNaviSection{
+    width:100% ;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+
+
+.mustHave{
+    /*background-color:aqua;*/
+    height:200px;
+
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.Folders{
+
+    /*background-color:rgb(209, 207, 217);*/
+    flex-grow: 1;
+}
+
+
+.folder{
+    width:100% ;
+}
+
+.folder:hover{
+    cursor:pointer ;
+}
+
+.folder > .folderSummary {
+    list-style: none;
+}
+.folder > .folderSummary::-webkit-details-marker {
+    display: none;
+}
+
+.folder ul{
+    padding-left: 5px;
+}
+
+.folderSummary{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.folderSummary:hover{
+    background-color:bisque;
+}
+
+.folderSummary #idBTNMore{
+    visibility: hidden;
+}
+
+.folderSummary:hover #idBTNMore{
+    visibility: visible;
+}
+
+.folderSummary #idBTNEdit{
+    visibility: hidden;
+}
+.folderSummary:hover #idBTNEdit{
+    visibility: visible;
+}
+
+.folderSummary #idBTNDelete{
+    visibility: hidden;
+}
+.folderSummary:hover #idBTNDelete{
+    visibility: visible;
+}
+
+.folderSummary #idFolderCounter{
+    visibility: visible;
+    font-size:0.65em ;
+}
+.folderSummary:hover #idFolderCounter{
+    visibility: hidden;
+}
+
+.PanelNavigator .bookmark:hover{
+    cursor:pointer ;
+}
+
+.larkDroppable:hover{
+    border-style: dashed;
+    border-color:blue;
+    border-width: 1px;
+}
+
+
+.mainCanvas{
+    width:100% ;
+    flex-grow: 1 ;
+    
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+

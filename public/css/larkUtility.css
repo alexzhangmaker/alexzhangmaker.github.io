@@ -1,0 +1,38 @@
+.flexBox_h{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content:flex-start;
+}
+
+
+.noShow{
+    display:none !important;
+    /*visibility: hidden;*/
+}
+
+.border{
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+}
+
+
+
+
+.larkSelected{
+    background-color: rgba(115, 89, 89, 0.611);
+    color: azure;
+}
+
+
+
+.larkBTN{
+    font-size: 24px;
+
+    background-color:transparent !important ;
+}
+
+.larkBTN:hover{
+    cursor: pointer;
+}

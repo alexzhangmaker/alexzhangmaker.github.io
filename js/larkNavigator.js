@@ -178,15 +178,6 @@ function onClickBookmark(jsonBookmark){
     window.open(jsonBookmark.data.url, '_blank').focus();
 }
 
-document.querySelector('#idBTNToggleLeftPannel').addEventListener('click',(event)=>{
-    let tagLeftPanel = document.querySelector('.leftPanel') ;
-    //tagLeftPanel.classList.toggle('noShow') ;
-    if(tagLeftPanel.classList.contains('noShow')){
-        tagLeftPanel.classList.remove('noShow') ;
-    }else{
-        tagLeftPanel.classList.add('noShow') ;
-    }
-}) ;
 
 
 function readyToCheckIn(){
@@ -241,6 +232,7 @@ document.querySelector('#idBTNPlusFolder').addEventListener('click',(event)=>{
     logChange(jsonChange) ;
     readyToCheckIn() ;
 }) ;
+
 
 document.querySelector('#idBTNPersonal').addEventListener('click',(event)=>{
     alert('idBTNPersonal TBD') ;
@@ -563,15 +555,6 @@ function logChange(jsonChange){
     globalChanges.push(jsonChange) ;
 }
 
-/*
-let jsonChange = {
-        operation:'plusFolder',
-        parentID:'',            // '' stand for root section, no parent 
-        siblingID:'',           // '' stand for none sibling, thus append to the last 
-        folder:jsonFolder       // json of the new plus folder
-    } ;
-*/
-
 function _plusFolder(jsonRootFolder,parentID,siblingID,jsonFolder){
     if(jsonRootFolder.id == parentID){
         if(siblingID == ''){
@@ -632,12 +615,6 @@ function checkPlusFolder(jsonChange){
     globalNavigator.data.Folders.push(jsonChange.folder) ;    
 }
 
-/*
-let jsonChange = {
-    operation:'removeFolder',
-    folderID:tagBookFolder.dataset.larkID
-} ;
-*/
 
 function _removeFolder(jsonRootFolder,folderID){
     for(let i=0;i<jsonRootFolder.Contents.length;i++){
@@ -668,14 +645,6 @@ function checkRemoveFolder(jsonChange){
 
     alert('can not find folder to remove') ;
 }
-
-/*
-let jsonChange = {
-    operation:'insertFolderBefore',
-    siblingID:targetFolder.dataset.larkID,
-    folderID:globalDraggedItem.dataset.larkID
-} ;
-*/
 
 function _grabFolderIn(jsonRoot,folderID){
     let jsonFolder = null ;
@@ -778,14 +747,6 @@ function checkRemoveBookmark(jsonChange){
 }
 
 
-/*
-let jsonChange = {
-        operation:'plusBookmark',
-        parentID:'',                
-        bookmark:jsonBookmark       
-    } ;
-*/
-
 function checkPlusBookmark(jsonChange){
     let jsonFolder = findJSONUsingID(jsonChange.parentID) ;
     if(jsonFolder!=null){
@@ -860,8 +821,6 @@ function checkInChanges(){
         tagBTNCheckIn.classList.add('noShow') ;
     }
 }
-//data model manipulation
-
 
 function _removeBookmark(jsonFolder,bookmarkID){
     let jsonBookmark = null ;
@@ -967,5 +926,6 @@ function uuid() {
 
 
 function loadJSONNavigator(jsonData){
-
+    //jsonGateway
+    globalNavigator = jsonData ;
 }
