@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-column Layout</title>
+  <style>
+    .multi-column {
+        overflow-y: auto;
+        overflow-x: auto;
+        /*column-count: 3;*/
+        column-width: 220px;
+        column-gap: 0px;
+        column-rule: 1px solid #ff00ff;
+
+        /*width: 100vw;*/
+        height: 500px ;
+        background-color: lightgray;
+
+        text-align: justify;
+
+        position: fixed ;
+        top: 20px;
+        left:20px;
+        padding: 0px;
+
+        z-index: -1;
+    }
+
+
+
+    .divCoverLeft{
+        /*position: fixed ;*/
+        position: absolute;
+
+        overflow-x: hidden;
+        overflow-y: hidden;
+        
+        top: 20px;
+        left:20px;
+        width:227px ;
+        height:500px ;
+        
+        z-index: 2;
+        background-color:firebrick;
+        opacity: 0.5;
+    }
+
+    .divCoverRight{
+        position: fixed ;
+        top: 20px;
+        left:460px;
+        width:220px ;
+        height:500px ;
+        z-index: 2;
+        background-color:firebrick;
+        opacity: 0.5;
+    }
+
+    .multi-column p {
+        margin: 0;
+        padding-top: 20px;
+        text-indent: 20px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .larkContent{
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+  </style>
+</head>
+<body>
+
+
+    <div class="divCoverLeft" id="overlay">
+    </div>
+        
+    <div class="divCoverRight">
+    </div>
+
+    <div class="multi-column" id="multiColumnContainer">
+        <p>lark1.By way of precaution, when all was complete De Rozier made a few short captive excursions, the balloon being fastened to earth by a rope. But all proving satisfactory, he decided to hazard a “right away” trip on the 21st of November 1783, when he was also to be accompanied by an equally courageous fellow-countryman, the Marquis d’Arlandes. It would be difficult to conceive a more daring and perilous enterprise than these two brave Frenchmen set themselves. They were to venture, by an untried way, into unknown realms where no mortal had been before; they were to entrust their lives to a frail craft whose capabilities had never yet been tested, and at a giddy height they were to soar aloft with an open fire, which at any moment might set light to the inflammable balloon and hurl them to destruction.</p>
+        <p>lark2.Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+        <p>lark3.Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+        <p>lark4.and with what anxiety was its course followed as, rising rapidly to a height of 3000 feet, it drifted away on an upper current which bore it right over the city of Paris. The travellers themselves experienced various excitements during their adventurous trip. They had constantly to stir the fire and feed it with fresh fuel; they had also with wet sponges continually to extinguish the flames when the light fabric from time to time ignited. At one period they feared descending into the river or on the house-tops, at another a sharp shock gave them the impression that their balloon had burst. But they came safely in the end through all perils and alarms, descending quietly, after a voyage of twenty-five minutes’ duration, five miles from their starting-place. Lark</p>
+        <p>lark5.and with what anxiety was its course followed as, rising rapidly to a height of 3000 feet, it drifted away on an upper current which bore it right over the city of Paris. The travellers themselves experienced various excitements during their adventurous trip. They had constantly to stir the fire and feed it with fresh fuel; they had also with wet sponges continually to extinguish the flames when the light fabric from time to time ignited. At one period they feared descending into the river or on the house-tops, at another a sharp shock gave them the impression that their balloon had burst. But they came safely in the end through all perils and alarms, descending quietly, after a voyage of twenty-five minutes’ duration, five miles from their starting-place. Lark</p>
+
+    </div>
+
+<script>
+  // Function to get the computed column width
+  function getColumnWidth() {
+    const container = document.getElementById('multiColumnContainer');
+
+    // Get computed styles of the container
+    const computedStyle = window.getComputedStyle(container);
+
+    //const containerWidth = container.getBoundingClientRect().width;
+    const containerWidth = container.scrollWidth;
+    console.log(`Computed containerWidth: ${containerWidth}px`);
+
+    // Calculate the actual column width
+    const columnWidth = parseFloat(computedStyle.getPropertyValue('column-width'));
+    console.log(`Computed column width: ${columnWidth}px`);
+
+    /*
+    //column-count
+    const columnCount = parseInt(computedStyle.getPropertyValue('column-count'));
+    console.log(`Computed column Counts: ${columnCount}`);
+    console.log(`Computed column Counts: ${computedStyle.getPropertyValue('column-count')}`);
+    */
+
+    const columnGap = parseFloat(computedStyle.getPropertyValue('column-gap'));
+    console.log(`Computed columnGap: ${columnGap}`);
+
+    // Calculate the column count: (container width + column gap) / (column width + column gap)
+    const columnCount = Math.floor((containerWidth + columnGap) / (columnWidth + columnGap));
+
+    console.log(`Container width: ${containerWidth}px`);
+    console.log(`Column width: ${columnWidth}px`);
+    console.log(`Column gap: ${columnGap}px`);
+    console.log(`Computed column count: ${columnCount}`);
+
+    // Alternatively, using getBoundingClientRect for container size:
+    const containerRect = container.getBoundingClientRect();
+    const totalColumns = parseInt(computedStyle.getPropertyValue('column-count'), 10);
+    const actualColumnWidth = (containerRect.width - ((totalColumns - 1) * parseFloat(computedStyle.getPropertyValue('column-gap')))) / totalColumns;
+    console.log(`Actual column width based on container size: ${actualColumnWidth}px`);
+
+
+  }
+
+  // Call the function
+  
+  getColumnWidth();
+
+
+  /*
+  function coverFirstColumn() {
+    const container = document.getElementById('multiColumnContainer');
+    const overlay = document.getElementById('overlay');
+
+    // Get computed styles for column-gap and column-width
+    const computedStyle = window.getComputedStyle(container);
+    const columnWidth = parseFloat(computedStyle.getPropertyValue('column-width'));
+    const columnGap = parseFloat(computedStyle.getPropertyValue('column-gap'));
+
+    // Use getBoundingClientRect to get the exact height of the container
+    const containerRect = container.getBoundingClientRect();
+    const containerHeight = containerRect.height;
+
+    // Set the overlay to have the same size and position as the first column
+    overlay.style.width = `${columnWidth}px`;
+    overlay.style.height = `${containerHeight}px`;
+    overlay.style.left = '0px'; // Positioned at the start (first column)
+    overlay.style.top = `${containerRect.top}px`; // Align with the top of the container
+  }
+  */
+ /*
+   // Function to overlay the first column
+   function coverFirstColumn() {
+    const container = document.getElementById('multiColumnContainer');
+    const overlay = document.getElementById('overlay');
+
+    // Get the container's bounding rectangle
+    const containerRect = container.getBoundingClientRect();
+
+    // Create a temporary div to measure the first column's actual width
+    const firstColumnMeasureDiv = document.createElement('div');
+    firstColumnMeasureDiv.style.position = 'absolute';
+    firstColumnMeasureDiv.style.visibility = 'hidden';
+    firstColumnMeasureDiv.style.columnSpan = 'all'; // Spans all columns
+
+    // Insert it inside the container
+    container.appendChild(firstColumnMeasureDiv);
+
+    // Get the first column's actual width
+    const firstColumnWidth = firstColumnMeasureDiv.getBoundingClientRect().width;
+
+    // Remove the temporary div after measuring
+    container.removeChild(firstColumnMeasureDiv);
+
+    // Set the overlay to have the same size and position as the first column
+    overlay.style.width = `${firstColumnWidth}px`;
+    overlay.style.height = `${containerRect.height}px`;
+    overlay.style.left = '0px'; // Positioned at the start (first column)
+    overlay.style.top = `${containerRect.top}px`; // Align with the top of the container
+  }
+
+  // Call the function after the page loads
+  coverFirstColumn();
+  */
+ // Function to overlay the first column
+ function coverFirstColumn() {
+    const container = document.getElementById('multiColumnContainer');
+    const overlay = document.getElementById('overlay');
+
+    // Get the container's bounding rectangle
+    const containerRect = container.getBoundingClientRect();
+
+    // Get computed styles for column-width and column-gap
+    const computedStyle = window.getComputedStyle(container);
+    const columnWidth = parseFloat(computedStyle.getPropertyValue('column-width'));
+    const columnGap = parseFloat(computedStyle.getPropertyValue('column-gap'));
+
+    // Get the container's full width
+    const containerWidth = containerRect.width;
+
+    // Calculate the number of columns based on container width and column width
+    const columnCount = Math.floor(containerWidth / (columnWidth + columnGap));
+
+    // Calculate the actual width of one column, considering rounding
+    const actualColumnWidth = (containerWidth - (columnCount - 1) * columnGap) / columnCount;
+
+    // Set the overlay to have the same size and position as the first column
+    overlay.style.width = `${actualColumnWidth}px`;
+    overlay.style.height = `${containerRect.height}px`;
+    overlay.style.left = '0px'; // Positioned at the start (first column)
+    overlay.style.top = `${containerRect.top}px`; // Align with the top of the container
+  }
+
+  // Call the function after the page loads
+  coverFirstColumn();
+
+</script>
+
+</body>
+</html>

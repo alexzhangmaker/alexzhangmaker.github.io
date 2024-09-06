@@ -107,10 +107,10 @@
 
 .mustHave{
     /*background-color:aqua;*/
-    height:200px;
-
-    flex-grow: 0;
-    flex-shrink: 0;
+    height:auto;
+    min-height: 120px;
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 .Folders{
@@ -121,6 +121,8 @@
 
 
 .folder{
+    padding-top: 5px;
+    padding-bottom: 5px;
     width:100% ;
 }
 
@@ -145,9 +147,13 @@
     justify-content: space-between;
 }
 
+
 .folderSummary:hover{
     background-color:bisque;
+    /*background-color: rgba(115, 89, 89, 0.611);*/
+
 }
+
 
 .folderSummary #idBTNMore{
     visibility: hidden;

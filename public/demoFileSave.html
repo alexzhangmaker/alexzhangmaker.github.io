@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gateway.Bookmarks</title>
+
+
+	
+
+</head>
+<body>
+    
+    
+    <button id="idBTNSave" onclick="doSave()">doSaveFile</button>
+
+    
+    <script src="./FileSaver.js"></script>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded',async (event)=>{
+        
+        }) ;
+
+        function doSave(){
+            var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, "hello world.txt");
+
+        }
+
+
+    </script>
+</body>
+</html>

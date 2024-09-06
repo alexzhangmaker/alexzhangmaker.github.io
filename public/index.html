@@ -150,8 +150,8 @@
     <script>
 
         document.addEventListener('DOMContentLoaded',async (event)=>{
-            let userID = 'alexszhang@gmail.com' ;
-            let srcURL = '/fetchGateway.V1/:alexszhang@gmail.com' ;
+            let userID = 'alexszhang@outlook.com' ;
+            let srcURL = '/fetchGateway.V1/:alexszhang@outlook.com' ;
             let response = await fetch(srcURL);
             const jsonUserGateway = await response.json();
             console.log(JSON.stringify(jsonUserGateway,null,3)) ; 

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-column Layout with Overlay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<style>
+    .roboto-thin {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.roboto-light {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.roboto-regular {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.roboto-medium {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.roboto-bold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.roboto-black {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.roboto-thin-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.roboto-light-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.roboto-regular-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.roboto-medium-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.roboto-bold-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.roboto-black-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+</style>
+  <style>
+
+    .larkView{
+        width: 600px; ;
+        height:400px ;
+        overflow-x: hidden;
+        overflow-y: hidden;
+
+    }
+    .multi-column {
+        column-width: 600px;/*100vw;400px;*/ /* Minimum column width */
+        column-gap: 0px; /* No gap between columns */
+        /*width: 100%;*/ /* Width of the container */
+        background-color: lightgray;
+        position: fixed ;
+        column-rule: 1px solid #ff00ff;
+
+        height: 400px ;
+        overflow-y: hidden;
+        overflow-x: auto;
+        left:0px ;
+        top:50px ;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .multi-column article{
+        margin: 0;
+        padding: 20px;
+        font-size: 18px;
+
+        counter-reset: p_counter;
+
+    }
+    
+    
+
+    .article p{
+        padding-left: 10px;
+        padding-right: 10px;
+        text-indent: 2em;
+        padding-top: 30px;
+        margin: 0;
+
+    }
+
+    p::before {
+        counter-increment: p_counter;
+        content: counter(p_counter) "...";
+    }
+    /* Styling the overlay div */
+    .overlay {
+      position: fixed;
+      /*background-color: rgba(255, 0, 0, 0.5);*/ /* Semi-transparent red */
+      z-index: 10; /* Ensure it's on top */
+    }
+
+
+    .buttons{
+        position: fixed;
+        top: 600px;
+        left: 20px ;
+        z-index: 20; /* Ensure it's on top */
+
+
+    }
+
+    ::-webkit-scrollbar {
+    width: 1px;
+}
+  </style>
+</head>
+<body>
+<div class="larkView">
+    <div class="multi-column" id="multiColumnContainer">
+        <article class="roboto-light">
+            <p>By way of precaution, when all was complete De Rozier made a few short captive excursions, the balloon being fastened to earth by a rope. But all proving satisfactory, he decided to hazard a “right away” trip on the 21st of November 1783, when he was also to be accompanied by an equally courageous fellow-countryman, the Marquis d’Arlandes. It would be difficult to conceive a more daring and perilous enterprise than these two brave Frenchmen set themselves. They were to venture, by an untried way, into unknown realms where no mortal had been before; they were to entrust their lives to a frail craft whose capabilities had never yet been tested, and at a giddy height they were to soar aloft with an open fire, which at any moment might set light to the inflammable balloon and hurl them to destruction.</p>
+            <p>Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+            <p>Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+            <p>lark4.and with what anxiety was its course followed as, rising rapidly to a height of 3000 feet, it drifted away on an upper current which bore it right over the city of Paris. The travellers themselves experienced various excitements during their adventurous trip. They had constantly to stir the fire and feed it with fresh fuel; they had also with wet sponges continually to extinguish the flames when the light fabric from time to time ignited. At one period they feared descending into the river or on the house-tops, at another a sharp shock gave them the impression that their balloon had burst. But they came safely in the end through all perils and alarms, descending quietly, after a voyage of twenty-five minutes’ duration, five miles from their starting-place. Lark</p>
+            <p>lark5.Such dreary streets! blocks of blackness, not houses, on either hand, and here and there a candle, like a candle moving about in a tomb. At this hour of the night, of the last day of the week, that quarter of the town proved all but deserted. But presently I came to a smoky light proceeding from a low, wide building, the door of which stood invitingly open. It had a careless look, as if it were meant for the uses of the public; so, entering, the first thing I did was to stumble over an ash-box in the porch. Ha! thought I, ha, as the flying particles almost choked me, are these ashes from that destroyed city, Gomorrah? But “The Crossed Harpoons,” and “The Sword-Fish?”—this, then must needs be the sign of “The Trap.” However, I picked myself up and hearing a loud voice within, pushed on and opened a second, interior door.. Lark</p>
+            <p>lark1.By way of precaution, when all was complete De Rozier made a few short captive excursions, the balloon being fastened to earth by a rope. But all proving satisfactory, he decided to hazard a “right away” trip on the 21st of November 1783, when he was also to be accompanied by an equally courageous fellow-countryman, the Marquis d’Arlandes. It would be difficult to conceive a more daring and perilous enterprise than these two brave Frenchmen set themselves. They were to venture, by an untried way, into unknown realms where no mortal had been before; they were to entrust their lives to a frail craft whose capabilities had never yet been tested, and at a giddy height they were to soar aloft with an open fire, which at any moment might set light to the inflammable balloon and hurl them to destruction.</p>
+            <p>lark2.Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+            <p>lark3.Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+            <p>lark4.and with what anxiety was its course followed as, rising rapidly to a height of 3000 feet, it drifted away on an upper current which bore it right over the city of Paris. The travellers themselves experienced various excitements during their adventurous trip. They had constantly to stir the fire and feed it with fresh fuel; they had also with wet sponges continually to extinguish the flames when the light fabric from time to time ignited. At one period they feared descending into the river or on the house-tops, at another a sharp shock gave them the impression that their balloon had burst. But they came safely in the end through all perils and alarms, descending quietly, after a voyage of twenty-five minutes’ duration, five miles from their starting-place. Lark</p>
+            <p>lark5.Such dreary streets! blocks of blackness, not houses, on either hand, and here and there a candle, like a candle moving about in a tomb. At this hour of the night, of the last day of the week, that quarter of the town proved all but deserted. But presently I came to a smoky light proceeding from a low, wide building, the door of which stood invitingly open. It had a careless look, as if it were meant for the uses of the public; so, entering, the first thing I did was to stumble over an ash-box in the porch. Ha! thought I, ha, as the flying particles almost choked me, are these ashes from that destroyed city, Gomorrah? But “The Crossed Harpoons,” and “The Sword-Fish?”—this, then must needs be the sign of “The Trap.” However, I picked myself up and hearing a loud voice within, pushed on and opened a second, interior door.. Lark</p>
+            <p>lark1.By way of precaution, when all was complete De Rozier made a few short captive excursions, the balloon being fastened to earth by a rope. But all proving satisfactory, he decided to hazard a “right away” trip on the 21st of November 1783, when he was also to be accompanied by an equally courageous fellow-countryman, the Marquis d’Arlandes. It would be difficult to conceive a more daring and perilous enterprise than these two brave Frenchmen set themselves. They were to venture, by an untried way, into unknown realms where no mortal had been before; they were to entrust their lives to a frail craft whose capabilities had never yet been tested, and at a giddy height they were to soar aloft with an open fire, which at any moment might set light to the inflammable balloon and hurl them to destruction.</p>
+            <p>lark2.Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+            <p>lark3.Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+            <p>lark4.and with what anxiety was its course followed as, rising rapidly to a height of 3000 feet, it drifted away on an upper current which bore it right over the city of Paris. The travellers themselves experienced various excitements during their adventurous trip. They had constantly to stir the fire and feed it with fresh fuel; they had also with wet sponges continually to extinguish the flames when the light fabric from time to time ignited. At one period they feared descending into the river or on the house-tops, at another a sharp shock gave them the impression that their balloon had burst. But they came safely in the end through all perils and alarms, descending quietly, after a voyage of twenty-five minutes’ duration, five miles from their starting-place. Lark</p>
+            <p>lark5.Such dreary streets! blocks of blackness, not houses, on either hand, and here and there a candle, like a candle moving about in a tomb. At this hour of the night, of the last day of the week, that quarter of the town proved all but deserted. But presently I came to a smoky light proceeding from a low, wide building, the door of which stood invitingly open. It had a careless look, as if it were meant for the uses of the public; so, entering, the first thing I did was to stumble over an ash-box in the porch. Ha! thought I, ha, as the flying particles almost choked me, are these ashes from that destroyed city, Gomorrah? But “The Crossed Harpoons,” and “The Sword-Fish?”—this, then must needs be the sign of “The Trap.” However, I picked myself up and hearing a loud voice within, pushed on and opened a second, interior door.. Lark</p>
+            <p>and with what anxiety was its course followed as, rising rapidly to a height of 3000 feet, it drifted away on an upper current which bore it right over the city of Paris. The travellers themselves experienced various excitements during their adventurous trip. They had constantly to stir the fire and feed it with fresh fuel; they had also with wet sponges continually to extinguish the flames when the light fabric from time to time ignited. At one period they feared descending into the river or on the house-tops, at another a sharp shock gave them the impression that their balloon had burst. But they came safely in the end through all perils and alarms, descending quietly, after a voyage of twenty-five minutes’ duration, five miles from their starting-place.</p>
+            <p>By way of precaution, when all was complete De Rozier made a few short captive excursions, the balloon being fastened to earth by a rope. But all proving satisfactory, he decided to hazard a “right away” trip on the 21st of November 1783, when he was also to be accompanied by an equally courageous fellow-countryman, the Marquis d’Arlandes. It would be difficult to conceive a more daring and perilous enterprise than these two brave Frenchmen set themselves. They were to venture, by an untried way, into unknown realms where no mortal had been before; they were to entrust their lives to a frail craft whose capabilities had never yet been tested, and at a giddy height they were to soar aloft with an open fire, which at any moment might set light to the inflammable balloon and hurl them to destruction.</p>
+
+            <p>Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+            
+            <blockquote><p>the first that ever burst
+              Into that silent sea;</p></blockquote>
+            
+              <p>and with what anxiety was its course followed as, rising rapidly to a height of 3000 feet, it drifted away on an upper current which bore it right over the city of Paris. The travellers themselves experienced various excitements during their adventurous trip. They had constantly to stir the fire and feed it with fresh fuel; they had also with wet sponges continually to extinguish the flames when the light fabric from time to time ignited. At one period they feared descending into the river or on the house-tops, at another a sharp shock gave them the impression that their balloon had burst. But they came safely in the end through all perils and alarms, descending quietly, after a voyage of twenty-five minutes’ duration, five miles from their starting-place.</p>
+        </article>
+    </div>
+</div>
+
+<!-- Overlay div that will cover the first column -->
+<div id="overlay" class="overlay"></div>
+
+<div class="buttons">
+    <button id="idBTNLeft">left</button>
+    <button id="idBTNRight"> right</button>
+</div>
+<script>
+  // Function to overlay the first column
+  let actualColumnWidth = 0 ;
+  let overlayLeft = 0 ;
+  let ContainerLeft = 0 ;
+
+  function coverFirstColumn() {
+    const container = document.getElementById('multiColumnContainer');
+    const overlay = document.getElementById('overlay');
+
+    // Get the container's bounding rectangle
+    const containerRect = container.getBoundingClientRect();
+
+    // Get computed styles for column-width and column-gap
+    const computedStyle = window.getComputedStyle(container);
+    console.log(computedStyle.getPropertyValue('left')) ;
+
+    const columnWidth = parseFloat(computedStyle.getPropertyValue('column-width'));
+    const columnGap = parseFloat(computedStyle.getPropertyValue('column-gap'));
+
+    // Get the container's full width
+    const containerWidth = containerRect.width;
+
+    // Calculate the number of columns based on container width and column width
+    const columnCount = Math.floor(containerWidth / (columnWidth + columnGap));
+
+    // Calculate the actual width of one column, considering rounding
+    actualColumnWidth = (containerWidth - (columnCount - 1) * columnGap) / columnCount;
+
+    // Set the overlay to have the same size and position as the first column
+    overlay.style.width = `${actualColumnWidth}px`;
+    overlay.style.height = `${containerRect.height}px`;
+    overlay.style.left = `${overlayLeft}px`; // Positioned at the start (first column)
+    overlay.style.top = `${containerRect.top}px`; // Align with the top of the container
+  }
+
+  // Call the function after the page loads
+  coverFirstColumn();
+
+  // Add a resize event listener for responsive layouts
+  window.addEventListener('resize', coverFirstColumn);
+
+  document.getElementById('idBTNLeft').addEventListener('click',(event)=>{
+    const overlay = document.getElementById('overlay');
+    const container = document.getElementById('multiColumnContainer');
+
+
+    //let currentLeft = overlay.style.left
+    //overlayLeft = overlayLeft - actualColumnWidth ;
+    //overlay.style.left = `${overlayLeft}px`; // Positioned at the start (first column)
+    container.scrollLeft -= actualColumnWidth*2;
+  }) ;
+
+  document.getElementById('idBTNRight').addEventListener('click',(event)=>{
+    const container = document.getElementById('multiColumnContainer');
+
+    //let currentLeft = overlay.style.left
+    //ContainerLeft = ContainerLeft - actualColumnWidth ;
+    //container.style.left = `${ContainerLeft}px`; // Positioned at the start (first column)
+    container.scrollLeft += actualColumnWidth*2;
+}) ;
+</script>
+
+</body>
+</html>

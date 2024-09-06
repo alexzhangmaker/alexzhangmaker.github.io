@@ -3149,7 +3149,7 @@ let jsonGateway = {
          }
       ]
    }
-}
+};
 
 
 //code below to be used in node.js environment to verify json data

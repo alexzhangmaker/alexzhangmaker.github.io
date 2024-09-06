@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-column Layout with Overlay</title>
+  <style>
+    .multi-column {
+      column-width: 400px; /* Minimum column width */
+      column-gap: 0px; /* No gap between columns */
+      /*width: 100%;*/ /* Width of the container */
+      background-color: lightgray;
+      position: fixed ;
+      column-rule: 1px solid #ff00ff;
+
+      height: 500px ;
+      overflow-y: auto;
+        overflow-x: auto;
+        left:5px ;
+        top:0px ;
+    }
+
+    .multi-column p {
+      margin: 0;
+    }
+
+    .multi-column p{
+        padding-left: 10px;
+        padding-right: 10px;
+        text-indent: 2em;
+        padding-top: 30px;
+    }
+    /* Styling the overlay div */
+    .overlay {
+      position: fixed;
+      background-color: rgba(255, 0, 0, 0.5); /* Semi-transparent red */
+      z-index: 10; /* Ensure it's on top */
+    }
+
+
+    .buttons{
+        position: fixed;
+        top: 600px;
+        left: 20px ;
+        z-index: 20; /* Ensure it's on top */
+
+
+    }
+  </style>
+</head>
+<body>
+
+<div class="multi-column" id="multiColumnContainer">
+    <p>lark1.By way of precaution, when all was complete De Rozier made a few short captive excursions, the balloon being fastened to earth by a rope. But all proving satisfactory, he decided to hazard a “right away” trip on the 21st of November 1783, when he was also to be accompanied by an equally courageous fellow-countryman, the Marquis d’Arlandes. It would be difficult to conceive a more daring and perilous enterprise than these two brave Frenchmen set themselves. They were to venture, by an untried way, into unknown realms where no mortal had been before; they were to entrust their lives to a frail craft whose capabilities had never yet been tested, and at a giddy height they were to soar aloft with an open fire, which at any moment might set light to the inflammable balloon and hurl them to destruction.</p>
+    <p>lark2.Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+    <p>lark3.Wild indeed was the applause of the crowd as the mighty craft, after due inflation, rose majestically into the sky, carrying with it its two brave voyagers—</p>
+    <p>lark4.and with what anxiety was its course followed as, rising rapidly to a height of 3000 feet, it drifted away on an upper current which bore it right over the city of Paris. The travellers themselves experienced various excitements during their adventurous trip. They had constantly to stir the fire and feed it with fresh fuel; they had also with wet sponges continually to extinguish the flames when the light fabric from time to time ignited. At one period they feared descending into the river or on the house-tops, at another a sharp shock gave them the impression that their balloon had burst. But they came safely in the end through all perils and alarms, descending quietly, after a voyage of twenty-five minutes’ duration, five miles from their starting-place. Lark</p>
+    <p>lark5.and with what anxiety was its course followed as, rising rapidly to a height of 3000 feet, it drifted away on an upper current which bore it right over the city of Paris. The travellers themselves experienced various excitements during their adventurous trip. They had constantly to stir the fire and feed it with fresh fuel; they had also with wet sponges continually to extinguish the flames when the light fabric from time to time ignited. At one period they feared descending into the river or on the house-tops, at another a sharp shock gave them the impression that their balloon had burst. But they came safely in the end through all perils and alarms, descending quietly, after a voyage of twenty-five minutes’ duration, five miles from their starting-place. Lark</p>
+
+</div>
+
+<!-- Overlay div that will cover the first column -->
+<div id="overlay" class="overlay"></div>
+
+<div class="buttons">
+    <button id="idBTNLeft">left</button>
+    <button id="idBTNRight"> right</button>
+</div>
+<script>
+  // Function to overlay the first column
+  let actualColumnWidth = 0 ;
+  let overlayLeft = 5 ;
+  function coverFirstColumn() {
+    const container = document.getElementById('multiColumnContainer');
+    const overlay = document.getElementById('overlay');
+
+    // Get the container's bounding rectangle
+    const containerRect = container.getBoundingClientRect();
+
+    // Get computed styles for column-width and column-gap
+    const computedStyle = window.getComputedStyle(container);
+    console.log(computedStyle.getPropertyValue('left')) ;
+
+    const columnWidth = parseFloat(computedStyle.getPropertyValue('column-width'));
+    const columnGap = parseFloat(computedStyle.getPropertyValue('column-gap'));
+
+    // Get the container's full width
+    const containerWidth = containerRect.width;
+
+    // Calculate the number of columns based on container width and column width
+    const columnCount = Math.floor(containerWidth / (columnWidth + columnGap));
+
+    // Calculate the actual width of one column, considering rounding
+    actualColumnWidth = (containerWidth - (columnCount - 1) * columnGap) / columnCount;
+
+    // Set the overlay to have the same size and position as the first column
+    overlay.style.width = `${actualColumnWidth}px`;
+    overlay.style.height = `${containerRect.height}px`;
+    overlay.style.left = `${overlayLeft}px`; // Positioned at the start (first column)
+    overlay.style.top = `${containerRect.top}px`; // Align with the top of the container
+  }
+
+  // Call the function after the page loads
+  coverFirstColumn();
+
+  // Add a resize event listener for responsive layouts
+  window.addEventListener('resize', coverFirstColumn);
+
+  document.getElementById('idBTNLeft').addEventListener('click',(event)=>{
+    const overlay = document.getElementById('overlay');
+
+    //let currentLeft = overlay.style.left
+    overlayLeft = overlayLeft - actualColumnWidth ;
+    overlay.style.left = `${overlayLeft}px`; // Positioned at the start (first column)
+  }) ;
+
+  document.getElementById('idBTNRight').addEventListener('click',(event)=>{
+    const overlay = document.getElementById('overlay');
+
+    //let currentLeft = overlay.style.left
+    overlayLeft = overlayLeft + actualColumnWidth ;
+    overlay.style.left = `${overlayLeft}px`; // Positioned at the start (first column)
+}) ;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>iframe paginator test</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&amp;display=swap">
+
+    <script src="https://unpkg.com/pagedjs@0.1.43/dist/paged.polyfill.js"></script>
+    <style>
+        @page {
+  size: 142mm 220mm;
+  margin: 22mm;
+  font-family: 'EB Garamond', serif;
+  font-size: 11pt;
+  line-height: 1.35;
+  hyphens: auto;
+}
+
+main p {
+  margin: 0;
+  text-indent: .5cm;
+}
+
+
+
+
+/** The standard `interface.css` follows **/
+
+/* Change the look */
+:root {
+    --color-background: whitesmoke;
+    --color-pageSheet: #cfcfcf;
+    --color-pageBox: violet;
+    --color-paper: white;
+    --color-marginBox: transparent;
+    --pagedjs-crop-color: #000;
+    --pagedjs-crop-stroke: 1px;
+}
+
+.pagedjs_marks-crop{
+    z-index: 999999999999;
+}
+
+/* To define how the book look on the screen: */
+@media screen {
+  body {
+    background-color: var(--color-background);
+  }
+
+  .pagedjs_pages {
+    display: flex;
+    width: calc(var(--pagedjs-width) * 2);
+    flex: 0;
+    flex-wrap: wrap;
+    margin: 0 auto;
+  }
+
+  .pagedjs_page {
+    background-color: var(--color-paper);
+    box-shadow: 0 0 0 1px var(--color-pageSheet);
+    margin: 0;
+    flex-shrink: 0;
+    flex-grow: 0;
+    margin-top: 10mm;
+  }
+
+  .pagedjs_first_page {
+    margin-left: var(--pagedjs-width);
+  }
+
+  .pagedjs_page:last-of-type {
+    margin-bottom: 10mm;
+  }
+
+  .pagedjs_pagebox{
+    box-shadow: 0 0 0 1px var(--color-pageBox);
+  }
+
+  .pagedjs_left_page{
+    z-index: 20;
+    width: calc(var(--pagedjs-bleed-left) + var(--pagedjs-pagebox-width))!important;
+  }
+
+  .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop {
+    border-color: transparent;
+  }
+
+  .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-middle{
+    width: 0;
+  }
+
+  .pagedjs_right_page{
+    z-index: 10;
+    position: relative;
+    left: calc(var(--pagedjs-bleed-left)*-1);
+  }
+
+  /* show the margin-box */
+
+  .pagedjs_margin-top-left-corner-holder,
+  .pagedjs_margin-top,
+  .pagedjs_margin-top-left,
+  .pagedjs_margin-top-center,
+  .pagedjs_margin-top-right,
+  .pagedjs_margin-top-right-corner-holder,
+  .pagedjs_margin-bottom-left-corner-holder,
+  .pagedjs_margin-bottom,
+  .pagedjs_margin-bottom-left,
+  .pagedjs_margin-bottom-center,
+  .pagedjs_margin-bottom-right,
+  .pagedjs_margin-bottom-right-corner-holder,
+  .pagedjs_margin-right,
+  .pagedjs_margin-right-top,
+  .pagedjs_margin-right-middle,
+  .pagedjs_margin-right-bottom,
+  .pagedjs_margin-left,
+  .pagedjs_margin-left-top,
+  .pagedjs_margin-left-middle,
+  .pagedjs_margin-left-bottom {
+    box-shadow: 0 0 0 1px inset var(--color-marginBox);
+  }
+
+}
+
+    </style>
+  </head>
+  <body>
+    <main lang="es">
+      <p>This is a text case for <a href="https://gitlab.pagedmedia.org/tools/pagedjs/issues/266">issue #266 on Paged.js</a>.</p>
+      <p>It looks like Paged.js is dropping the last line in a page under certain circumstances.</p>
+      <p>.</p>
+      <p>It looks like Paged.js is dropping the last line in a page under certain circumstances.</p>
+      <p>It looks like Paged.js is dropping the last line in a page under certain circumstances.</p>
+      <p>.</p>
+      <p>While I am not completely sure and I cannot point out the exact reason, I think it may have something to do with <strong>hyphenation</strong>.</p>
+      <p>.</p>
+      <p>.</p>
+      <p>.</p>
+      <p>Also, try removing one of the <code>&lt;p&gt;.&lt;/p&gt;</code> lines in the source. You will see what happens: the pagination mechanism fails at another point!</p>
+    
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.</p>
+      <p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.</p>
+      <p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p><p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p><p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p><p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p><p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p><p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>.Determine the number of items per page: Decide how many items you want to display per page. This will determine the size of each “page” of content.
+    </p>
+      <p>.</p>
+      <p>
+        This is a long paragraph with several lines. This is the second line. Punto de la vía podrían hallarlo. Cuando el juez llegó mandó el levantamiento del cadáver y en la toma de declaración el ferroviario atestiguó haber sorprendido al hombre rodando por la vía poco después de.
+      </p>
+    </main>
+    
+  </body>
+</html>

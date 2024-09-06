@@ -1,0 +1,32 @@
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: ;
+}
+
+/* the outermost container in <body> */
+#container {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#page {
+    display: block;
+    position: fixed;
+    top: 50px;
+    left: 200px;
+    right: 200px;
+    bottom: 50px;
+    background-color: #888888;
+}
+
+h2 {
+    break-before: page;
+}
