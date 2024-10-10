@@ -145,7 +145,12 @@ let globalNavigator= {
 let globalChanges=[] ;
 let _global_OnClickBookmark = 'onClickBookmark' ;
 
-function gwRenderNavigator(jsonGateway,cssRootElement){
+function gwRenderNavigator(cssRootElement){
+    _gwRenderNavigator(globalNavigator,cssRootElement) ;
+}
+
+
+function _gwRenderNavigator(jsonGateway,cssRootElement){
     let tagRoot=document.querySelector(cssRootElement) ;
     let tagMustHave = tagRoot.querySelector('.mustHave') ;
     let tagFolders = tagRoot.querySelector('.Folders') ;
