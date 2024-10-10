@@ -1,6 +1,6 @@
 let globalDraggedItem   =   null;
 let globalTargetItem    =   null ;
-
+/*
 let globalNavigator= {
     "meta": {
        "application": "athena",
@@ -11,7 +11,7 @@ let globalNavigator= {
     },
     "data": {
        "mustHave": [
-        /*
+        
           {
              "id": "f007a853-d95f-49a6-8521-c7391fa60079",
              "type": "Gateway.Bookmark",
@@ -29,7 +29,7 @@ let globalNavigator= {
                 "url": "http://127.0.0.1:8081/studyJourney.html"
              }
           }
-          */
+          
        ],
        "Folders": [
           {
@@ -140,7 +140,7 @@ let globalNavigator= {
         ]
     }
 };
-
+*/
 
 let globalChanges=[] ;
 let _global_OnClickBookmark = 'onClickBookmark' ;
