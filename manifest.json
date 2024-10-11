@@ -22,7 +22,7 @@
       "sizes": "144x144",
       "type": "image/png"
     }],
-  "start_url": "/indexPWA.html",
+  "start_url": "/index.html",
   "display": "standalone",
   "lang": "en",
   "orientation": "portrait",
