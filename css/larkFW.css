@@ -121,13 +121,14 @@
 
 
 .folder{
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px;
     width:100% ;
 }
 
 .folder:hover{
     cursor:pointer ;
+    background-color:bisque;
 }
 
 .folder > .folderSummary {
@@ -147,13 +148,12 @@
     justify-content: space-between;
 }
 
-
+/*
 .folderSummary:hover{
     background-color:bisque;
-    /*background-color: rgba(115, 89, 89, 0.611);*/
 
 }
-
+*/
 
 .folderSummary #idBTNMore{
     visibility: hidden;
@@ -190,9 +190,11 @@
 }
 
 .larkDroppable:hover{
+    /*
     border-style: dashed;
     border-color:blue;
     border-width: 1px;
+    */
 }
 
 

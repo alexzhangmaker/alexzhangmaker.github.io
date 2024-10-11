@@ -1,146 +1,5 @@
 let globalDraggedItem   =   null;
 let globalTargetItem    =   null ;
-/*
-let globalNavigator= {
-    "meta": {
-       "application": "athena",
-       "version": "1.0.01",
-       "author": "alexszhang@gmail.com",
-       "user": "alexszhang@gmail.com",
-       "timestamp": "Mon Aug 21 2023 21:16:43 GMT+0700 (中南半岛时间)"
-    },
-    "data": {
-       "mustHave": [
-        
-          {
-             "id": "f007a853-d95f-49a6-8521-c7391fa60079",
-             "type": "Gateway.Bookmark",
-             "title": "云雀.todos",
-             "data": {
-                "url":"http://124.156.193.78:8080/app_todo.html",
-                "extendData":'any'
-            }
-          },
-          {
-             "id": "5820c7df-10db-420d-af7c-cfef7dfa3b61",
-             "type": "Gateway.Application",
-             "title": "泰语学习",
-             "data": {
-                "url": "http://127.0.0.1:8081/studyJourney.html"
-             }
-          }
-          
-       ],
-       "Folders": [
-          {
-             "id": "6ed238c6-c85b-422a-bb59-27f367f22ba7",
-             "type": "Gateway.Folder",
-             "title": "CMU Apps",
-             "Contents": [
-                {
-                   "id": "e8939171-a73b-427c-b3d1-f5e2cea5cd11",
-                   "type": "Gateway.Bookmark",
-                   "title": "CMU.fb",
-                   "data": {
-                    "url": "https://www.facebook.com/CMUeProeGrad"
-                   }
-                },
-                {
-                   "id": "0c64b9cc-00fb-4be3-a4c3-69fa9303213c",
-                   "type": "Gateway.Bookmark",
-                   "title": "TFL.CMU",
-                   "data": {
-                    "url": "https://www.human.cmu.ac.th/department.php?org_id=44f683a84163b3523afe57c2e008bc8c"
-                   }
-                },
-                {
-                    "id": "6ed238c6-c85b-422a-bb59-27f367f22ba722",
-                    "type": "Gateway.Folder",
-                    "title": "CMU Apps--2",
-                    "Contents": [
-                       {
-                          "id": "e8939171-a73b-427c-b3d1-f5e2cea5cd1122",
-                          "type": "Gateway.Bookmark",
-                          "title": "CMU.fb",
-                          "data": {
-                            "url": "https://www.facebook.com/CMUeProeGrad"
-                          }
-                       },
-                       {
-                          "id": "0c64b9cc-00fb-4be3-a4c3-69fa9303213c22",
-                          "type": "Gateway.Bookmark",
-                          "title": "TFL.CMU",
-                          "data": {
-                            "url": "https://www.human.cmu.ac.th/department.php?org_id=44f683a84163b3523afe57c2e008bc8c"
-                          }
-                       },
-                       {
-                            "id": "f007a853-d95f-49a6-8521-c7391fa6007w9",
-                            "type": "Gateway.Bookmark",
-                            "title": "云雀.todos",
-                            "data": {
-                                "url": "http://124.156.193.78:8080/app_todo.html"
-                            }
-                        },
-                        {
-                            "id": "5820c7df-10db-420d-af7c-cfef7dfa3b6w1",
-                            "type": "Gateway.Bookmark",
-                            "title": "泰语学习",
-                            "data": {
-                                "url": "http://127.0.0.1:8081/studyJourney.html"
-                            }
-                        }
-                    ]
-                 }
-             ]
-          },
-          {
-            "id": "0a05ea98-6ebf-41c7-96c1-3b79b908c5c4",
-            "type": "Gateway.Folder",
-            "title": "signpost.Apps",
-            "Contents": [
-               {
-                  "id": "6b2b6ed5-46ed-4dec-b2dd-ecf0fcc20f43",
-                  "type": "Gateway.Bookmark",
-                  "title": "TXCloud.Console",
-                  "data": {
-                    "url": "https://console.cloud.tencent.com/lighthouse/instance/index?rid=1"
-                  }
-               },
-               {
-                  "id": "72831c97-e584-4ead-b474-b1b73c0d636b",
-                  "type": "Gateway.Bookmark",
-                  "title": "assistant.TXCloud",
-                  "data": {
-                    "url": "http://124.156.193.78:8080/app_todo.html"
-                  }
-               },
-               {
-                "id": "0a05ea98-6ebf-41c7-96c1-3b79b908c5c4sss",
-                "type": "Gateway.Folder",
-                "title": "signpost.Demo",
-                "Contents": []
-               },
-               {
-                "id": "0a05ea98-6ebf-41c7-96c1-3b79b908c5c4sssss",
-                "type": "Gateway.Folder",
-                "title": "signpost.Demo2",
-                "Contents": []
-               },
-               {
-                  "id": "2624bb79-f27b-4a6e-907d-bb42e2f2d583",
-                  "type": "Gateway.Bookmark",
-                  "title": "alex.CF",
-                  "data": {
-                    "url": "https://dash.cloudflare.com/1b28f415fd10549801f9347b667f16b5/pages/view/larkbird/deployments/new"
-                  }
-               }
-            ]
-        }
-        ]
-    }
-};
-*/
 
 let globalChanges=[] ;
 let _global_OnClickBookmark = 'onClickBookmark' ;
@@ -148,7 +7,6 @@ let _global_OnClickBookmark = 'onClickBookmark' ;
 function gwRenderNavigator(cssRootElement){
     _gwRenderNavigator(globalNavigator,cssRootElement) ;
 }
-
 
 function _gwRenderNavigator(jsonGateway,cssRootElement){
     let tagRoot=document.querySelector(cssRootElement) ;
@@ -187,7 +45,6 @@ function onClickBookmark(jsonBookmark){
 
 function readyToCheckIn(){
     let tagBTNCheckIn = document.querySelector('#idBTNCheckInChanges') ;
-    //tagBTNCheckIn.classList.toggle('noShow') ;
     if(tagBTNCheckIn.classList.contains('noShow')==true){
         tagBTNCheckIn.classList.remove('noShow') ;
     }
@@ -244,7 +101,6 @@ document.querySelector('#idBTNPersonal').addEventListener('click',(event)=>{
 }) ;
 
 document.querySelector('#idBTNSetting').addEventListener('click',(event)=>{
-
     dlgWorkBench() ;
 }) ;
 
@@ -277,7 +133,6 @@ function gwRenderBookmark(jsonBookmark,tagParent){
         }
         tagBookMark.classList.add('larkSelected') ;
         if(tagCurSelected!=tagBookMark){
-            //window.open(url, '_blank').focus();
             eval(_global_OnClickBookmark)(jsonBookmark) ;
         }
     }) ;
@@ -310,7 +165,6 @@ function insertChildFolderBefore(tagFolder,tagChildFolder, tagChildBefore){
     if(tagFolder == tagRootFolders){
         tagRootFolders.insertBefore(tagChildFolder,tagChildBefore) ;
     }else{
-        //let tagFolderUL = tagFolder.querySelector('.larkDroppable') ;
         let tagFolderUL = tagFolder.querySelector('ul') ;
         tagFolderUL.insertBefore(tagChildFolder,tagChildBefore) ;
     }
@@ -324,7 +178,6 @@ function renderFolderContents(jsonFolder){
     for(let i=0 ;i<jsonFolder.Contents.length;i++){
         if(jsonFolder.Contents[i].type == "Gateway.Bookmark"){
             let tagBookmark = renderBookMark(jsonFolder.Contents[i],tagBMContainer) ;
-            //tagBMContainer.appendChild(tagBookmark) ;
         }
     }
 }
@@ -390,7 +243,6 @@ function gwRenderFolder(jsonFolder,tagParent,tagSibling=null){
         let tagUL = tagDetails.querySelector('ul') ;
         if(tagUL.querySelectorAll('details').length==0){
             event.preventDefault() ;
-            //alert('dsfsf') ;
         }
 
         let jsonItem = findJSONUsingID(tagBookFolder.dataset.larkID) ;
@@ -496,7 +348,6 @@ function gwRenderFolder(jsonFolder,tagParent,tagSibling=null){
         }else{
             targetFolder = event.target.closest('.folder') ;
         }
-
 
         console.log(targetFolder.querySelector('.folderSummary').innerText) ;
 
@@ -647,7 +498,6 @@ function checkRemoveFolder(jsonChange){
             if(bResult == true) return ;
         }
     }
-
     alert('can not find folder to remove') ;
 }
 
