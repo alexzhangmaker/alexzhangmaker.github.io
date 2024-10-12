@@ -16,6 +16,7 @@
     "express": "^4.19.2",
     "file-saver": "^2.0.5",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "tabletop": "^1.6.3"
   }
 }
