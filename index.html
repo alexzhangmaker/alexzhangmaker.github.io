@@ -122,15 +122,19 @@
             
             <div class="larkDlg">
                 <div class="larkDlgHeader">
-                    <div class="larkDlgTitle">Title goes here</div>
+                    <div class="larkDlgTitle">outpost Setting</div>
                     <div class="larkDlgHeaderBar">
                         <i class="bi-x-square larkBTN"></i>
                     </div>
                 </div>
                 <div class="larkDlgBody">
+                    <!-----
                     <input type="text" id="idBMTitle" name="lname" style="width:100%;height:1.2em;">
                     <input type="text" id="idBMURI" name="lname" style="width:100%;height:1.2em;">
                     <input type="text" id="idBMDescription" name="lname" style="width:100%;height:1.2em;">
+                    -->
+                    <label for="idURLServer">url:</label>
+                    <input type="text" id="idURLServer" name="idURLServer"><br><br>
 
                 </div>
                 <div class="larkDlgFooter">
@@ -152,6 +156,22 @@
     <script src="./js/larkDialogs.js"></script>
 
     <script>
+
+        document.getElementById('idBTNDlgCheck').addEventListener('click',(event)=>{
+            let tagURLAddre = document.querySelector('#idURLServer') ;
+            let cURLAddr = tagURLAddre.value ;
+            localforage.setItem('outPost', cURLAddr).then(function (value) {
+                // Do other things once the value has been saved.
+                console.log(value);
+                document.querySelector('#idDlgWorkbench').close() ;
+            }).catch(function(err) {
+                // This code runs if there were any errors
+                document.querySelector('#idDlgWorkbench').close() ;
+                console.log(err);
+            });
+
+            //idDlgWorkbench
+        }) ;
 
         async function readJSONURL(){
             try {
