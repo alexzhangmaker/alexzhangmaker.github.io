@@ -105,6 +105,13 @@ document.querySelector('#idBTNSetting').addEventListener('click',(event)=>{
 }) ;
 
 
+/*
+document.querySelector('#idBTNCheckInChanges').addEventListener('click',(event)=>{
+    //dlgWorkBench() ;
+    alert('idBTNCheckInChanges TBD') ;
+}) ;
+*/
+
 
 function gwRenderBookmark(jsonBookmark,tagParent){
     let tagBookMark = document.createElement('li') ;
@@ -636,7 +643,7 @@ function checkChangeBMMeta(jsonChange){
 }
 
 
-function checkInChanges(){
+async function checkInChanges(){
     for(let i=0;i<globalChanges.length;i++){
         switch(globalChanges[i].operation){
             case "plusFolder":
@@ -675,6 +682,25 @@ function checkInChanges(){
     if(tagBTNCheckIn.classList.contains('noShow')!=true){
         tagBTNCheckIn.classList.add('noShow') ;
     }
+
+    //globalNavigator
+    let jsonGatewayDB={
+        user:'alexszhang@outlook.com',
+        Gateway:globalNavigator
+    };
+    //http://127.0.0.1:9988/
+    let urlGatewayJSON = `http://127.0.0.1:9988/updateGateway.V1/` ;
+    let jsonRequest={
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonGatewayDB,null,3)
+    } ;
+    console.log(jsonRequest) ;
+    let response = await fetch(urlGatewayJSON, jsonRequest);
+    await response.json() ;
 }
 
 function _removeBookmark(jsonFolder,bookmarkID){

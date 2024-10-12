@@ -1,6 +1,6 @@
 
 
-const larkGatewayDBFile = './public/SQLiteDB/larkGateway.db' ;
+const larkGatewayDBFile = './SQLiteDB/larkGateway.db' ;
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 
@@ -3450,7 +3450,7 @@ async function doWork(){
 //doWork() ;
 
 
-exports.newGateway             = _newGateway ;
+exports.newGateway               = _newGateway ;
 exports.updateGateway            = _updateGateway ;
 exports.fetchGateway             = _fetchGateway ;
 

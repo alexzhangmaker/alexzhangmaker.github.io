@@ -28,11 +28,11 @@
             <div class="headerToolBar">
                 <div>
                     <i class="bi-person-circle larkBTN" id="idBTNPersonal"></i>
-                    <span>alexszhang@gmail.com</span>
+                    <span>alexszhang</span>
                 </div>
                 <div>
                     <i class="bi-plus larkBTN" id="idBTNPlusFolder"></i>
-                    <i class="bi-cloud-check noShow" id="idBTNCheckInChanges"></i>
+                    <i class="bi-cloud-check larkBTN noShow" id="idBTNCheckInChanges"></i>
                     <i class="bi-gear-wide-connected larkBTN" id="idBTNSetting"></i>
                 </div>
             </div>
@@ -160,7 +160,8 @@
                 // from the offline store.
                 console.log(value);
                 if(value==null){
-                    let jsonURL = `https://alexzhangmaker.github.io/json/Gateway.json` ;
+                    //let jsonURL = `https://alexzhangmaker.github.io/json/Gateway.json` ;
+                    let jsonURL = `http://127.0.0.1:9988/fetchGateway.V1/:alexszhang@outlook.com` ;
 
                     localforage.setItem('outPost', jsonURL).then(function (value) {
                         // Do other things once the value has been saved.
@@ -171,6 +172,7 @@
                     });
                     return jsonURL ;
                 }
+                return value ;
 
             } catch (err) {
                 // This code runs if there were any errors.
@@ -183,7 +185,7 @@
             let userID = 'alexszhang@outlook.com' ;
             //let srcURL = '/fetchGateway.V1/:alexszhang@outlook.com' ;
             let srcURL = await readJSONURL() ;//`https://alexzhangmaker.github.io/json/Gateway.json` ;
-            let response = await fetch(srcURL);
+            let response = await fetch(srcURL,{mode: 'no-cors'});
             const jsonUserGateway = await response.json();
             console.log(JSON.stringify(jsonUserGateway,null,3)) ; 
             
