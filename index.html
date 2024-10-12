@@ -160,8 +160,8 @@
                 // from the offline store.
                 console.log(value);
                 if(value==null){
-                    //let jsonURL = `https://alexzhangmaker.github.io/json/Gateway.json` ;
-                    let jsonURL = `http://127.0.0.1:9988/fetchGateway.V1/:alexszhang@outlook.com` ;
+                    let jsonURL = `https://alexzhangmaker.github.io/json/Gateway.json` ;
+                    //let jsonURL = `http://127.0.0.1:9988/fetchGateway.V1/:alexszhang@outlook.com` ;
 
                     localforage.setItem('outPost', jsonURL).then(function (value) {
                         // Do other things once the value has been saved.
