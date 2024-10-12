@@ -153,11 +153,36 @@
 
     <script>
 
+        async function readJSONURL(){
+            try {
+                const value = await localforage.getItem('outPost');
+                // This code runs once the value has been loaded
+                // from the offline store.
+                console.log(value);
+                if(value==null){
+                    let jsonURL = `https://alexzhangmaker.github.io/json/Gateway.json` ;
+
+                    localforage.setItem('outPost', jsonURL).then(function (value) {
+                        // Do other things once the value has been saved.
+                        console.log(value);
+                    }).catch(function(err) {
+                        // This code runs if there were any errors
+                        console.log(err);
+                    });
+                    return jsonURL ;
+                }
+
+            } catch (err) {
+                // This code runs if there were any errors.
+                console.log(err);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded',async (event)=>{
             
             let userID = 'alexszhang@outlook.com' ;
             //let srcURL = '/fetchGateway.V1/:alexszhang@outlook.com' ;
-            let srcURL = `https://alexzhangmaker.github.io/json/Gateway.json` ;
+            let srcURL = await readJSONURL() ;//`https://alexzhangmaker.github.io/json/Gateway.json` ;
             let response = await fetch(srcURL);
             const jsonUserGateway = await response.json();
             console.log(JSON.stringify(jsonUserGateway,null,3)) ; 
@@ -180,7 +205,7 @@
 
     </script>
     <script type='text/javascript'>    
-        var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1ZxANNvssnrZ6_7EqjblRFZySbliEX86sVQRaEc0b-Ws/edit?usp=sharing';
+        var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1ZxANNvssnrZ6_7EqjblRFZySbliEX86sVQRaEc0b-Ws/edit?gid=0#gid=0';
       
         function initGoogleSheet() {
           Tabletop.init( { key: publicSpreadsheetUrl,
