@@ -186,7 +186,11 @@
             //let srcURL = '/fetchGateway.V1/:alexszhang@outlook.com' ;
             let srcURL = await readJSONURL() ;//`https://alexzhangmaker.github.io/json/Gateway.json` ;
             let response = await fetch(srcURL,{mode: 'no-cors'});
-            const jsonUserGateway = await response.json();
+
+            const string = await response.text();
+            const jsonUserGateway = string === "" ? {} : JSON.parse(string);
+      
+            //const jsonUserGateway = await response.json();
             console.log(JSON.stringify(jsonUserGateway,null,3)) ; 
             
 
