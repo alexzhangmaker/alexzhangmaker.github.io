@@ -1,0 +1,40 @@
+{
+  "name": "outpost.Penguin",
+  "description": "Penguin's outPost",
+  "version": "2.0",
+  "manifest_version": 3,
+  "incognito":"spanning",
+  
+
+  "permissions": [
+      "storage", 
+      "tabs",
+      "bookmarks"
+  ],
+
+  "host_permissions": [],
+  "content_scripts": [
+
+  ],
+  "action": {
+    "default_title": "Penguin,fly", 
+    "default_popup": "bookmarking.html",  // optional
+    "default_icon": {
+      "16": "/images/computer.png",
+      "32": "/images/computer.png",
+      "48": "/images/computer.png",
+      "128": "/images/computer.png"
+    }
+  },
+  "icons": {
+    "16": "/images/computer.png",
+    "32": "/images/computer.png",
+    "48": "/images/computer.png",
+    "128": "/images/computer.png"
+  },
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  }
+
+}

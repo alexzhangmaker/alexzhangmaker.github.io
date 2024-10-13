@@ -30,6 +30,7 @@ app.listen(port, () => {
 //app.get('/publish.V1', fetchAccountHoldings) ;             // http://127.0.0.1:8180/fetchProjects.V2
 app.get('/fetchGateway.V1/:user', fetchGatewayV1) ;    //http://127.0.0.1:9988/fetchGateway.V1/:alexszhang@gmail.com
 app.post('/updateGateway.V1/', updateGatewayV1) ;
+app.post('/addBookmark.V1/', addBookmarkV1) ;
 
 
 
@@ -38,7 +39,7 @@ async function fetchGatewayV1(request, response) {
     const {user } = request.params;
     let cUser = user.replace(':','') ;
     let jsonGateway = await libGatewayDB.fetchGateway(cUser) ;
-    console.log(JSON.stringify(jsonGateway,null,3)) ;
+    //console.log(JSON.stringify(jsonGateway,null,3)) ;
     response.json(jsonGateway.Gateway) ;
 }
 
@@ -48,5 +49,14 @@ async function updateGatewayV1(request, response) {
   console.log(`updateGatewayV1:${jsonData}`) ;
   console.log(JSON.stringify(jsonData,null,3)) ;
   await libGatewayDB.updateGateway(jsonData) ;
+  response.send({ retCode: '200' }) ;
+}
+
+
+
+async function addBookmarkV1(request, response) {
+  let jsonData = request.body ;
+  console.log(JSON.stringify(jsonData,null,3)) ;
+  await libGatewayDB.addBookmark(jsonData) ;
   response.send({ retCode: '200' }) ;
 }

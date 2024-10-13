@@ -5,7 +5,7 @@ let jsonGateway = {
       "author": "alexszhang@gmail.com",
       "user": "alexszhang@gmail.com",
       "timestamp": "Mon Aug 21 2023 21:16:43 GMT+0700 (中南半岛时间)"
-   },
+   }, 
    "data": {
       "mustHave": [
          {

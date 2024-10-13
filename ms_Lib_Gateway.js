@@ -3,6 +3,7 @@
 const larkGatewayDBFile = './SQLiteDB/larkGateway.db' ;
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
+const { v4: uuidv4 } = require('uuid');
 
 function createDbConnection(filename) {
   return open({
@@ -127,158 +128,78 @@ async function _updateGateway(jsonGateway){
     }
 }
 
+
 /*
-async function _archieveMemo(cNoteID){
-    sqlite3.verbose();
-    console.log(`_archieveMemo will do ${cNoteID}`) ;
-    try {  
-        const dbConnection = await createDbConnection(larkGatewayDBFile);
-        let cStmt = `UPDATE memo set status="archive" where memoID = ?` ;
-        await dbConnection.run(cStmt, [cNoteID]);
-    
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-
-
-
-async function _newMemoBox(jsonMemoBox){
-
-    sqlite3.verbose();
-    try {
-        let jsonMemoBoxDB={
-            memoBoxID:signpostTools.generateDynamicID(),
-            memoBoxTitle:jsonMemoBox.memoBoxTitle,
-            memoIDs:JSON.stringify(jsonMemoBox.memoIDs),
-        };
-
-        console.log(`_newMemoBox ${jsonMemoBoxDB}`) ;
-        const dbConnection = await createDbConnection(larkGatewayDBFile);
-        let cStmt = `INSERT INTO memoBox (memoBoxID,memoBoxTitle,memoIDs,status) VALUES ( ?,?,?,?)` ;
-
-        await dbConnection.run(cStmt, [jsonMemoBoxDB.memoBoxID,jsonMemoBoxDB.memoBoxTitle,jsonMemoBoxDB.memoIDs,'ready']);
-        return jsonMemoBoxDB.memoBoxID ;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-
-async function _fetchMemoBoxIDs(){
-    sqlite3.verbose();
-    try {  
-        const dbConnection = await createDbConnection(larkGatewayDBFile);
-        let cStmt = `SELECT memoBoxID FROM memoBox where status!="archive"` ;
-        let memoBoxIDs = await dbConnection.all(cStmt, []);
-        console.log(memoBoxIDs);
-        return memoBoxIDs ;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-  
-
-async function _fetchMemoBox(memoBoxID){
-    sqlite3.verbose();
-    try {  
-        const dbConnection = await createDbConnection(noteDBFile);
-        let cStmt = `SELECT * FROM memoBox where memoBoxID = ?` ;
-        const jsonMemoBoxDB = await dbConnection.get(cStmt, [memoBoxID]);
-        if(jsonMemoBoxDB != undefined){
-            let jsonMemoBox={
-                memoBoxID:jsonMemoBoxDB.memoBoxID,
-                memoBoxTitle:jsonMemoBoxDB.memoBoxTitle,
-                memoIDs:JSON.parse(jsonMemoBoxDB.memoIDs),
-                external:'tbd'
-            } ;
-            if(jsonMemoBoxDB.external!=null){
-                jsonMemoBox.external = JSON.parse(jsonMemoBoxDB.external)
-            }
-            
-            console.log(jsonMemoBox);
-            return jsonMemoBox ;
-        }
-        return undefined ;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-  
-  
-async function _updateMemoBox(jsonMemoBox){
-    sqlite3.verbose();
-    try {  
-        console.log(`_updateMemoBox ${JSON.stringify(jsonMemoBox,null,3)}`) ;
-
-        const dbConnection = await createDbConnection(noteDBFile);
-
-        let jsonMemoBoxDB={
-            memoBoxID:jsonMemoBox.memoBoxID,
-            memoBoxTitle:jsonMemoBox.memoBoxTitle,
-            memoIDs:JSON.stringify(jsonMemoBox.memoIDs),
-        };
-    
-        console.log(`_updateMemoBox ${jsonMemoBoxDB}`) ;
-
-        let cStmt = `SELECT memoBoxID FROM memoBox where memoBoxID = ?` ;
-        let jsonDBNotePre = await dbConnection.get(cStmt, [jsonMemoBox.memoBoxID]);
-        if(jsonDBNotePre == undefined){
-            console.log(`_updateGraffitiNote: ${jsonMemoBox.memoBoxID} not found `) ;
-        }else{
-            let cUpdateStmt = `UPDATE memoBox set memoBoxTitle=?, memoIDs=? where memoBoxID = ?` ;
-            await dbConnection.run(cUpdateStmt, [jsonMemoBoxDB.memoBoxTitle,
-                jsonMemoBoxDB.memoIDs,
-                jsonMemoBoxDB.memoBoxID,
-            ]);
-        }
-    }catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-  
-async function _AddMemo2MemoBox(memoID,memoBoxID){
-    sqlite3.verbose();
-    try {  
-        const dbConnection = await createDbConnection(noteDBFile);
-        let cStmt = `SELECT memoBoxID, memoIDs FROM memoBox where memoBoxID = ?` ;
-        let jsonMemoBox = await dbConnection.get(cStmt, [memoBoxID]);
-        if(jsonMemoBox == undefined){
-            console.log(`_AddMemo2MemoBox: ${memoBoxID} not found `) ;
-        }else{
-            let memoIDs = JSON.parse(jsonMemoBox.memoIDs) ;
-            memoIDs.push(memoID) ;
-            let cUpdateStmt = `UPDATE memoBox set memoIDs=? where memoBoxID = ?` ;
-            await dbConnection.run(cUpdateStmt, [JSON.stringify(memoIDs),memoBoxID]);
-        }
-    }catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-  
-async function _archieveMemoBox(memoBoxID){
-    sqlite3.verbose();
-    console.log(memoBoxID) ;
-    try {  
-        const dbConnection = await createDbConnection(noteDBFile);
-        let cStmt = `UPDATE memoBox set status="archive" where memoBoxID = ?` ;
-        await dbConnection.run(cStmt, [memoBoxID]);
-    
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
+let jsonAddBookmark={
+   operation:'addBookmark',
+   parameter:{
+      user:'alexszhang@gmail.com',
+      folderID:'folder001',
+      url:currentTab.url,
+      title:currentTab.title,
+      description:'this is google'
+   }
+} ;
 */
+
+function addBM2Folder(jsonFolder,jsonAddBookmark){
+   if(jsonFolder.id == jsonAddBookmark.parameter.folderID){
+      let jsonBookMark={
+         "id": uuidv4(),
+         "type": "Gateway.Bookmark",
+         "title": jsonAddBookmark.parameter.title,
+         "data": {
+            "url": jsonAddBookmark.parameter.url,
+            "description":jsonAddBookmark.parameter.description
+         }
+      } ;
+      console.log(`addBM2Folder ${JSON.stringify(jsonBookMark)}`) ;
+      jsonFolder.Contents.push(jsonBookMark) ;
+      return true ;
+   }
+
+   for(let i=0;i<jsonFolder.Contents.length;i++){
+      if(jsonFolder.Contents.type == 'Gateway.Folder'){
+         let bResult = addBM2Folder(jsonFolder.Contents[i],jsonAddBookmark) ;
+         if(bResult == true) return true ;
+      }
+   }
+
+   return false ;
+}
+
+
+async function _addBookmark(jsonAddBookmark){
+   sqlite3.verbose();
+   try {  
+       const dbConnection = await createDbConnection(larkGatewayDBFile);
+   
+       let cStmt = `SELECT * FROM userGateway where user = ?` ;
+       let jsonGatewayDB = await dbConnection.get(cStmt, [jsonAddBookmark.parameter.user]);
+       if(jsonGatewayDB == undefined){
+           console.log(`_updateGateway: ${jsonAddBookmark.parameter.user} not found `) ;
+       }else{
+         let jsonGateway = JSON.parse(jsonGatewayDB.Gateway) ;
+         for(let i=0;i<jsonGateway.data.Folders.length;i++){
+            let bResult = addBM2Folder(jsonGateway.data.Folders[i],jsonAddBookmark) ;
+
+            jsonGatewayDB.Gateway = JSON.stringify(jsonGateway) ;
+            if(bResult == true){
+               let cUpdateStmt = `UPDATE userGateway set Gateway=? where user = ?` ;
+               await dbConnection.run(cUpdateStmt, [
+                  jsonGatewayDB.Gateway,
+                  jsonGatewayDB.user
+               ]);
+            } ;
+         }
+       }
+   }catch (error) {
+       console.error(error);
+       throw error;
+   }
+}
+
+
 
 
 let globalNavigator = {
@@ -3453,4 +3374,5 @@ async function doWork(){
 exports.newGateway               = _newGateway ;
 exports.updateGateway            = _updateGateway ;
 exports.fetchGateway             = _fetchGateway ;
+exports.addBookmark              = _addBookmark ;
 

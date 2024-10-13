@@ -205,7 +205,7 @@
             let userID = 'alexszhang@outlook.com' ;
             //let srcURL = '/fetchGateway.V1/:alexszhang@outlook.com' ;
             let srcURL = await readJSONURL() ;//`https://alexzhangmaker.github.io/json/Gateway.json` ;
-            let response = await fetch(srcURL,{mode: 'no-cors'});
+            let response = await fetch(srcURL/*,{mode: 'no-cors'}*/);
 
             const string = await response.text();
             const jsonUserGateway = string === "" ? {} : JSON.parse(string);
