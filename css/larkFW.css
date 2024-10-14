@@ -109,8 +109,8 @@
     /*background-color:aqua;*/
     height:auto;
     min-height: 120px;
-    flex-grow: 1;
-    flex-shrink: 1;
+    /*flex-grow: 1;
+    flex-shrink: 1;*/
 }
 
 .Folders{
