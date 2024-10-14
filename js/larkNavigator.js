@@ -685,10 +685,9 @@ async function checkInChanges(){
 
     //globalNavigator
     let jsonGatewayDB={
-        user:'alexszhang@outlook.com',
+        user:await readUserValue(),
         Gateway:globalNavigator
     };
-    //http://127.0.0.1:9988/
     let urlGatewayJSON = `http://127.0.0.1:9988/updateGateway.V1/` ;
     let jsonRequest={
         method: 'POST',

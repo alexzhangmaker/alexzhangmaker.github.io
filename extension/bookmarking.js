@@ -1,10 +1,63 @@
 console.log('bookmarking.js');
 
+
+async function readUserValue(){
+    try {
+        const value = await localforage.getItem('outPost.User');
+        // This code runs once the value has been loaded
+        // from the offline store.
+        console.log(value);
+        if(value==null){
+            let cUser = `alexszhang` ;
+            localforage.setItem('outPost.User', cUser).then(function (value) {
+                // Do other things once the value has been saved.
+                console.log(value);
+            }).catch(function(err) {
+                // This code runs if there were any errors
+                console.log(err);
+            });
+            return jsonURL ;
+        }
+        return value ;
+
+    } catch (err) {
+        // This code runs if there were any errors.
+        console.log(err);
+    }
+}
+
+async function readJSONURL(){
+    try {
+        const value = await localforage.getItem('outPost');
+        // This code runs once the value has been loaded
+        // from the offline store.
+        console.log(value);
+        if(value==null){
+            let jsonURL = `http://127.0.0.1:9988/fetchGateway.V1/:alexszhang` ;
+
+            localforage.setItem('outPost', jsonURL).then(function (value) {
+                // Do other things once the value has been saved.
+                console.log(value);
+            }).catch(function(err) {
+                // This code runs if there were any errors
+                console.log(err);
+            });
+            return jsonURL ;
+        }
+        return value ;
+
+    } catch (err) {
+        // This code runs if there were any errors.
+        console.log(err);
+    }
+}
+
 document.querySelector('#idBTNFetchBMTree').addEventListener('click',async (event)=>{
 
     
     //let srcURL = '/fetchGateway.V1/:alexszhang@outlook.com' ;
-    let srcURL = `http://127.0.0.1:9988/fetchGateway.V1/:alexszhang@outlook.com` ;//`https://alexzhangmaker.github.io/json/Gateway.json` ;//`http://127.0.0.1:9988/fetchGateway.V1/:alexszhang@outlook.com` ;
+    let cUser = await readUserValue() ;
+    let srcURL = `http://127.0.0.1:9988/fetchGateway.V1/:${cUser}` ;//`https://alexzhangmaker.github.io/json/Gateway.json` ;//`http://127.0.0.1:9988/fetchGateway.V1/:alexszhang@outlook.com` ;
     let response = await fetch(srcURL/*,{mode: 'no-cors'}*/);
 
     const string = await response.text();
@@ -82,7 +135,7 @@ document.querySelector('#idBTNAddBookmark').addEventListener('click',async (even
     let jsonBookmarkOp={
         operation:'addBookmark',
         parameter:{
-            user:'alexszhang@outlook.com',
+            user:await readUserValue() ,
             folderID:document.querySelector('#idFolder').dataset.folderID,
             url:document.querySelector('#idURL').value,
             title:document.querySelector('#idTitle').value,
@@ -100,7 +153,7 @@ document.querySelector('#idBTNSubmit').addEventListener('click',async (event)=>{
     let jsonBookmarkOp={
         operation:'addBookmark',
         parameter:{
-            user:'alexszhang@outlook.com',
+            user:await readUserValue() ,
             folderID:document.querySelector('#idFolder').dataset.folderID,
             url:document.querySelector('#idURL').value,
             title:document.querySelector('#idTitle').value,

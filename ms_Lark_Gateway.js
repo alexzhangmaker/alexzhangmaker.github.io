@@ -13,6 +13,7 @@ const libGatewayDB = require('./ms_Lib_Gateway.js') ;
 const app = express();
 app.use(express.static('./')) ;
 app.use(cors()) ;
+app.use(express.json({limit: '50mb'}));
 
 // configure the app to use bodyParser()
 app.use(bodyParser.urlencoded({extended: true}));
@@ -46,8 +47,8 @@ async function fetchGatewayV1(request, response) {
 
 async function updateGatewayV1(request, response) {
   let jsonData = request.body ;
-  console.log(`updateGatewayV1:${jsonData}`) ;
-  console.log(JSON.stringify(jsonData,null,3)) ;
+  //console.log(`updateGatewayV1:${jsonData}`) ;
+  //console.log(JSON.stringify(jsonData,null,3)) ;
   await libGatewayDB.updateGateway(jsonData) ;
   response.send({ retCode: '200' }) ;
 }

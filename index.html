@@ -173,6 +173,32 @@
             //idDlgWorkbench
         }) ;
 
+
+        async function readUserValue(){
+            try {
+                const value = await localforage.getItem('outPost.User');
+                // This code runs once the value has been loaded
+                // from the offline store.
+                console.log(value);
+                if(value==null){
+                    let cUser = `alexszhang` ;
+                    localforage.setItem('outPost.User', cUser).then(function (value) {
+                        // Do other things once the value has been saved.
+                        console.log(value);
+                    }).catch(function(err) {
+                        // This code runs if there were any errors
+                        console.log(err);
+                    });
+                    return jsonURL ;
+                }
+                return value ;
+
+            } catch (err) {
+                // This code runs if there were any errors.
+                console.log(err);
+            }
+        }
+
         async function readJSONURL(){
             try {
                 const value = await localforage.getItem('outPost');
@@ -180,8 +206,7 @@
                 // from the offline store.
                 console.log(value);
                 if(value==null){
-                    let jsonURL = `https://alexzhangmaker.github.io/json/Gateway.json` ;
-                    //let jsonURL = `http://127.0.0.1:9988/fetchGateway.V1/:alexszhang@outlook.com` ;
+                    let jsonURL = `http://127.0.0.1:9988/fetchGateway.V1/:alexszhang` ;
 
                     localforage.setItem('outPost', jsonURL).then(function (value) {
                         // Do other things once the value has been saved.
@@ -202,8 +227,7 @@
 
         document.addEventListener('DOMContentLoaded',async (event)=>{
             
-            let userID = 'alexszhang@outlook.com' ;
-            //let srcURL = '/fetchGateway.V1/:alexszhang@outlook.com' ;
+            let userID = await readUserValue() ;
             let srcURL = await readJSONURL() ;//`https://alexzhangmaker.github.io/json/Gateway.json` ;
             let response = await fetch(srcURL/*,{mode: 'no-cors'}*/);
 
