@@ -57,6 +57,7 @@
             <div class="headerToolBar">
                 <div>
                     <i class="bi-list larkBTN" id="idBTNToggleLeftPannel"></i>
+                    <i class="bi-house larkBTN" id="idBTNHomeScreen"></i>
                 </div>
                 <div>
                     <i class="bi-plus larkBTN" id="idBTNPlusApp"></i>
@@ -233,6 +234,11 @@
             }
         }
 
+        //idBTNHomeScreen
+        document.querySelector("#idBTNHomeScreen").addEventListener('click',async (event)=>{
+            gwRenderCanvas('.mainCanvas') ;
+
+        }) ;
         document.addEventListener('DOMContentLoaded',async (event)=>{
             
             let userID = await readUserValue() ;
