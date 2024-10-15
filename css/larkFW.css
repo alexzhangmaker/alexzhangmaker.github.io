@@ -36,9 +36,9 @@
 .rightPanel{
     width:80% ;
     height:100% ;
-    flex-grow: 1;
+    /*flex-grow: 1;*/
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
 
     display: flex;
     flex-direction: column;
@@ -69,10 +69,12 @@
     flex-grow: 0 ;
     /*background-color: brown;*/
     font-size: 1.2em;
-
+    padding-left: 10px;
+    padding-right: 10px;
+    
     display: flex;
     flex-direction: row;
-    justify-content:center;
+    justify-content: space-between;
     align-items:center;
     align-content: center;
 }
@@ -101,6 +103,8 @@
     width:100% ;
     overflow-x: hidden;
     overflow-y: auto;
+
+    padding-bottom: 20px;
 }
 
 
@@ -201,8 +205,10 @@
 .mainCanvas{
     width:100% ;
     flex-grow: 1 ;
-    
+    padding: 10px;
 
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
 

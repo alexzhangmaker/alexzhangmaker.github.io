@@ -13,7 +13,31 @@ function _gwRenderNavigator(jsonGateway,cssRootElement){
     let tagMustHave = tagRoot.querySelector('.mustHave') ;
     let tagFolders = tagRoot.querySelector('.Folders') ;
 
-    tagMustHave.innerHTML = `<ul></ul>` ;
+    tagMustHave.innerHTML = `
+    <style>
+        #idMustHaveBar{
+            display:flex;
+            flex-direction:row ;
+            justify-content:space-between ;
+            padding-right:10px;
+            padding-bottom:5px ;
+        }
+
+        #idMustHaveBar span{
+            color:grey ;
+        }
+
+        #idMustHaveBar #idBTNPlusMustHave{
+            color:grey ;
+            font-size:14px !important;
+        }
+    </style>
+    <div id="idMustHaveBar">
+        <span>Daily Apps</span>
+        <i class="bi-plus-lg larkBTN" id="idBTNPlusMustHave"></i>
+    </div>
+    <ul></ul>
+    ` ;
 
     if(jsonGateway.data.mustHave.length>0){
         let tagMustHaveUL = tagMustHave.querySelector('ul') ;
@@ -23,9 +47,35 @@ function _gwRenderNavigator(jsonGateway,cssRootElement){
     }else{
         tagMustHave.classList.add('noShow') ;
     }
-    
+    tagMustHave.querySelector('#idBTNPlusMustHave').addEventListener('click',clickPlusMustHave) ;
 
-    tagFolders.innerHTML = `<ul id="idFoldersUL"></ul>` ;
+
+    tagFolders.innerHTML = `
+        <style>
+            #idFoldersBar{
+                display:flex;
+                flex-direction:row ;
+                justify-content:space-between ;
+                padding-right:10px;
+                padding-bottom:5px ;
+            }
+
+            #idFoldersBar span{
+                color:grey ;
+            }
+
+            #idFoldersBar #idBTNPlusFolder{
+                color:grey ;
+                font-size:14px !important;
+            }
+
+        </style>
+        <div id="idFoldersBar">
+            <span>Folders</span>
+            <i class="bi-plus-lg larkBTN" id="idBTNPlusFolder"></i>
+        </div>
+        <ul id="idFoldersUL"></ul>
+    ` ;
     let tagFoldersUL = tagFolders.querySelector('ul') ;
     for(i=0;i<jsonGateway.data.Folders.length;i++){
         if(jsonGateway.data.Folders[i].type == "Gateway.Folder"){
@@ -34,13 +84,14 @@ function _gwRenderNavigator(jsonGateway,cssRootElement){
             gwRenderBookmark(jsonGateway.data.Folders[i],tagFoldersUL) ;
         }
     }
+
+    tagFolders.querySelector('#idBTNPlusFolder').addEventListener('click',clickPlusFolder) ;
 }
 
 
 function onClickBookmark(jsonBookmark){
     window.open(jsonBookmark.data.url, '_blank').focus();
 }
-
 
 
 function readyToCheckIn(){
@@ -60,8 +111,11 @@ document.querySelector('#idBTNCheckInChanges').addEventListener('click',(event)=
 }) ;
 
 
+function clickPlusMustHave(event){
+    alert('clickPlusMustHave TBD') ;
+}
 
-document.querySelector('#idBTNPlusFolder').addEventListener('click',(event)=>{
+function clickPlusFolder(event){
     let tagCurSelected = document.querySelector('.larkSelected') ;
     let jsonFolder = {
         "id": uuid(),
@@ -70,7 +124,6 @@ document.querySelector('#idBTNPlusFolder').addEventListener('click',(event)=>{
         "Contents": []
     } ;
     
-
     let jsonChange = {
         operation:'plusFolder',
         parentID:'',            /* '' stand for root section, no parent */
@@ -93,7 +146,7 @@ document.querySelector('#idBTNPlusFolder').addEventListener('click',(event)=>{
     }
     logChange(jsonChange) ;
     readyToCheckIn() ;
-}) ;
+}
 
 
 document.querySelector('#idBTNPersonal').addEventListener('click',(event)=>{
@@ -103,14 +156,6 @@ document.querySelector('#idBTNPersonal').addEventListener('click',(event)=>{
 document.querySelector('#idBTNSetting').addEventListener('click',(event)=>{
     dlgWorkBench() ;
 }) ;
-
-
-/*
-document.querySelector('#idBTNCheckInChanges').addEventListener('click',(event)=>{
-    //dlgWorkBench() ;
-    alert('idBTNCheckInChanges TBD') ;
-}) ;
-*/
 
 
 function gwRenderBookmark(jsonBookmark,tagParent){
@@ -214,7 +259,7 @@ function gwRenderFolder(jsonFolder,tagParent,tagSibling=null){
                     <i class="bi-trash-fill" id="idBTNDelete"></i>
                     <i class="bi-pencil-square" id="idBTNEdit"></i>
                     <i class="bi-node-plus" id="idBTNMore"></i>   
-                    <span id="idFolderCounter">32</span>
+
                 </div>
             </summary>
             <ul></ul>

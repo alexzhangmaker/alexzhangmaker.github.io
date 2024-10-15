@@ -4,30 +4,7 @@ function gwRenderCanvas(cssRootElement){
 
     tagCanvas.innerHTML = `
         <div id="idBookmarkBrowser">
-            <div><span>folderName</span></div>
-            <ul id="idBookmarks">
-                <li>
-                    <!------
-                    <div class="boxBookmark">
-                        <div>
-                            <img tabindex="-1" class="image-LAVC" data-ar="7:6" width="56" height="48" alt=" " src="https://rdl.ink/render/https%3A%2F%2Fwww.w3schools.com%2Fimages%2Fw3schools_logo_436_2.png?mode=crop&amp;fill=solid&amp;width=56&amp;ar=7:6&amp;dpr=1.7999999523162842" draggable="false">                            
-                        </div>
-
-                        <div class="boxBookmarkMeta">
-                            <span>Brookfield</span>
-                            <div>Brookfield homepage ....</div>
-                            <div>https://stackoverflow.com/questions/43262121/trying-to-use-fetch-and-pass-in-mode-no-cors</div>
-                        </div>
-                        <div class="boxToolbar toolVisibilty">
-                            <i class="bi-google"></i>
-                            <i class="bi-trash-fill"></i>
-                            <i class="bi-pencil-square"></i>
-                        </div>
-                    </div>
-                    ---->
-                    
-                </li>
-            </ul>
+            <ul id="idBookmarks"></ul>
         </div>
     ` ;
 }
