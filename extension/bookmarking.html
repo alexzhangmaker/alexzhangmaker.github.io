@@ -6,43 +6,23 @@
 </head>
  
  <body>
-    <button id="idBTNFetchBMTree" >fetch JSON</button>
-    <button id="idBTNAddBookmark">Add Bookmark</button>
-    <button id="idBTNSubmit" disabled>Submit</button>
-    <button id="cancelAlarm">Cancel Alarm</button>
-    <div id="idFolderSelector">
+    <div id="idSettingContainer">
+        <div id="idSettingHeader">
+            <button id="idBTNFetchBMTree" >fetch JSON</button>
+            <!---<button id="idBTNAddBookmark">Add Bookmark</button>-->
+            <button id="idBTNSubmit" disabled>Add Bookmark</button>
+            <!---<button id="cancelAlarm">Cancel Alarm</button>-->
+        </div>
         
-        <!----
-        <details>
-            <summary>Click me 1</summary>
-            <article>
-                <details>
-                    <summary>Click me 1.1</summary>
-                    <article>
-                        dfsfdsf
-                    </article>
-                </details>
-
-                <details>
-                    <summary>Click me 1.2</summary>
-                    <article>
-                        dfsfdsf
-                    </article>
-                </details>
-                
-            </article>
-        </details>
-    --->
+        <div id="idBMMeta">
+            <label for="idFolder">folder:</label><input type="text" id="idFolder" name="idFolder"><br>
+            <label for="idTitle">title:</label><input type="text" id="idTitle" name="idTitle"><br>
+            <label for="idComment">Comment:</label><input type="text" id="idComment" name="idComment"><br>
+            <label for="idURL">URL:</label><input type="text" id="idURL" name="idURL"><br>
+        </div>
+        <div id="idFolderSelector"></div>
     </div>
-    <div id="idBMMeta">
-        <label for="idFolder">folder:</label><input type="text" id="idFolder" name="idFolder"><br>
-        <label for="idTitle">title:</label><input type="text" id="idTitle" name="idTitle"><br>
-        <label for="idComment">Comment:</label><input type="text" id="idComment" name="idComment"><br>
-        <label for="idURL">URL:</label><input type="text" id="idURL" name="idURL"><br>
-    </div>
-    <div id="idConsole">
-        <ul id="idConsoleList"></ul>
-    </div>
+  
 
    <script src="bookmarking.js"></script>
    <script src="./jsResource/localforage.js"></script>

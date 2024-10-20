@@ -77,7 +77,7 @@ document.querySelector('#idBTNFetchBMTree').addEventListener('click',async (even
 
     //const jsonUserGateway = await response.json();
     console.log(JSON.stringify(jsonUserGateway,null,3)) ; 
-    log2Console(JSON.stringify(jsonUserGateway,null,3)) ;
+    //log2Console(JSON.stringify(jsonUserGateway,null,3)) ;
 
     //const value = await localforage.getItem('outPost');
     localforage.setItem('outPost', JSON.stringify(jsonUserGateway)).then(function (value) {
@@ -129,6 +129,7 @@ let jsonAddBookmark={
    }
 } ;
 */
+/*
 document.querySelector('#idBTNAddBookmark').addEventListener('click',async (event)=>{
     let currentTab = await getCurrentTab() ;
 
@@ -145,10 +146,10 @@ document.querySelector('#idBTNAddBookmark').addEventListener('click',async (even
 
     //const responseSW = await chrome.runtime.sendMessage(jsonBookmarkOp);
     //console.log(responseSW);
-    log2Console(JSON.stringify(jsonBookmarkOp)) ;
+    //log2Console(JSON.stringify(jsonBookmarkOp)) ;
 
 }) ;
-
+*/
 document.querySelector('#idBTNSubmit').addEventListener('click',async (event)=>{
     let jsonBookmarkOp={
         operation:'addBookmark',
@@ -176,6 +177,7 @@ document.querySelector('#idBTNSubmit').addEventListener('click',async (event)=>{
 }) ;
 
 
+/*
 function log2Console(csLog){
     let tagConsole = document.querySelector('#idConsole') ;
     let tagMsgUL = tagConsole.querySelector('#idConsoleList') ;
@@ -183,6 +185,7 @@ function log2Console(csLog){
     tagMsgUL.appendChild(tagMsg) ;
     tagMsg.innerText = csLog ;
 }
+*/
 
 
 async function getCurrentTab() {
