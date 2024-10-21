@@ -32,7 +32,7 @@ function renderBookMark(jsonBookMark,tagBMContainer){
 
             <div class="boxBookmarkMeta">
                 <span id="idBMTitle">${jsonBookMark.title}</span>
-                <div id="idBMURL">${jsonBookMark.data.url}</div>
+                <div id="idBMURL">${jsonBookMark.url}</div>
             </div>
             <div class="boxToolbar toolVisibilty">
                 <i class="bi-google"></i>
@@ -48,7 +48,7 @@ function renderBookMark(jsonBookMark,tagBMContainer){
     tagBookMark.setAttribute('draggable', true);
 
     tagBookMark.dataset.larkID = jsonBookMark.id ;
-    tagBookMark.dataset.url = jsonBookMark.data.url ;
+    tagBookMark.dataset.url = jsonBookMark.url ;
 
     tagBookMark.querySelector('.boxBookmarkMeta').addEventListener('click',(event)=>{
         window.open(tagBookMark.dataset.url, '_blank').focus();

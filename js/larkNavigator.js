@@ -36,13 +36,23 @@ function _gwRenderNavigator(jsonGateway,cssRootElement){
         <span>Daily Apps</span>
         <i class="bi-plus-lg larkBTN" id="idBTNPlusMustHave"></i>
     </div>
-    <ul></ul>
+    <ul>
+        <style>
+            .larkMustHaveBM{
+                display:flex;
+                flex-direction:row ;
+                justify-content:space-between ;
+
+                padding-right:10px;
+            }
+        </style>
+    </ul>
     ` ;
 
-    if(jsonGateway.data.mustHave.length>0){
+    if(jsonGateway.jsonMustHave.length>0){
         let tagMustHaveUL = tagMustHave.querySelector('ul') ;
-        for(let i=0;i<jsonGateway.data.mustHave.length;i++){
-            gwRenderBookmark(jsonGateway.data.mustHave[i],tagMustHaveUL) ;
+        for(let i=0;i<jsonGateway.jsonMustHave.length;i++){
+            gwRenderBookmark(jsonGateway.jsonMustHave[i],tagMustHaveUL) ;
         }
     }else{
         tagMustHave.classList.add('noShow') ;
@@ -77,11 +87,11 @@ function _gwRenderNavigator(jsonGateway,cssRootElement){
         <ul id="idFoldersUL"></ul>
     ` ;
     let tagFoldersUL = tagFolders.querySelector('ul') ;
-    for(i=0;i<jsonGateway.data.Folders.length;i++){
-        if(jsonGateway.data.Folders[i].type == "Gateway.Folder"){
-            gwRenderFolder(jsonGateway.data.Folders[i],tagFoldersUL) ;
+    for(i=0;i<jsonGateway.jsonFolders.length;i++){
+        if(jsonGateway.jsonFolders[i].type == "Gateway.Folder"){
+            gwRenderFolder(jsonGateway.jsonFolders[i],tagFoldersUL) ;
         }else{
-            gwRenderBookmark(jsonGateway.data.Folders[i],tagFoldersUL) ;
+            gwRenderBookmark(jsonGateway.jsonFolders[i],tagFoldersUL) ;
         }
     }
 
@@ -105,14 +115,91 @@ document.querySelector('#idBTNCheckInChanges').addEventListener('click',(event)=
     checkInChanges() ;
     let tagBTNCheckIn = event.target ;
     if(tagBTNCheckIn.classList.contains('noShow')!=true){
-        alert('will check in changes') ;
+        //alert('will check in changes') ;
         tagBTNCheckIn.classList.add('noShow') ;
     }
 }) ;
 
 
+
+/*
+{
+    "id": "b93f4a8f-6412-4e60-bc6b-aee013745e00",
+    "type": "Gateway.Bookmark",
+    "title": "云雀.todos",
+    "data": {
+        "url": "http://124.156.193.78:8080/app_todo.html"
+    }
+}
+*/
+function callback_PlusMustHave(jsonFormData){
+    console.log(jsonFormData) ;
+    
+    let jsonBMOperation={
+        operation:'addMustHave',
+        userID:'alexszhang',
+        folderID:'NO NEED',
+        jsonBookmark:{
+            "id": "TBD",
+            "type": "Gateway.Bookmark",
+            "title": jsonFormData.title,
+            "data": {
+                "url": jsonFormData.url
+            }
+        }
+    } ;
+
+    let urlPlusMustHave = `/newMustHave.V1/` ;
+
+    fetch(urlPlusMustHave, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonBMOperation)
+    }).then(res => res.json())
+    .then(res => console.log(res));
+}
+
 function clickPlusMustHave(event){
-    alert('clickPlusMustHave TBD') ;
+    //alert('clickPlusMustHave TBD') ;
+    let jsonDialog={
+        cssContainer:'#idDlgContainer',
+        theme:{
+            backgroundColor:'aqua',
+            border:'black'
+        },
+        layout:{
+            width:800,
+            height:300
+        },
+        content:{
+            title:'demo Title',
+            fields:[
+                {
+                    label:'url',
+                    content:{
+                        type:'input.Text',
+                        default:'demo input',
+                        name:'url'
+                    }
+                },{
+                    label:'title',
+                    content:{
+                        type:'input.Text',
+                        default:'demo input',
+                        name:'title'
+                    }
+                }
+            ]
+        },
+        callback:{
+            commitFunc:'callback_PlusMustHave'
+        }
+    } ;
+    
+    let tagID = createLarkDialog(jsonDialog) ;
 }
 
 function clickPlusFolder(event){
@@ -160,9 +247,24 @@ document.querySelector('#idBTNSetting').addEventListener('click',(event)=>{
 
 function gwRenderBookmark(jsonBookmark,tagParent){
     let tagBookMark = document.createElement('li') ;
+    tagBookMark.classList.add('larkMustHaveBM') ;
     tagBookMark.innerHTML=`
-        <i class="bi-journal-bookmark-fill"></i>
-        ${jsonBookmark.title}
+        <style>
+            .mustHaveTools .bi-recycle{
+                visibility: hidden;
+            }
+
+            .mustHaveTools:hover .bi-recycle{
+                visibility: visible;
+            }
+        </style>
+        <div>
+            <i class="bi-journal-bookmark-fill"></i>
+            <span>${jsonBookmark.title}</span>
+        </div>
+        <div class="mustHaveTools">
+            <i class="bi-recycle"></i>
+        </div>
     ` ;
     tagParent.appendChild(tagBookMark) ;
     tagBookMark.classList.add('bookmark') ;
@@ -174,6 +276,32 @@ function gwRenderBookmark(jsonBookmark,tagParent){
     tagBookMark.dataset.url = jsonBookmark.data.url ;
     tagBookMark.dataset.larkID = jsonBookmark.id ;
 
+    tagBookMark.querySelector('.bi-recycle').addEventListener('click',(event)=>{
+        event.stopPropagation() ;
+
+        let jsonBMOperation={
+            operation:'removeMustHave',
+            userID:'alexszhang',
+            folderID:'NO NEED',
+            jsonBookmark:{
+                "id": tagBookMark.dataset.larkID //"TBD"//dataset.larkID
+            }
+        } ;
+    
+        let urlPlusMustHave = `/removeMustHave.V1/` ;
+    
+        fetch(urlPlusMustHave, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonBMOperation)
+        }).then(res => res.json())
+        .then(res => console.log(res));
+
+        tagBookMark.remove() ;
+    }) ;
     tagBookMark.addEventListener('click',(event)=>{
         let tagBookMark = event.target.closest('li') ;
         let url = tagBookMark.dataset.url ;
@@ -223,14 +351,30 @@ function insertChildFolderBefore(tagFolder,tagChildFolder, tagChildBefore){
 }
 
 
-function renderFolderContents(jsonFolder){
-    let tagBMContainer = document.querySelector('#idBookmarks') ;
+async function renderFolderContents(jsonFolder){
 
+    let jsonBMOperation={
+        operation:'fetchBookmarks',
+        userID:'alexszhang',
+        folderID:jsonFolder.id
+    } ;
+    let urlFetchBMs = `/fetchBookmarkV1.V1/` ;
+    let jsonRequest={
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonBMOperation,null,3)
+    } ;
+    let response = await fetch(urlFetchBMs, jsonRequest);
+    let jsonBookmarks = await response.json() ;
+
+
+    let tagBMContainer = document.querySelector('#idBookmarks') ;
     tagBMContainer.innerHTML = `` ;
-    for(let i=0 ;i<jsonFolder.Contents.length;i++){
-        if(jsonFolder.Contents[i].type == "Gateway.Bookmark"){
-            let tagBookmark = renderBookMark(jsonFolder.Contents[i],tagBMContainer) ;
-        }
+    for(let i=0 ;i<jsonBookmarks.length;i++){
+        renderBookMark(jsonBookmarks[i],tagBMContainer) ;
     }
 }
 
@@ -276,7 +420,7 @@ function gwRenderFolder(jsonFolder,tagParent,tagSibling=null){
     tagBookFolder.setAttribute('draggable', true);
     tagBookFolder.dataset.larkID = jsonFolder.id ;
 
-    tagBookFolder.addEventListener('click',(event)=>{
+    tagBookFolder.addEventListener('click',async (event)=>{
         let tagBookFolder = event.target.closest('details') ;
         let tagCurSelected = document.querySelector('.larkSelected') ;
         if(tagCurSelected!=null){
@@ -299,7 +443,7 @@ function gwRenderFolder(jsonFolder,tagParent,tagSibling=null){
 
         let jsonItem = findJSONUsingID(tagBookFolder.dataset.larkID) ;
         console.log(jsonItem) ;
-        renderFolderContents(jsonItem) ;
+        await renderFolderContents(jsonItem) ;
     }) ;
 
     tagBookFolder.querySelector('#idBTNEdit').addEventListener('click',(event)=>{
@@ -493,25 +637,25 @@ function _plusFolder(jsonRootFolder,parentID,siblingID,jsonFolder){
 function checkPlusFolder(jsonChange){
     if(jsonChange.parentID==''){
         if(jsonChange.siblingID == ''){
-            globalNavigator.data.Folders.push(jsonChange.folder) ;
+            globalNavigator.jsonFolders.push(jsonChange.folder) ;
             return ;
         }
         
-        for(let i=0;i<globalNavigator.data.Folders.length;i++){
-            if(globalNavigator.data.Folders[i].id == jsonChange.siblingID){
-                globalNavigator.data.Folders.splice(i,0,jsonChange.folder) ;
+        for(let i=0;i<globalNavigator.jsonFolders.length;i++){
+            if(globalNavigator.jsonFolders[i].id == jsonChange.siblingID){
+                globalNavigator.jsonFolders.splice(i,0,jsonChange.folder) ;
                 return ;
             }
         }
 
         //not found sibling using sibling ID, still append to the end
-        globalNavigator.data.Folders.push(jsonChange.folder) ;
+        globalNavigator.jsonFolders.push(jsonChange.folder) ;
         return ;
     }
 
-    for(let i=0;i<globalNavigator.data.Folders.length;i++){
-        if(globalNavigator.data.Folders[i].type == "Gateway.Folder"){
-            let bResult = _plusFolder(globalNavigator.data.Folders[i],
+    for(let i=0;i<globalNavigator.jsonFolders.length;i++){
+        if(globalNavigator.jsonFolders[i].type == "Gateway.Folder"){
+            let bResult = _plusFolder(globalNavigator.jsonFolders[i],
                 jsonChange.parentID,
                 jsonChange.siblingID,
                 jsonChange.folder) ;
@@ -520,7 +664,7 @@ function checkPlusFolder(jsonChange){
     }
 
     //failed all other options, append to the last of []
-    globalNavigator.data.Folders.push(jsonChange.folder) ;    
+    globalNavigator.jsonFolders.push(jsonChange.folder) ;    
 }
 
 
@@ -539,14 +683,14 @@ function _removeFolder(jsonRootFolder,folderID){
 }
 
 function checkRemoveFolder(jsonChange){
-    for(let i=0;i<globalNavigator.data.Folders.length;i++){
-        if(globalNavigator.data.Folders[i].id == jsonChange.folderID){
-            globalNavigator.data.Folders.splice(i,1) ;
+    for(let i=0;i<globalNavigator.jsonFolders.length;i++){
+        if(globalNavigator.jsonFolders[i].id == jsonChange.folderID){
+            globalNavigator.jsonFolders.splice(i,1) ;
             return ;
         }
 
-        if(globalNavigator.data.Folders[i].type == "Gateway.Folder"){
-            let bResult = _removeFolder(globalNavigator.data.Folders[i],jsonChange.folderID) ;
+        if(globalNavigator.jsonFolders[i].type == "Gateway.Folder"){
+            let bResult = _removeFolder(globalNavigator.jsonFolders[i],jsonChange.folderID) ;
             if(bResult == true) return ;
         }
     }
@@ -571,14 +715,14 @@ function _grabFolderIn(jsonRoot,folderID){
 
 function _grabFolderForMoving(folderID){
     let jsonFolder = null ;
-    for(let i=0;i<globalNavigator.data.Folders.length;i++){
-        if(globalNavigator.data.Folders[i].id == folderID){
-            jsonFolder = globalNavigator.data.Folders.splice(i,1) ;
+    for(let i=0;i<globalNavigator.jsonFolders.length;i++){
+        if(globalNavigator.jsonFolders[i].id == folderID){
+            jsonFolder = globalNavigator.jsonFolders.splice(i,1) ;
             return jsonFolder[0] ;
         }
 
-        if(globalNavigator.data.Folders[i].type == "Gateway.Folder"){
-            jsonFolder = _grabFolderIn(globalNavigator.data.Folders[i],folderID) ;
+        if(globalNavigator.jsonFolders[i].type == "Gateway.Folder"){
+            jsonFolder = _grabFolderIn(globalNavigator.jsonFolders[i],folderID) ;
             if(jsonFolder!= null)return jsonFolder ;
         }
     }
@@ -614,20 +758,20 @@ function checkInsertFolder(jsonChange){
     }
     console.log(jsonFolder) ;
 
-    for(let i=0;i<globalNavigator.data.Folders.length;i++){
-        if(globalNavigator.data.Folders[i].id == jsonChange.siblingID){
-            globalNavigator.data.Folders.splice(i,0,jsonFolder) ;
+    for(let i=0;i<globalNavigator.jsonFolders.length;i++){
+        if(globalNavigator.jsonFolders[i].id == jsonChange.siblingID){
+            globalNavigator.jsonFolders.splice(i,0,jsonFolder) ;
             return ;
         }
 
-        if(globalNavigator.data.Folders[i].type == "Gateway.Folder"){
+        if(globalNavigator.jsonFolders[i].type == "Gateway.Folder"){
             let bResult = false ;
-            bResult = _insertFolderIn(globalNavigator.data.Folders[i],jsonChange.siblingID,jsonFolder) ;
+            bResult = _insertFolderIn(globalNavigator.jsonFolders[i],jsonChange.siblingID,jsonFolder) ;
             if(bResult == true)return ;
         }
     }
 
-    globalNavigator.data.Folders.push(jsonFolder) ;
+    globalNavigator.jsonFolders.push(jsonFolder) ;
     return ;
 }
 
@@ -637,20 +781,46 @@ function checkMoveBookmark(jsonChange){
 }
 
 
-function checkRemoveBookmark(jsonChange){
+async function checkRemoveBookmark(jsonChange){
+
+    let jsonBMOperation={
+        operation:'removeBM',
+        userID:'alexszhang',
+        folderID:'not NEED',
+        jsonBookmark:{
+            "id": jsonChange.bookmarkID
+        }
+    } ;
+
+    let urlRemoveBM = `http://127.0.0.1:9988/removeBookmark.V1/` ;
+    let jsonRequest={
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonBMOperation,null,3)
+    } ;
+    console.log(jsonRequest) ;
+    let response = await fetch(urlRemoveBM, jsonRequest);
+    await response.json() ;
+
+    console.log(globalNavigator);
+    /*
     for(let i=0;i<globalNavigator.data.Folders.length;i++){
-        if(globalNavigator.data.Folders[i].id == jsonChange.bookmarkID){
-            globalNavigator.data.Folders.splice(i,1) ;
+        if(globalNavigator.jsonFolders[i].id == jsonChange.bookmarkID){
+            globalNavigator.jsonFolders.splice(i,1) ;
             return ;
         }
 
-        if(globalNavigator.data.Folders[i].type == "Gateway.Folder"){
-            let removeBM = _removeBookmark(globalNavigator.data.Folders[i],jsonChange.bookmarkID) ;
+        if(globalNavigator.jsonFolders[i].type == "Gateway.Folder"){
+            let removeBM = _removeBookmark(globalNavigator.jsonFolders[i],jsonChange.bookmarkID) ;
             if(removeBM != null) return ;
         }
     }
+    */
 
-    alert('not found Bookmark to remove') ;
+    //alert('not found Bookmark to remove') ;
 }
 
 
@@ -700,15 +870,19 @@ async function checkInChanges(){
             case "insertFolderBefore":
                 checkInsertFolder(globalChanges[i]) ;
                 break ;
+
+            /*
             case "plusBookmark":
                 checkPlusBookmark(globalChanges[i]) ;
                 break ;
             case "moveBookmark":
                 checkMoveBookmark(globalChanges[i]) ;
                 break ;
+            */
             case "removeBookmark":
-                checkRemoveBookmark(globalChanges[i]) ;
+                await checkRemoveBookmark(globalChanges[i]) ;
                 break ;
+            
             case "changeTitle":
                 checkChangeTitle(globalChanges[i]) ;
                 break ;
@@ -729,21 +903,24 @@ async function checkInChanges(){
     }
 
     //globalNavigator
+    /*
     let jsonGatewayDB={
         user:await readUserValue(),
         Gateway:globalNavigator
     };
-    let urlGatewayJSON = `http://127.0.0.1:9988/updateGateway.V1/` ;
+    */
+    //let urlGatewayJSON = `http://127.0.0.1:9988/updateGateway.V1/` ;
+    let urlUpdateFolders = `http://127.0.0.1:9988/updateUserFolders.V1/` ;
     let jsonRequest={
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(jsonGatewayDB,null,3)
+        body: JSON.stringify(globalNavigator,null,3)
     } ;
     console.log(jsonRequest) ;
-    let response = await fetch(urlGatewayJSON, jsonRequest);
+    let response = await fetch(urlUpdateFolders, jsonRequest);
     await response.json() ;
 }
 
@@ -803,23 +980,23 @@ function _moveBookmark(bookmarkID,folderID){
 }
 
 function findJSONUsingID(id){
-    for(let i=0;i<globalNavigator.data.mustHave.length;i++){
-        if(globalNavigator.data.mustHave[i].id == id){
-            return globalNavigator.data.mustHave[i] ;
+    for(let i=0;i<globalNavigator.jsonMustHave.length;i++){
+        if(globalNavigator.jsonMustHave[i].id == id){
+            return globalNavigator.jsonMustHave[i] ;
         }else{
-            if(globalNavigator.data.mustHave[i].type == "Gateway.Folder"){
-                let jsonItem = _findJSONUsingIDIn(globalNavigator.data.mustHave[i],id) ;
+            if(globalNavigator.jsonMustHave[i].type == "Gateway.Folder"){
+                let jsonItem = _findJSONUsingIDIn(globalNavigator.jsonMustHave[i],id) ;
                 if(jsonItem!=null) return jsonItem ;
             }
         }
     }
 
-    for(i=0;i<globalNavigator.data.Folders.length;i++){
-        if(globalNavigator.data.Folders[i].id == id){
-            return globalNavigator.data.Folders[i] ;
+    for(i=0;i<globalNavigator.jsonFolders.length;i++){
+        if(globalNavigator.jsonFolders[i].id == id){
+            return globalNavigator.jsonFolders[i] ;
         }else{
-            if(globalNavigator.data.Folders[i].type == "Gateway.Folder"){
-                let jsonItem = _findJSONUsingIDIn(globalNavigator.data.Folders[i],id) ;
+            if(globalNavigator.jsonFolders[i].type == "Gateway.Folder"){
+                let jsonItem = _findJSONUsingIDIn(globalNavigator.jsonFolders[i],id) ;
                 if(jsonItem!=null) return jsonItem ;
             }
         }

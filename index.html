@@ -16,6 +16,7 @@
 
 
 <link rel="stylesheet" href="./css/contextMenu.css">
+<script src="./larkDialog.js"></script>
 
 <link rel="manifest" href="manifest.json" />
 
@@ -154,6 +155,8 @@
         </dialog>
     
     </div>
+    <div id="idDlgContainer"></div>
+
     <script src="./jsResource/localforage.js"></script>
     <script src='./jsResource/tabletop.js'></script>
 
@@ -215,7 +218,8 @@
                 // from the offline store.
                 console.log(value);
                 if(value==null){
-                    let jsonURL = `http://127.0.0.1:9988/fetchGateway.V1/:alexszhang` ;
+                    //let jsonURL = `http://127.0.0.1:9988/fetchGateway.V1/:alexszhang` ;
+                    let jsonURL = `http://127.0.0.1:9988/fetchUserFolders.V1/:alexszhang` ;
 
                     localforage.setItem('outPost', jsonURL).then(function (value) {
                         // Do other things once the value has been saved.
@@ -247,7 +251,7 @@
 
             const string = await response.text();
             const jsonUserGateway = string === "" ? {} : JSON.parse(string);
-      
+            
             //const jsonUserGateway = await response.json();
             console.log(JSON.stringify(jsonUserGateway,null,3)) ; 
             

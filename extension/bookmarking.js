@@ -150,7 +150,23 @@ document.querySelector('#idBTNAddBookmark').addEventListener('click',async (even
 
 }) ;
 */
+/*
+let jsonBMOperation={
+    operation:'add',
+    userID:'alexszhang',
+    folderID:'ebb666c0-874c-46ce-9fec-2865beb698a2',
+    jsonBookmark:{
+        "id": "ebb666c0-874c-46ce-9fec-2865beb698a6",
+        "type": "Gateway.Bookmark",
+        "title": "gridjs.io",
+        "data": {
+            "url": "https://gridjs.io/docs/"
+        }
+    }
+} ;
+*/
 document.querySelector('#idBTNSubmit').addEventListener('click',async (event)=>{
+    /*
     let jsonBookmarkOp={
         operation:'addBookmark',
         parameter:{
@@ -161,6 +177,20 @@ document.querySelector('#idBTNSubmit').addEventListener('click',async (event)=>{
             description:document.querySelector('#idComment').value
         }
     } ;
+    */
+    let jsonBMOperation={
+        operation:'addBookmark',
+        userID:await readUserValue() ,
+        folderID:document.querySelector('#idFolder').dataset.folderID,
+        jsonBookmark:{
+            "id": "TBD",
+            "type": "Gateway.Bookmark",
+            "title": document.querySelector('#idTitle').value,
+            "data": {
+                "url": document.querySelector('#idURL').value
+            }
+        }
+    } ;
 
     let addBMURL = `http://127.0.0.1:9988/addBookmark.V1/` ;
     let jsonRequest={
@@ -169,11 +199,12 @@ document.querySelector('#idBTNSubmit').addEventListener('click',async (event)=>{
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(jsonBookmarkOp,null,3)
+        body: JSON.stringify(jsonBMOperation,null,3)
     } ;
     console.log(jsonRequest) ;
     let response = await fetch(addBMURL, jsonRequest);
     //let jsonDeckID = await responseSRC.json() ;
+    window.close();
 }) ;
 
 
