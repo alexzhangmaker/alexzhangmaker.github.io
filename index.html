@@ -32,9 +32,7 @@
                     <span>alexszhang</span>
                 </div>
                 <div>
-                    <!---
-                        <i class="bi-plus larkBTN" id="idBTNPlusFolder"></i>
-                    -->
+                    
                     <i class="bi-cloud-check larkBTN noShow" id="idBTNCheckInChanges"></i>
                 </div>
             </div>
@@ -64,7 +62,7 @@
                     <i class="bi-plus larkBTN" id="idBTNPlusApp"></i>
                 </div>
             </div>
-            <div class="mainCanvas" ></div>
+            <div class="mainCanvas"></div>
             <div class="bottomToolBar">footbar</div>
         </div>
     </div>
@@ -243,6 +241,7 @@
             gwRenderCanvas('.mainCanvas') ;
 
         }) ;
+
         document.addEventListener('DOMContentLoaded',async (event)=>{
             
             let userID = await readUserValue() ;

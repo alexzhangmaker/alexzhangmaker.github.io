@@ -22,7 +22,7 @@
     overflow-x: hidden;
     overflow-y: hidden;
 
-    background-color:lightcyan;
+    background-color:rgb(122, 156, 156);
     /*border-right: black;
     border-style: solid;
     */
@@ -102,9 +102,12 @@
 .PanelNaviSection{
     width:100% ;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
 
-    padding-bottom: 20px;
+    padding-bottom: 10px;
+
+    display: flex;
+    flex-direction:column;
 }
 
 
@@ -113,8 +116,8 @@
     /*background-color:aqua;*/
     height:auto;
     min-height: 120px;
-    /*flex-grow: 1;
-    flex-shrink: 1;*/
+    /*flex-grow: 1;*/
+    flex-shrink: 0;
 }
 
 .Folders{

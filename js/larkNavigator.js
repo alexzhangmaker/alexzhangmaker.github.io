@@ -79,6 +79,14 @@ function _gwRenderNavigator(jsonGateway,cssRootElement){
                 font-size:14px !important;
             }
 
+            #idFoldersUL{
+                overflow-x: hidden;
+                overflow-y: auto;
+                /*height:90% ;*/
+                flex-grow: 1;
+
+            }
+
         </style>
         <div id="idFoldersBar">
             <span>Folders</span>
@@ -371,7 +379,12 @@ async function renderFolderContents(jsonFolder){
     let jsonBookmarks = await response.json() ;
 
 
-    let tagBMContainer = document.querySelector('#idBookmarks') ;
+    let tagMainCanvas= document.querySelector('.mainCanvas');
+    tagMainCanvas.innerHTML=`
+        <div id="idBookmarkBrowser" class="bookmarkBrowser"></div>
+    ` ;
+    
+    let tagBMContainer = document.querySelector('#idBookmarkBrowser') ;
     tagBMContainer.innerHTML = `` ;
     for(let i=0 ;i<jsonBookmarks.length;i++){
         renderBookMark(jsonBookmarks[i],tagBMContainer) ;
@@ -399,11 +412,12 @@ function gwRenderFolder(jsonFolder,tagParent,tagSibling=null){
                         ${jsonFolder.title}
                     </span>
                 </div>
-                <div  class="boxToolbar toolVisibilty">
-                    <i class="bi-trash-fill" id="idBTNDelete"></i>
-                    <i class="bi-pencil-square" id="idBTNEdit"></i>
-                    <i class="bi-node-plus" id="idBTNMore"></i>   
-
+                <div>
+                    <div  class="boxToolbar toolVisibilty">
+                        <i class="bi-trash-fill" id="idBTNDelete"></i>
+                        <i class="bi-pencil-square" id="idBTNEdit"></i>
+                        <i class="bi-node-plus" id="idBTNMore"></i>   
+                    </div>
                 </div>
             </summary>
             <ul></ul>

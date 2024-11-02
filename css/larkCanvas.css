@@ -1,19 +1,76 @@
 
+.ellipses {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.bookmarkBrowser{
+    /*background-color: coral;*/
+    /*max-width: 1200px;*/
+    margin: 0 auto;
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: repeat(3,400px);
+}
+
+/*
+.card {
+    background-color: dodgerblue;
+    color: white;
+    padding: 1rem;
+    height: 4rem;
+  }
+  
+  .cards {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: repeat(3,400px);
+  }
+*/
+
 
 .boxBookmark{
     display: flex;
     flex-direction: row;
     align-items: flex-start;
 
-    width:80% ;
+    width:400px ;
+    height:4.5em ;
+
+    padding: 10px;
 }
 
+.boxBookmark:hover{
+    border-bottom: darkslategray;
+    background-color: cadetblue;
+
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+
+}
+
+.boxBookmarkLogo{
+    width:40px;
+}
+
+.boxBookmarkContent{
+    padding-left: 10px;
+}
 .boxBookmarkMeta{
-    width:80% ;
+    width:320px ;
 }
 
 .boxToolbar{
-    width:25% ;
+    width:100% ;
+    height:100% ;
+    padding-right: 2px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .toolVisibilty{

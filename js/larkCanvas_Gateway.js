@@ -3,8 +3,30 @@ function gwRenderCanvas(cssRootElement){
     let tagCanvas = document.querySelector(cssRootElement) ;
 
     tagCanvas.innerHTML = `
-        <div id="idBookmarkBrowser">
-            <ul id="idBookmarks"></ul>
+        <style>
+            .larkCanvas{
+                width:100% ;
+                height:100% ;
+
+                display:flex;
+                flex-direction:row;
+                justify-content: space-between;
+            }
+            .larkFrameCalendar{
+                border-style: none ;
+                width: 65%; 
+                height: 100%;
+            }
+
+            .larkFrameToDo{
+                border-style: none ;
+                width: 30%; 
+                height: 100%;
+            }
+        </style>
+        <div class="larkCanvas">
+            <iframe class="larkFrameCalendar" src="http://127.0.0.1:9988/testFullCalendar.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+            <iframe class="larkFrameToDo" src="http://127.0.0.1:9988/larkToDo.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
         </div>
     ` ;
 }
@@ -23,29 +45,29 @@ function dlgCheckBMFunc(jsonData){
 
 function renderBookMark(jsonBookMark,tagBMContainer){
     console.log(`will render ${JSON.stringify(jsonBookMark,null,3)}`) ;
-    let tagBookMark =document.createElement('li') ;
+    let tagBookMark =document.createElement('div') ;
+    tagBookMark.classList.add('boxBookmark') ;
     tagBookMark.innerHTML = `
-        <div class="boxBookmark">
-            <div>
+            <div class="boxBookmarkLogo">
                 <img tabindex="-1" class="image-LAVC" data-ar="7:6" width="56" height="48" alt=" " src="https://rdl.ink/render/https%3A%2F%2Fwww.w3schools.com%2Fimages%2Fw3schools_logo_436_2.png?mode=crop&amp;fill=solid&amp;width=56&amp;ar=7:6&amp;dpr=1.7999999523162842" draggable="false">                            
             </div>
 
-            <div class="boxBookmarkMeta">
-                <span id="idBMTitle">${jsonBookMark.title}</span>
-                <div id="idBMURL">${jsonBookMark.url}</div>
+            <div class="boxBookmarkContent">
+                <div class="boxToolbar toolVisibilty">
+                    <i class="bi-trash-fill"></i>
+                    <i class="bi-pencil-square"></i>
+                </div>
+                <div class="boxBookmarkMeta">
+                    <p id="idBMTitle" class="ellipses">${jsonBookMark.title}</p>
+                </div>
             </div>
-            <div class="boxToolbar toolVisibilty">
-                <i class="bi-google"></i>
-                <i class="bi-trash-fill"></i>
-                <i class="bi-pencil-square"></i>
-            </div>
-        </div>
+       
         
     ` ;
 
     tagBMContainer.appendChild(tagBookMark) ;
-    tagBookMark.classList.add('larkDraggable') ;
-    tagBookMark.setAttribute('draggable', true);
+    //tagBookMark.classList.add('larkDraggable') ;
+    //tagBookMark.setAttribute('draggable', true);
 
     tagBookMark.dataset.larkID = jsonBookMark.id ;
     tagBookMark.dataset.url = jsonBookMark.url ;
@@ -54,12 +76,13 @@ function renderBookMark(jsonBookMark,tagBMContainer){
         window.open(tagBookMark.dataset.url, '_blank').focus();
     }) ;
 
-    tagBookMark.querySelector('.bi-google').addEventListener('click',(event)=>{
+    tagBookMark.addEventListener('click',(event)=>{
         window.open(tagBookMark.dataset.url, '_blank').focus();
     }) ;
 
     tagBookMark.querySelector('.bi-trash-fill').addEventListener('click',(event)=>{
-        let tagBookmark = event.target.closest('li') ;
+        event.stopPropagation() ;
+        let tagBookmark = event.target.closest('.boxBookmark') ;
         tagBookmark.remove() ;
         event.preventDefault() ;
         let jsonChange = {
@@ -80,7 +103,7 @@ function renderBookMark(jsonBookMark,tagBMContainer){
             bookmark:tagBookMark,
             bookmarkTitle:tagBookMark.querySelector('#idBMTitle').innerText,
             bookmarkNote:'tbd',
-            bookmarkURL:tagBookMark.querySelector('#idBMURL').innerText
+            bookmarkURL:tagBookMark.dataset.url
         } ;
         renderDlg_BMEdit(jsonBMDlg) ;
         event.preventDefault() ;
@@ -130,7 +153,7 @@ document.querySelector('#idBTNPlusApp').addEventListener('click',(event)=>{
     if(tagCurSelected!=null){
         //tagBookmarksUL = tagCurSelected.querySelector('ul') ;
         //idBookmarks
-        tagBookmarksUL = document.querySelector('#idBookmarks')
+        tagBookmarksUL = document.querySelector('#idBookmarkBrowser')
     }else{
         tagBookmarksUL = document.querySelector('#idFoldersUL') ;
     }
