@@ -7,7 +7,7 @@
 
 
   <link href="https://cdn.jsdelivr.net/npm/layui@2.9.18/dist/css/layui.min.css" rel="stylesheet">
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
   <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
@@ -62,421 +62,233 @@
         width:100% ;
     }
   </style>
+  <style>
+        
+    body {
+        --sb-track-color: #eff5ed;
+        --sb-thumb-color: #011b0e;
+        --sb-size: 3px;
+    }
+
+    .larkToDos::-webkit-scrollbar {
+        width: var(--sb-size);
+    }
+
+    .larkToDos::-webkit-scrollbar-track {
+        background: var(--sb-track-color);
+        border-radius: 3px;
+    }
+
+    .larkToDos::-webkit-scrollbar-thumb {
+        background: var(--sb-thumb-color);
+        border-radius: 3px;
+        border: 1px solid #232E33;
+    }
+
+    @supports not selector(::-webkit-scrollbar) {
+        .larkToDos {
+            scrollbar-color: var(--sb-thumb-color)
+                            var(--sb-track-color);
+        }
+    }
+
+  </style>
+  <style>
+    details{
+        padding-top: 1px;
+        padding-bottom: 1px;
+        width:100% ;
+    }
+
+    details:hover{
+        cursor:pointer ;
+        background-color:bisque;
+    }
+
+    /*
+    .folder > .folderSummary {
+        list-style: none;
+    }
+    */
+    details > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    
+
+    summary{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .todoContainer{
+        display: flex;
+        flex-direction: column;
+        gap: 0.2em;
+    }
+
+    .todoItem{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .todoItem:hover{
+        cursor: pointer;
+    }
+    .toolVisibilty{
+        visibility: hidden;
+    }
+
+    .todoItem:hover .toolVisibilty{
+        visibility: visible;
+    }
+</style>
 </head>
 <body>
 
 
     <div class='larkToDoBrowser'>
-        <div class="larkToDoToolbar">header tools</div>
-        <div class="larkToDos">
-           
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
+        <div class="toDoBrowserToolbar">header tools</div>
+        <div class="todoList">
 
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
+            <div class="larkToDos">
+                
+                
+                <details>
+                    <summary>
+                        <div>
+                            <i class="bi-folder2-open"></i>
+                            <span>2024-11-03</span>
+                        </div>
+                    </summary>
 
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
+                    <div class="todoContainer">
+                        <div class="todoItem">
+                            <div>do something today</div>
+                            <div  class="boxToolbar toolVisibilty">
+                                <i class="bi-trash-fill" id="idBTNDelete"></i>
+                                <i class="bi-pencil-square" id="idBTNEdit"></i>
+                            </div>
+                        </div>
+                        <div class="todoItem">
+                            <div>do something today</div>
+                            <div  class="boxToolbar toolVisibilty">
+                                <i class="bi-trash-fill" id="idBTNDelete"></i>
+                                <i class="bi-pencil-square" id="idBTNEdit"></i>
+                            </div>
+                        </div>
+                        <div class="todoItem">
+                            <div>do something today</div>
+                            <div  class="boxToolbar toolVisibilty">
+                                <i class="bi-trash-fill" id="idBTNDelete"></i>
+                                <i class="bi-pencil-square" id="idBTNEdit"></i>
+                            </div>
+                        </div>
+                        <div class="todoItem">
+                            <div>do something today</div>
+                            <div  class="boxToolbar toolVisibilty">
+                                <i class="bi-trash-fill" id="idBTNDelete"></i>
+                                <i class="bi-pencil-square" id="idBTNEdit"></i>
+                            </div>
+                        </div>
+                        <div class="todoItem">
+                            <div>do something today</div>
+                            <div  class="boxToolbar toolVisibilty">
+                                <i class="bi-trash-fill" id="idBTNDelete"></i>
+                                <i class="bi-pencil-square" id="idBTNEdit"></i>
+                            </div>
+                        </div>
+                    </div>
+                </details>
 
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
-
-            <details>
-                <summary>2024-10-11</summary>
-                <div>
-                    <div>do something today</div>
-                    <div>do something tommorrow</div>
-                    <div>do something again</div>
-                </div>
-            </details>
+            </div>
+            
         </div>
     </div>
     
+<script>
+    let jsonToDos=[
+        {
+            date:'2024-11-01',
+            title:'do something on that day1'
+        },{
+            date:'2024-10-02',
+            title:'Go to Makro for grocerry2'
+        },{
+            date:'2024-10-02',
+            title:'Go to Makro for grocerry3'
+        },{
+            date:'2024-12-02',
+            title:'Go to Makro for grocerry4'
+        },{
+            date:'2024-10-06',
+            title:'Go to Makro for grocerry5'
+        },{
+            date:'2024-10-02',
+            title:'Go to Makro for grocerry6'
+        }
+    ];
 
+    loadToDos(jsonToDos) ;
+
+    function loadToDos(jsonToDos){
+        let tagToDos=document.querySelector('.larkToDos') ;
+        let todoDates=[] ;
+        for(let i=0;i<jsonToDos.length;i++){
+            if(todoDates.includes(jsonToDos[i].date))continue ;
+            todoDates.push(jsonToDos[i].date) ;
+        }
+
+        todoDates.sort() ;
+        console.log(todoDates);
+        for(i=0;i<todoDates.length;i++){
+            let tagToDoDate = document.createElement('details') ;
+            tagToDos.appendChild(tagToDoDate) ;
+            tagToDoDate.innerHTML=`
+            <summary>
+                <div>
+                    <i class="bi-folder2-open"></i>
+                    <span>${todoDates[i]}</span>
+                </div>
+            </summary>
+
+            <div class="todoContainer">
+            </div>
+            ` ;
+            tagToDoDate.dataset.date=todoDates[i] ;
+        }
+
+        function _findToDoDate(strDate){
+            let tagDetails = document.querySelectorAll('details') ;
+            for(let i=0;i<tagDetails.length;i++){
+                if(tagDetails[i].dataset.date == strDate)return tagDetails[i] ;
+            }
+            return null ;
+        }
+
+        for(i=0;i<jsonToDos.length;i++){
+            let tagToDoDate = _findToDoDate(jsonToDos[i].date) ;
+            renderToDoItem(tagToDoDate,jsonToDos[i]) ;
+        }
+    }
+
+    function renderToDoItem(tagContainer,jsonToDo){
+        
+        let tagToDoItem = document.createElement('div') ;
+        tagContainer.appendChild(tagToDoItem) ;
+        tagToDoItem.classList.add('todoItem') ;
+        tagToDoItem.innerHTML=`
+            <div>${jsonToDo.title}</div>
+            <div  class="boxToolbar toolVisibilty">
+                <i class="bi-trash-fill" id="idBTNDelete"></i>
+                <i class="bi-pencil-square" id="idBTNEdit"></i>
+            </div>
+        ` ;
+    }
+</script>
 </body>
 </html>
