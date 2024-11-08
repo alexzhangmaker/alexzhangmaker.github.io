@@ -109,7 +109,7 @@ function renderDlg_FolderEdit(jsonDlg={}){
 
 
 
-
+/*
 function dlgWorkBench(){
     let tagDlg = document.querySelector('#idDlgWorkbench') ;
     tagDlg.showModal() ;
@@ -122,7 +122,7 @@ document.querySelector('#idBTNCloseDlg').addEventListener('click',(event)=>{
     tagDlg.close() ;
 }) ;
 
-
+*/
 
 //lark Dialog Component
 
@@ -130,8 +130,11 @@ function createLarkDialog(jsonDialog){
     let tagDialog = document.createElement('dialog') ;
     let container = document.querySelector(jsonDialog.cssContainer) ;
     container.appendChild(tagDialog) ;
+    container.style.visibility = 'visible' ;
 
     tagDialog.style.backgroundColor = jsonDialog.theme.backgroundColor ;
+    tagDialog.style.borderColor = `${jsonDialog.theme.border}` ;//"300px";
+
     tagDialog.style.width = `${jsonDialog.layout.width}px` ;//"300px";
     tagDialog.style.height = `${jsonDialog.layout.height}px` ;//"300px";
 
@@ -141,16 +144,19 @@ function createLarkDialog(jsonDialog){
         .larkDlg{
             width:100% ;
             height:100% ;
+            /*
             padding-left: 10px;
-            padding-right: 10px;                    
+            padding-right: 10px;      
+            */              
             display: flex;
             flex-direction: column;
+            gap:5px;
         }
 
         .larkDlgHeader{
             display: flex;
             flex-direction: row;
-            height:48px ;
+            /*height:48px ;*/
             align-items: center;
             justify-content: flex-start;
             flex-grow: 0;
@@ -175,8 +181,10 @@ function createLarkDialog(jsonDialog){
 
         .larkDlgField{
             width:100% ;
+            /*
             padding-left: 10px;
             padding-right: 10px;
+            */
             padding-top: 5px;
             padding-bottom: 5px;
             display: flex;
@@ -184,7 +192,7 @@ function createLarkDialog(jsonDialog){
         }
 
         .larkDlgFieldLabel{
-            width:20% ;
+            width:10% ;
             padding-right: 10px;
             display: flex;
             flex-direction: row;
@@ -192,7 +200,7 @@ function createLarkDialog(jsonDialog){
         }
 
         .larkDlgFieldContent{
-            width:80% ;
+            width:90% ;
         }
 
         .larkDlgFieldContent input{
@@ -204,7 +212,7 @@ function createLarkDialog(jsonDialog){
             flex-direction: row;
             align-items: center;
             justify-content: flex-end;
-            gap:20px;
+            gap:5px;
             height:48px ;
 
             flex-grow: 0;
@@ -214,7 +222,11 @@ function createLarkDialog(jsonDialog){
         .larkDlgFooter button{
             height:1.5em ;
             background-color: white;
+            width: 6em;
+
         }
+
+        
     </style>
     <div class="larkDlg">
         <div class="larkDlgHeader">
@@ -225,20 +237,22 @@ function createLarkDialog(jsonDialog){
         </div>
         <div class="larkDlgBody"></div>
         <div class="larkDlgFooter">
-            <button id="idBTNCloseDlg"><i class="bi-x larkBTN"></i>close</button>
-            <button id="idBTNDlgCheck"><i class="bi-check2-square larkBTN"></i>check</button>
+            <button id="idBTNCloseDlg" class="${jsonDialog.theme.font}"><i class="bi-x larkBTN"></i>close</button>
+            <button id="idBTNDlgCheck" class="${jsonDialog.theme.font}"><i class="bi-check2-square larkBTN"></i>check</button>
         </div>
     </div>
     ` ;
 
     let tagBody = tagDialog.querySelector('.larkDlgBody') ;
     for(let i=0;i<jsonDialog.content.fields.length;i++){
-        renderField(tagBody,jsonDialog.content.fields[i]) ;
+        renderField(tagBody,jsonDialog,jsonDialog.content.fields[i]) ;
     }
 
     tagDialog.querySelector('#idBTNCloseDlg').addEventListener('click',(event)=>{
         tagDialog.close() ;
         recallLarkDialog() ;
+        container.style.visibility = 'hidden' ;
+
     }) ;
 
     tagDialog.querySelector('#idBTNDlgCheck').addEventListener('click',(event)=>{
@@ -249,12 +263,17 @@ function createLarkDialog(jsonDialog){
         for(let i=0;i<jsonSchema.content.fields.length;i++){
             let cssField = `[data-name="${jsonSchema.content.fields[i].content.name}"]` ;
             let tagField = tagDialog.querySelector(cssField) ;
-            jsonFormData[`${jsonSchema.content.fields[i].content.name}`] = tagField.querySelector('input').value ;
+            let cInput = tagField.querySelector('input').value ;
+            if(cInput==''){
+                cInput = tagField.querySelector('input').getAttribute("placeholder") ;
+            }
+            jsonFormData[`${jsonSchema.content.fields[i].content.name}`] =  cInput;
         }
         console.log(jsonFormData) ;
         eval(`${jsonSchema.callback.commitFunc}`)(jsonFormData) ;
         tagDialog.close() ;
         recallLarkDialog() ;
+        container.style.visibility = 'hidden' ;
 
         let ctxScript = '(async () => {await foo1();await foo2();is_script_ended = true; })();';
 
@@ -263,7 +282,10 @@ function createLarkDialog(jsonDialog){
     tagDialog.querySelector('.bi-x-square').addEventListener('click',(event)=>{
         tagDialog.close() ;
         recallLarkDialog() ;
+        container.style.visibility = 'hidden' ;
+
     }) ;
+
 
     tagDialog.id = 'larkDialog001' ;
     tagDialog.show() ;
@@ -271,22 +293,41 @@ function createLarkDialog(jsonDialog){
 
 }
 
-function renderField(tagBody,jsonField){
-    let tagField = document.createElement('div');
-    tagField.innerHTML=`
-        <div class="larkDlgFieldLabel">
-            <label for="idURLServer">${jsonField.label}</label>
-        </div>
-        <div class="larkDlgFieldContent">
-            <input type="text" id="idURLServer" name="idURLServer">
-        </div>
-    ` ;
-    tagField.classList.add('larkDlgField') ;
-    tagField.dataset.name = jsonField.content.name ;
-    //const foo = document.querySelector('[data-name="foo"]');
-
-    tagBody.appendChild(tagField) ;
-    return tagField ;
+function renderField(tagBody,jsonDialog,jsonField){
+    if(jsonField.content.type == 'input.Button'){
+        let tagFooter = tagBody.closest('.larkDlg').querySelector('.larkDlgFooter') ;
+        let tagButton = document.createElement('button') ;
+        tagFooter.appendChild(tagButton) ;
+        tagButton.id = jsonField.content.name ;
+        tagButton.classList.add(jsonDialog.theme.font) ;
+        tagButton.innerHTML=`${jsonField.content.title}` ;
+        if(jsonField.content.hasOwnProperty('onClick')){
+            tagButton.addEventListener('click',(event)=>{
+                console.log(jsonDialog) ;
+                eval(jsonField.content.onClick)(jsonDialog) ;
+                let container = document.querySelector(jsonDialog.cssContainer) ;
+                let tagDialog = tagBody.closest('dialog') ;
+                tagDialog.close() ;
+                recallLarkDialog() ;
+                container.style.visibility = 'hidden' ;
+            }) ;
+        }
+    }else{
+        let tagField = document.createElement('div');
+        tagField.innerHTML=`
+            <div class="larkDlgFieldLabel">
+                <label for="idURLServer">${jsonField.label}</label>
+            </div>
+            <div class="larkDlgFieldContent">
+                <input type="text" id="idURLServer" name="idURLServer" placeholder="${jsonField.content.default}" class="${jsonDialog.theme.font}">
+            </div>
+        ` ;
+        tagField.classList.add('larkDlgField') ;
+        tagField.dataset.name = jsonField.content.name ;
+    
+        tagBody.appendChild(tagField) ;
+        return tagField ;
+    }
 }
 
 

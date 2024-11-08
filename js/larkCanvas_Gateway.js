@@ -11,10 +11,12 @@ function gwRenderCanvas(cssRootElement){
                 display:flex;
                 flex-direction:row;
                 justify-content: space-between;
+                gap:5px ;
             }
             .larkFrameCalendar{
                 border-style: none ;
-                width: 65%; 
+                /*width: 65%; */
+                flex-grow:1;
                 height: 100%;
             }
 
@@ -25,8 +27,8 @@ function gwRenderCanvas(cssRootElement){
             }
         </style>
         <div class="larkCanvas">
-            <iframe class="larkFrameCalendar" src="http://127.0.0.1:9988/testFullCalendar.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
-            <iframe class="larkFrameToDo" src="http://127.0.0.1:9988/larkToDo.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+            <iframe class="larkFrameCalendar" src="http://127.0.0.1:9990/larkCalendar.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+            <iframe class="larkFrameToDo" src="http://127.0.0.1:9990/larkToDo.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
         </div>
     ` ;
 }
@@ -47,11 +49,46 @@ function renderBookMark(jsonBookMark,tagBMContainer){
     console.log(`will render ${JSON.stringify(jsonBookMark,null,3)}`) ;
     let tagBookMark =document.createElement('div') ;
     tagBookMark.classList.add('boxBookmark') ;
+
+    var url = new URL(jsonBookMark.url);
+    /*
+    url.protocol;  // "http:"
+    url.hostname;  // "aaa.bbb.ccc.com"
+    url.pathname;  // "/asdf/asdf/sadf.aspx"
+    url.search;    // "?blah"
+    */
+
+    // Return true if file exists, false otherwise
+    function _existsFavICON(hostName) {
+        let urlFavIco = `https://${hostName}/favicon.ico`
+        console.log(urlFavIco) ;
+        var http = new XMLHttpRequest();
+        http.open('GET', urlFavIco, true);
+        http.withCredentials = "true";
+
+        http.send();
+        return http.status!=404;
+    }
+
+    function _checkFavicon(url) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = url;
+        
+            img.onload = () => resolve(true);  // Favicon exists
+            img.onerror = () => resolve(false); // Favicon does not exist
+        });
+    }
+
+    
+
+    //console.log(_existsFavICON(url.hostname)) ; 
+    //internet-4848.png
+    //https://${url.hostname}/favicon.ico
     tagBookMark.innerHTML = `
             <div class="boxBookmarkLogo">
-                <img tabindex="-1" class="image-LAVC" data-ar="7:6" width="56" height="48" alt=" " src="https://rdl.ink/render/https%3A%2F%2Fwww.w3schools.com%2Fimages%2Fw3schools_logo_436_2.png?mode=crop&amp;fill=solid&amp;width=56&amp;ar=7:6&amp;dpr=1.7999999523162842" draggable="false">                            
+                <img tabindex="-1" class="image-LAVC" data-ar="7:6" width="48" height="48" alt="Web" src="https://${url.hostname}/favicon.ico" draggable="false">                            
             </div>
-
             <div class="boxBookmarkContent">
                 <div class="boxToolbar toolVisibilty">
                     <i class="bi-trash-fill"></i>
@@ -60,9 +97,7 @@ function renderBookMark(jsonBookMark,tagBMContainer){
                 <div class="boxBookmarkMeta">
                     <p id="idBMTitle" class="ellipses">${jsonBookMark.title}</p>
                 </div>
-            </div>
-       
-        
+            </div> 
     ` ;
 
     tagBMContainer.appendChild(tagBookMark) ;
@@ -131,6 +166,19 @@ function renderBookMark(jsonBookMark,tagBMContainer){
     // When dragging leaves a list item
     tagBookMark.addEventListener('dragleave', function() {
         tagBookMark.style.borderTop = '';
+    });
+
+
+    let faviconUrl = `https://${url.hostname}/favicon.ico` ;
+    _checkFavicon(faviconUrl).then(exists => {
+        if (exists) {
+          console.log("Favicon exists:", faviconUrl);
+          // You can display the favicon or add it to your app here
+        } else {
+          console.log("Favicon does not exist:", faviconUrl);
+          // You can use a fallback icon here if desired
+          tagBookMark.querySelector('.image-LAVC').src = '/images/icons/internet-4848.png' ;
+        }
     });
 
     return tagBookMark ;

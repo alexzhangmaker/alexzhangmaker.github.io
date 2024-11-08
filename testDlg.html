@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>larkDialog</title>
+
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
+  
+  <link rel="stylesheet" href="./css/larkFont.css">
+
+<style>    
+
+</style>
+  
+  <style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+        font-size: 14px;
+
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+
+    /*
+    dialog{
+        border-color: blue;
+    }
+    */
+    
+  </style>
+</head>
+<body>
+
+
+<button id='idBTN'>Button</button>
+<div id="idDlgContainer" class="asap-condensed-regular"></div>
+    
+<script>
+
+function callback_Demo(jsonFormData){
+    console.log(jsonFormData) ;
+}
+
+document.querySelector('#idBTN').addEventListener('click',(event)=>{
+    let jsonDialog={
+        cssContainer:'#idDlgContainer',
+        theme:{
+            backgroundColor:'aqua',
+            border:'blue',
+            font:'asap-condensed-regular'
+        },
+        layout:{
+            width:600,
+            height:250
+        },
+        content:{
+            title:'Bookmarking website',
+            fields:[
+                {
+                    label:'url',
+                    content:{
+                        type:'input.Text',
+                        default:'url of the website',
+                        name:'url'
+                    }
+                },{
+                    label:'title',
+                    content:{
+                        type:'input.Text',
+                        default:'title for the page',
+                        name:'title'
+                    }
+                },{
+                    label:'email@',
+                    content:{
+                        type:'input.Text',
+                        default:'contact email@',
+                        name:'email'
+                    }
+                },{
+                    label:'Phone',
+                    content:{
+                        type:'input.Text',
+                        default:'phone no#',
+                        name:'phone'
+                    }
+                }
+            ]
+        },
+        callback:{
+            commitFunc:'callback_Demo'
+        }
+    } ;
+
+    createLarkDialog(jsonDialog) ;
+}) ; 
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    
+});
+</script>
+
+<script src="./js/larkDialogs.js"></script>
+
+</body>
+</html>

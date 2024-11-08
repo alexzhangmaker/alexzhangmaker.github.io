@@ -13,17 +13,121 @@
   <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
   <script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
   
-  
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        .asap-condensed-extralight {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 200;
+        font-style: normal;
+        }
+
+        .asap-condensed-light {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 300;
+        font-style: normal;
+        }
+
+        .asap-condensed-regular {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        }
+
+        .asap-condensed-medium {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 500;
+        font-style: normal;
+        }
+
+        .asap-condensed-semibold {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 600;
+        font-style: normal;
+        }
+
+        .asap-condensed-bold {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 700;
+        font-style: normal;
+        }
+
+        .asap-condensed-extrabold {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 800;
+        font-style: normal;
+        }
+
+        .asap-condensed-black {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 900;
+        font-style: normal;
+        }
+
+        .asap-condensed-extralight-italic {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 200;
+        font-style: italic;
+        }
+
+        .asap-condensed-light-italic {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 300;
+        font-style: italic;
+        }
+
+        .asap-condensed-regular-italic {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 400;
+        font-style: italic;
+        }
+
+        .asap-condensed-medium-italic {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 500;
+        font-style: italic;
+        }
+
+        .asap-condensed-semibold-italic {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 600;
+        font-style: italic;
+        }
+
+        .asap-condensed-bold-italic {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 700;
+        font-style: italic;
+        }
+
+        .asap-condensed-extrabold-italic {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 800;
+        font-style: italic;
+        }
+
+        .asap-condensed-black-italic {
+        font-family: "Asap Condensed", sans-serif;
+        font-weight: 900;
+        font-style: italic;
+        }
+
+    </style>
   
   <style>
     html, body {
         margin: 0;
         padding: 0;
-        font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 16px;
 
         overflow-y: hidden;
         overflow-x: hidden;
+    }
+
+    body {
+        --sb-track-color: #eff5ed;
+        --sb-thumb-color: #011b0e;
+        --sb-size: 3px;
     }
 
     .larkToDoBrowser{
@@ -33,14 +137,28 @@
         overflow-x: hidden;
     }
 
-
     .larkToDoToolbar{
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
     }
 
-    
+    .toDoBrowserToolbar{
+        width:100% ;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        gap:10px;
+
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    #idINPUTToDo{
+        flex-grow: 1;
+    }
+
     .larkToDos{
         width:100% ;
         height:100% ;
@@ -53,6 +171,8 @@
         gap: 10px;
     }
 
+    /*
+
     .larkToDo{
         background-color: rgb(187, 175, 175);
         display: flex;
@@ -61,14 +181,8 @@
 
         width:100% ;
     }
-  </style>
-  <style>
+    */
         
-    body {
-        --sb-track-color: #eff5ed;
-        --sb-thumb-color: #011b0e;
-        --sb-size: 3px;
-    }
 
     .larkToDos::-webkit-scrollbar {
         width: var(--sb-size);
@@ -92,8 +206,6 @@
         }
     }
 
-  </style>
-  <style>
     details{
         padding-top: 1px;
         padding-bottom: 1px;
@@ -105,16 +217,9 @@
         background-color:bisque;
     }
 
-    /*
-    .folder > .folderSummary {
-        list-style: none;
-    }
-    */
     details > summary::-webkit-details-marker {
         display: none;
     }
-
-    
 
     summary{
         display: flex;
@@ -146,18 +251,24 @@
     .todoItem:hover .toolVisibilty{
         visibility: visible;
     }
+
+    .todoDONE{
+        text-decoration: line-through;
+    }
 </style>
 </head>
 <body>
 
 
-    <div class='larkToDoBrowser'>
-        <div class="toDoBrowserToolbar">header tools</div>
+    <div class='larkToDoBrowser asap-condensed-regular'>
+        <div class="toDoBrowserToolbar">
+            <input type="text" id="idINPUTToDo" style="width: 20rem;" placeholder="YYYY-MM-DD something +project @context due:YYYY-MM-DD">
+            <i class="bi-calendar-plus"></i>
+        </div>
         <div class="todoList">
 
             <div class="larkToDos">
-                
-                
+                <!---
                 <details>
                     <summary>
                         <div>
@@ -174,44 +285,19 @@
                                 <i class="bi-pencil-square" id="idBTNEdit"></i>
                             </div>
                         </div>
-                        <div class="todoItem">
-                            <div>do something today</div>
-                            <div  class="boxToolbar toolVisibilty">
-                                <i class="bi-trash-fill" id="idBTNDelete"></i>
-                                <i class="bi-pencil-square" id="idBTNEdit"></i>
-                            </div>
-                        </div>
-                        <div class="todoItem">
-                            <div>do something today</div>
-                            <div  class="boxToolbar toolVisibilty">
-                                <i class="bi-trash-fill" id="idBTNDelete"></i>
-                                <i class="bi-pencil-square" id="idBTNEdit"></i>
-                            </div>
-                        </div>
-                        <div class="todoItem">
-                            <div>do something today</div>
-                            <div  class="boxToolbar toolVisibilty">
-                                <i class="bi-trash-fill" id="idBTNDelete"></i>
-                                <i class="bi-pencil-square" id="idBTNEdit"></i>
-                            </div>
-                        </div>
-                        <div class="todoItem">
-                            <div>do something today</div>
-                            <div  class="boxToolbar toolVisibilty">
-                                <i class="bi-trash-fill" id="idBTNDelete"></i>
-                                <i class="bi-pencil-square" id="idBTNEdit"></i>
-                            </div>
-                        </div>
+                        
                     </div>
                 </details>
-
+                --->
             </div>
             
         </div>
     </div>
-    
+
+<script src="./todotxt.js"></script>
 <script>
     let jsonToDos=[
+        /*
         {
             date:'2024-11-01',
             title:'do something on that day1'
@@ -231,14 +317,185 @@
             date:'2024-10-02',
             title:'Go to Makro for grocerry6'
         }
+        */
     ];
 
-    loadToDos(jsonToDos) ;
+    /*
+    //https://github.com/roufamatic/todo-txt-js
+function doWork(todoList){
+	console.log(todoList) ;
 
-    function loadToDos(jsonToDos){
+	// Read the list into an array of todo items.
+	var todos = TodoTxt.parseFile(todoList);
+
+	// Access properties on the new items.
+	//console.log(todos.length);            // ==> 4
+
+	// Fetch items from the object
+	var items = todos.items();            
+	
+	for(let i=0;i<items.length;i++){
+		//console.log(JSON.stringify(items[i],null,3)) ;
+		//console.log(items[i]) ;
+		console.log(`lineNumber:${items[i].lineNumber()}`);     // ==> 1
+		console.log(`id: ${items[i].id()}`);             // ==> (a UUID-like string)
+		console.log(`contexts:${items[i].contexts()}`);       // ==> ['@guitar', '@home']
+		console.log(`projects:${items[i].projects()}`);       // ==> ['+music']
+		console.log(`priority:${items[i].priority()}`);       // ==> null
+		console.log(`createdDate:${items[i].createdDate()}`);    // ==> null
+		console.log(`isComplete:${items[i].isComplete()}`);     // ==> false
+		console.log(`completedDate:${items[i].completedDate()}`);  // ==> null
+		console.log(`addons:${JSON.stringify(items[i].addons())}`);         // ==> {}
+		console.log(`textTokens:${items[i].textTokens()}`);     // ==> ['Write', 'a', 'new', 'song']
+	}
+	
+}
+
+
+//var todoList =	`(A) Thank Mom for the meatballs @phone` ;
+//var todoList =	`x 2011-03-02 2011-03-01 Review Tim's pull request +TodoTxtTouch @github` ;
+var todoList =	'x (A) 2016-05-20 2016-04-30 measure space for +chapelShelving @chapel due:2016-05-30' ;
+
+let demotodoList=[
+	'(B) Schedule Goodwill pickup +GarageSale @phone',
+	'x (A) 2016-05-20 2016-04-30 measure space for +chapelShelving @chapel due:2016-05-30',
+	'(A) Call Mom',
+	'Really gotta call Mom (A) @phone @someday',
+	'2011-03-02 Document +TodoTxt task format',
+	'(A) 2011-03-02 Call Mom'
+] ;
+
+for(let i=0;i<demotodoList.length;i++){
+	console.log(' ');
+	doWork(demotodoList[i]) ;
+}
+    */
+    document.querySelector('#idINPUTToDo').addEventListener('keydown',async (event) => {
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            // Do something
+            let tagInput = event.target ;
+            alert(`enter ${tagInput.value}`) ;
+            event.preventDefault() ;
+            event.stopPropagation() ;
+
+            let todoList= tagInput.value;//'x (A) 2016-05-20 2016-04-30 measure space for +chapelShelving @chapel due:2016-05-30'
+            var todos = TodoTxt.parseFile(todoList);
+            var items = todos.items();            
+        
+            for(let i=0;i<items.length;i++){
+                //console.log(JSON.stringify(items[i],null,3)) ;
+                //console.log(items[i]) ;
+                console.log(`lineNumber:${items[i].lineNumber()}`);     // ==> 1
+                console.log(`id: ${items[i].id()}`);             // ==> (a UUID-like string)
+                console.log(`contexts:${items[i].contexts()}`);       // ==> ['@guitar', '@home']
+                console.log(`projects:${items[i].projects()}`);       // ==> ['+music']
+                console.log(`priority:${items[i].priority()}`);       // ==> null
+                console.log(`createdDate:${items[i].createdDate()}`);    // ==> null
+                console.log(`isComplete:${items[i].isComplete()}`);     // ==> false
+                console.log(`completedDate:${items[i].completedDate()}`);  // ==> null
+                console.log(`addons:${JSON.stringify(items[i].addons())}`);         // ==> {}
+                console.log(`textTokens:${items[i].textTokens()}`);     // ==> ['Write', 'a', 'new', 'song']
+                
+                let cTokens = items[i].textTokens() ;
+                let strTitle = '' ;
+                for(let i=0;i<cTokens.length;i++){
+                    strTitle = strTitle + cTokens[i] + ' ';
+                }
+                let jsonToDo={
+                    id:0,
+                    date:'',
+                    title:strTitle,
+                    project:items[i].projects()==null ? '':items[i].projects()[0],
+                    context:items[i].contexts()==null ? '':items[i].contexts()[0],
+                    status:'pending'
+                } ;
+
+                if(items[i].createdDate()!=null){
+                    let cDate = new Date(items[i].createdDate());
+                    let month=cDate.getMonth()+1 ;
+                    let cMonth = month<=9? `0${month}` : `${month}` ;
+                    let day = cDate.getDate() ;
+                    let cDay = day<=9? `0${day}` : `${day}` ;
+                    jsonToDo.date = `${cDate.getFullYear()}-${cMonth}-${cDay}`;//items[i].createdDate() ;
+                }else{
+                    let cDate = new Date() ;
+                    let month=cDate.getMonth()+1 ;
+                    let cMonth = month<=9? `0${month}` : `${month}` ;
+                    let day = cDate.getDate() ;
+                    let cDay = day<=9? `0${day}` : `${day}` ;
+                    jsonToDo.date=`${cDate.getFullYear()}-${cMonth}-${cDay}`;
+                }
+
+                _newToDo(jsonToDo) ;
+
+                let tagToDoDate = _findToDoDate(jsonToDo.date) ;
+                if(tagToDoDate!=null){
+                    renderToDoItem(tagToDoDate,jsonToDo) ;
+
+                }else{
+                    let tagToDos=document.querySelector('.larkToDos') ;
+                    let tagToDoDateNew = document.createElement('details') ;
+                    tagToDos.appendChild(tagToDoDateNew) ;
+                    tagToDoDateNew.innerHTML=`
+                    <summary>
+                        <div>
+                            <i class="bi-folder2-open"></i>
+                            <span>${jsonToDo.date}</span>
+                        </div>
+                    </summary>
+
+                    <div class="todoContainer">
+                    </div>
+                    ` ;
+                    tagToDoDateNew.dataset.date=jsonToDo.date ;
+
+                    renderToDoItem(tagToDoDateNew,jsonToDo) ;
+
+                }
+            }
+        }        
+    }) ;
+
+    
+
+    function _findToDoDate(strDate){
+        let tagDetails = document.querySelectorAll('details') ;
+        for(let i=0;i<tagDetails.length;i++){
+            if(tagDetails[i].dataset.date == strDate)return tagDetails[i] ;
+        }
+        return null ;
+    }
+
+    function _newToDo(jsonToDo){
+        console.log(jsonToDo) ;
+        let urlNewToDo = `/newToDo.V1/` ;
+
+        fetch(urlNewToDo, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonToDo)
+        }).then(res => res.json())
+        .then(res => console.log(res));
+    }
+
+    async function loadToDos(jsonToDos){
+
+        let urlToDo = `/fetchPendingToDo.V1/` ;
+        let response = await fetch(urlToDo/*,{mode: 'no-cors'}*/);
+        let jsonServerToDos = await response.json() ;
+        console.log(jsonServerToDos) ;
+
+        for(let i=0;i<jsonServerToDos.length;i++){
+            jsonToDos.push(jsonServerToDos[i]) ;
+        }
+
+
         let tagToDos=document.querySelector('.larkToDos') ;
         let todoDates=[] ;
-        for(let i=0;i<jsonToDos.length;i++){
+        for(i=0;i<jsonToDos.length;i++){
             if(todoDates.includes(jsonToDos[i].date))continue ;
             todoDates.push(jsonToDos[i].date) ;
         }
@@ -260,15 +517,10 @@
             </div>
             ` ;
             tagToDoDate.dataset.date=todoDates[i] ;
+            tagToDoDate.setAttribute('open',true);
         }
 
-        function _findToDoDate(strDate){
-            let tagDetails = document.querySelectorAll('details') ;
-            for(let i=0;i<tagDetails.length;i++){
-                if(tagDetails[i].dataset.date == strDate)return tagDetails[i] ;
-            }
-            return null ;
-        }
+        
 
         for(i=0;i<jsonToDos.length;i++){
             let tagToDoDate = _findToDoDate(jsonToDos[i].date) ;
@@ -288,7 +540,34 @@
                 <i class="bi-pencil-square" id="idBTNEdit"></i>
             </div>
         ` ;
+        tagToDoItem.dataset.id = jsonToDo.id ;
+
+        tagToDoItem.querySelector('.bi-trash-fill').addEventListener('click',async (event)=>{
+            
+            let urlDoneToDo = `/doneWithToDo.V1/` ;
+            let jsonToDo = {
+                id:parseInt(tagToDoItem.dataset.id)
+            } ;
+
+            tagToDoItem.classList.add('todoDONE')
+            fetch(urlDoneToDo, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonToDo)
+            }).then(res => res.json())
+            .then(res => console.log(res));
+
+        }) ;
     }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded',async (event)=>{
+        await loadToDos(jsonToDos) ;
+    }) ;
+
 </script>
 </body>
 </html>
