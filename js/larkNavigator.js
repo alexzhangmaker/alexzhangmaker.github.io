@@ -266,6 +266,10 @@ function gwRenderBookmark(jsonBookmark,tagParent){
             .mustHaveTools:hover .bi-recycle{
                 visibility: visible;
             }
+
+            .larkMustHaveBM:hover > div > span{
+                color:blue ;
+            }
         </style>
         <div>
             <i class="bi-journal-bookmark-fill"></i>
