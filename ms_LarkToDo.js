@@ -30,7 +30,7 @@ app.listen(port, () => {
 //app.get('/publish.V1', fetchAccountHoldings) ;                        // http://127.0.0.1:9990/fetchProjects.V2
 app.get('/fetchPendingToDo.V1/', fetchPendingToDoV1) ;                  //http://127.0.0.1:9990/fetchPendingToDo.V1/
 app.get('/fetchPendingToDosOf.V1/:project', fetchPendingToDosOfV1) ;    //http://127.0.0.1:9990/fetchPendingToDosOf.V1/:Penguin.V3
-app.post('/newToDo.V1/', newToDoV1) ;
+app.post('/newToDo.V1/', newToDoV1) ;                                   //http://127.0.0.1:9990/newToDo.V1/
 app.post('/doneWithToDo.V1/', doneWithToDoV1) ;
 
 
@@ -70,9 +70,9 @@ async function fetchPendingToDosOfV1(request, response) {
 async function newToDoV1(request, response) {
   let jsonToDo = request.body ;
   //console.log(`updateGatewayV1:${jsonData}`) ;
-  //console.log(JSON.stringify(jsonData,null,3)) ;
+  console.log(JSON.stringify(jsonToDo,null,3)) ;
   await libToDos.newToDo(jsonToDo) ;
-  response.send({ retCode: '200' }) ;
+  response.json({ retCode: '200' }) ;
 }
 
 

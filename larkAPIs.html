@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>API Toolbox</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        .roboto-condensed-JSONView {
+            font-family: "Roboto Condensed", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+    </style>
+    <style>
+      #idJSONEditor{
+        width:100vw ;
+        height:600px ;
+        background-color: azure;
+        color: darkgrey;
+
+      }
+
+      #idContentDIV{
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="idContentDIV">
+        <button id="idBTNRequest">request</button>
+        <button id="idBTN001">getJSON</button>
+        <button id="idBTN002">copy 2 Clip</button>
+        <button id="idBTN003">copy from Clip</button>
+
+        <input type="text" id="idURLText" placeholder="http://127.0.0.1:9990/newToDo.V1/">
+
+        <style>
+            #idJSONEditor{
+                font-size: 16px;
+                position:relative;
+                width:50vw;
+            }
+
+            .jsonNode{
+                position: relative;
+                padding-left: 3em;
+            }
+            #idCanvas{
+                font-size: 16px;
+
+                display: flex;
+                width:100vw;
+                height:100% ;
+                flex-direction: row;
+            }
+        </style>
+        <div id="idCanvas">
+            <div contenteditable="false" id="idJSONEditor" class="roboto-condensed-JSONView"></div>
+            <div id="idJSONEView" class="roboto-condensed-JSONView"></div>
+        </div>
+    </div>
+    <!------
+                <div class="jsonNode">{</div>
+                    <div class="jsonNode">
+                    <pre class="jsonLeafNode"><span style="padding-right: 0.1px;">    <span class="cm-string cm-property">"context"</span>: <span class="cm-string">"TBD"</span>,</span></pre>
+                        <pre class="jsonLeafNode"><span style="padding-right: 0.1px;">    <span class="cm-string cm-property">"context"</span>: <span class="cm-string">"TBD"</span>,</span></pre>
+                        <pre class="jsonLeafNode"><span style="padding-right: 0.1px;">    <span class="cm-string cm-property">"context"</span>: <span class="cm-string">"TBD"</span>,</span></pre>
+
+                        <div class="jsonNode">
+                            <span>"childIs"</span><span>:</span><span>{</span>
+                            <div class="jsonNode">
+                                    <div class="jsonNode">
+                                        <pre ><span style="padding-right: 0.1px;">    <span class="cm-string cm-property">"context"</span>: <span class="cm-string">"TBD"</span>,</span></pre>
+                                        <pre ><span style="padding-right: 0.1px;">    <span class="cm-string cm-property">"context"</span>: <span class="cm-string">"TBD"</span>,</span></pre>
+                                    </div>
+                            </div>
+                            <span>}</span><span>,</span>
+
+                        </div>
+                        <pre ><span style="padding-right: 0.1px;">    <span class="cm-string cm-property">"context"</span>: <span class="cm-string">"TBD"</span>,</span></pre>
+
+                    </div>
+                <div class="jsonNode">}</div>
+
+
+                <div>==============</div>
+                <style>
+
+                </style>
+                -->
+            <!----
+                <div class="jsonNode">
+                    <div class="jsonNodeLeftPart">{</div>
+                    <div class="jsonNode"><span>"status"</span><span>:</span><span>"pending"</span><span>,</span></div>
+                    
+                    <div class="jsonNode">
+                        <div class="jsonNodeLeft"><span>"childIs"</span><span>:</span><span>{</span></div>
+                        <div class="jsonNode"><span>"date"</span><span>:</span><span>"2024-11-16"</span><span>,</span></div>
+                        <div class="jsonNode"><span>"title"</span><span>:</span><span>"new UI details-3"</span><span>,</span></div>
+                        <div class="jsonNode"><span>"project"</span><span>:</span><span>"Penguin.V3"</span><span>,</span></div>
+                        <div class="jsonNode"><span>"context"</span><span>:</span><span>"TBD"</span><span>,</span></div>
+                        <div class="jsonNode"><span>"status"</span><span>:</span><span>"pending"</span><span>,</span></div>
+                        <div class="jsonNodeRight"><span>}</span><span>,</span></div>
+                    </div>
+
+
+                    <div class="jsonNodeRightPart">}</div>
+
+
+                </div>
+            -->
+  </body>
+  
+    <script>
+
+        function bindKeyEvent(tagElement){
+            tagElement.addEventListener('keydown',(event)=>{
+                //do something on keydown
+                if(event.keyCode==13){
+                    event.stopPropagation() ;
+                    event.preventDefault() ;
+                    onEnter(event) ;
+                    //enter key was pressed
+                }
+            }) ;
+        }
+
+        function renderJSONNode(tagParent,jsonkey,jsonContent,bLastSibling){
+            let tagNode = document.createElement('div') ;
+            tagNode.classList.add('jsonNode') ;
+            tagParent.appendChild(tagNode) ;
+
+            tagNode.addEventListener('keydown',(event)=>{
+                //do something on keydown
+                if(event.keyCode==13){
+                    event.stopPropagation() ;
+                    event.preventDefault() ;
+                    //enter key was pressed
+                    alert('fdsfdsf') ;
+                }
+            }) ;
+
+            tagNode.innerHTML=`
+                <div class="jsonNodeLeft"><span>"${jsonkey}"</span><span>:</span><span>{</span></div>
+            ` ;
+
+            const keys = Object.keys(jsonContent);
+            for(let i=0;i<keys.length;i++){
+                key = keys[i] ;
+            //for (let key in jsonContent) {
+                if (jsonContent.hasOwnProperty(key)) {  // check if the property belongs to the object itself
+                    if (typeof jsonContent[key] === 'object' && jsonContent[key] !== null) {
+                        console.log(JSON.stringify(jsonContent[key]));
+                        if(i==keys.length-1){
+                            renderJSONNode(tagNode,key,jsonContent[key],true) ;
+                        }else{
+                            renderJSONNode(tagNode,key,jsonContent[key],false) ;
+                        }
+                    }else{
+                        console.log(`${key}: ${jsonContent[key]}`);
+                        let tagChildNode = document.createElement('div') ;
+                        tagChildNode.classList.add('jsonNode') ;
+
+                        if(i==keys.length-1){
+                            tagChildNode.innerHTML=`
+                            <span>"${key}"</span><span>:</span><span>"${jsonContent[key]}"</span>
+                        ` ;
+                        }else{
+                            tagChildNode.innerHTML=`
+                            <span>"${key}"</span><span>:</span><span>"${jsonContent[key]}"</span><span>,</span>
+                        ` ;
+                        }
+                        tagNode.appendChild(tagChildNode) ;
+                    }
+                }
+            }
+
+            if(bLastSibling==true){
+                tagNode.innerHTML=tagNode.innerHTML + `<div class="jsonNodeRight"><span>}</span></div>` ;
+            }else{
+                tagNode.innerHTML=tagNode.innerHTML + `<div class="jsonNodeRight"><span>}</span><span>,</span></div>` ;
+            }
+        }
+
+        function onEnter(event){
+            alert('enter') ;
+        }
+
+        function renderJSON(tagContainer,jsonContent){
+            let tagJSONNode = document.createElement('div') ;
+            tagContainer.appendChild(tagJSONNode) ;
+            tagJSONNode.classList.add('jsonNode') ;
+            tagJSONNode.addEventListener('keydown',(event)=>{
+                //do something on keydown
+                if(event.keyCode==13){
+                    event.stopPropagation() ;
+                    event.preventDefault() ;
+                    //enter key was pressed
+                    alert('fdsfdsf') ;
+                }
+            }) ;
+
+            tagJSONNode.innerHTML=`<div class="jsonNodeLeftPart">{</div>` ;
+            
+            const keys = Object.keys(jsonContent);
+            for(let i=0;i<keys.length;i++){
+                key = keys[i] ;
+            //for (let key in jsonContent) {
+                if (jsonContent.hasOwnProperty(key)) {  // check if the property belongs to the object itself
+                    if (typeof jsonContent[key] === 'object' && jsonContent[key] !== null) {
+                        console.log(JSON.stringify(jsonContent[key]));
+                        if(i==keys.length-1){
+                            renderJSONNode(tagJSONNode,key,jsonContent[key],true) ;
+                        }else{
+                            renderJSONNode(tagJSONNode,key,jsonContent[key],false) ;
+                        }
+                    }else{
+
+                        console.log(`${key}: ${jsonContent[key]}`);
+                        let tagNode = document.createElement('div') ;
+                        tagNode.classList.add('jsonNode') ;
+                        if(i==keys.length-1){
+                            tagNode.innerHTML=`
+                            <span contenteditable="true">"${key}"</span><span>:</span><span contenteditable="true">"${jsonContent[key]}"</span>
+
+                        ` ;
+                        }else{
+                            tagNode.innerHTML=`
+                            <span contenteditable="true">"${key}"</span><span>:</span><span contenteditable="true">"${jsonContent[key]}"</span><span>,</span>
+                        ` ;
+                        }
+                        tagJSONNode.appendChild(tagNode) ;
+
+                        let tagSPANs = tagNode.querySelectorAll('span') ;
+                        tagSPANs.forEach(tagSPAN => {
+                            bindKeyEvent(tagSPAN) ;
+                        });
+                    }
+                }
+            }
+
+            tagJSONNode.innerHTML=tagJSONNode.innerHTML + `<div class="jsonNodeRightPart">}</div>` ;
+        }
+
+
+        function copyToClipboard() {
+            let tagRoot = document.querySelector('#idJSONEditor') ;
+
+            let cContent = `${tagRoot.innerText}` ;
+            console.log(cContent) ;
+
+
+            // Use the Clipboard API
+            navigator.clipboard.writeText(cContent).then(() => {
+                console.log('Text copied to clipboard');
+                alert('Text copied to clipboard: ' + cContent);
+            })
+            .catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+        
+        function copyFromClipboard(){
+            navigator.clipboard.readText().then((clipText) => {
+                console.log(clipText) ;
+                //document.querySelector(".editor").innerText += clipText ;
+            });
+            
+        }
+
+
+        async function postAPICall(cURL,jsonContent){
+            let urlAPITool = '/APIRequest.V1/' ;
+
+            console.log(jsonContent) ;
+            let jsonRequest={
+                url:cURL==''? 'http://127.0.0.1:9990/newToDo.V1/':cURL,
+                action:'post',
+                content:jsonContent==''? {say:'hello'}:jsonContent
+            } ;
+
+            console.log(jsonRequest) ;
+            let vS = false ;
+            if(vS){
+
+                let jsonResult = await fetch(urlAPITool, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonRequest)
+                }).then(res => res.json()) ;
+                console.log(jsonResult) ;
+            }
+        }
+    </script>
+    <script>
+
+        //idBTN001
+        document.querySelector('#idBTN002').addEventListener('click',async (event)=>{
+            copyToClipboard() ;
+
+        }) ;
+
+        document.querySelector('#idBTN003').addEventListener('click',async (event)=>{
+            copyFromClipboard() ;
+
+        }) ;
+
+        //idBTN001
+        document.querySelector('#idBTN001').addEventListener('click',async (event)=>{
+            let tagRoot = document.querySelector('#idJSONEditor') ;
+            let cContent = `${tagRoot.innerText}` ;
+            console.log(cContent) ;
+            console.log(JSON.parse(cContent)) ;
+
+            let tagViewer = document.querySelector('#idJSONEView') ;
+            renderJSON(tagViewer,JSON.parse(cContent))
+
+        }) ;
+
+        document.querySelector('#idBTNRequest').addEventListener('click',async (event)=>{
+
+            let jsonContentDemo={
+                "date": "2024-11-05",
+                "title": "new UI details-3",
+                "project": "Penguin.V3",
+                "context": "TBD",
+                "status": "pending",
+                "child":{
+                    "name":"child001",
+                    "age":"16"
+                },
+                "address":"Chiang Mai",
+                "home":{
+                    "country":"CN",
+                    "zip":"50200"
+                }
+            } ;
+
+            let tagRoot = document.querySelector('#idJSONEditor') ;
+            renderJSON(tagRoot,jsonContentDemo) ;
+
+
+            let cURL = document.querySelector('#idURLText').value ;
+            //let cContent = `${document.querySelector('#idJSONEditor').innerText}`
+            let jsonContent = {} ;//JSON.parse(cContent) ;
+            //await postAPICall(cURL,jsonContent) ;
+            
+            
+        }) ;
+    </script>
+</html>

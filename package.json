@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.7",
     "body-parser": "^1.20.2",
     "cheerio": "^1.0.0",
     "cors": "^2.8.5",
@@ -16,6 +17,7 @@
     "epub-gen": "^0.1.0",
     "express": "^4.19.2",
     "file-saver": "^2.0.5",
+    "node-fetch": "^2.7.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "tabletop": "^1.6.3",
