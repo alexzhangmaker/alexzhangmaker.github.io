@@ -39,7 +39,7 @@ async function _fetchAllPendingToDos(){
     sqlite3.verbose();
     try {  
         const dbConnection = await createDbConnection(larkToDoDBFile);
-        let cStmt = `SELECT * FROM todoTbl where status = 'pending' ORDER BY date` ;
+        let cStmt = `SELECT * FROM todoTbl where status = 'pending' ORDER BY date DESC` ;
         let jsonToDos = await dbConnection.all(cStmt, []);   
         return jsonToDos ;
     } catch (error) {
@@ -53,7 +53,7 @@ async function _fetchPendingToDosOf(project){
     sqlite3.verbose();
     try {  
         const dbConnection = await createDbConnection(larkToDoDBFile);
-        let cStmt = `SELECT * FROM todoTbl where status = 'pending' AND project = ? ORDER BY date` ;
+        let cStmt = `SELECT * FROM todoTbl where status = 'pending' AND project = ? ORDER BY date DESC` ;
         let jsonToDos = await dbConnection.all(cStmt, [project]);   
         return jsonToDos ;
     } catch (error) {
