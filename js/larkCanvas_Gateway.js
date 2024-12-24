@@ -69,7 +69,7 @@ function gwRenderCanvas(cssRootElement){
     /*margin: 1rem auto;*/
     padding: 0 1rem;
     /*width: 35em;*/
-    max-width: calc(100% - 2rem);
+    max-width: 100% /*calc(100% - 2rem)*/;
     position: relative;
     border: 1px solid #78909C;
     border-radius: 6px;

@@ -238,17 +238,20 @@
 }
 
 
+
 #idFoldersUL::-webkit-scrollbar {
     width: 3px;
+    scrollbar-color: rgb(147, 146, 146) rgb(211, 221, 225);
+
 }
 
 #idFoldersUL::-webkit-scrollbar-track {
     background: #eff5ed;
-    border-radius: 3px;
+    border-radius: 1px;
 }
 
 #idFoldersUL::-webkit-scrollbar-thumb {
-    background: #686e6b;
-    border-radius: 3px;
-    border: 1px solid #c7ced1;
+    background: #b5b6b6;
+    border-radius: 1px;
+    border: 1px solid #dee0e1;
 }
