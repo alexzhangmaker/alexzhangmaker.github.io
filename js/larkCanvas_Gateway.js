@@ -13,22 +13,147 @@ function gwRenderCanvas(cssRootElement){
                 justify-content: space-between;
                 gap:5px ;
             }
+
+            #idWidgetContainer{
+                flex-grow:1;
+
+                /*width:65% ;*/
+                height:100% ;
+
+                overflow-y: auto; 
+                overflow-x: hidden; 
+
+                display: flex ;
+                flex-direction: column ;
+                gap:10px;
+            }
+
+
+    #idWidgetContainer::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    #idWidgetContainer::-webkit-scrollbar-track {
+        background: #eff5ed;
+        border-radius: 3px;
+    }
+
+    #idWidgetContainer::-webkit-scrollbar-thumb {
+        background: #011b0e;
+        border-radius: 3px;
+        border: 1px solid #232E33;
+    }
+
+            #idToDoContainer{
+                width:30% ;
+                height:100% ;
+            }
+
             .larkFrameCalendar{
                 border-style: none ;
-                /*width: 65%; */
-                flex-grow:1;
-                height: 100%;
+                width: 100%;
+                height: 800px;
             }
 
             .larkFrameToDo{
                 border-style: none ;
-                width: 30%; 
+                width: 100%; 
                 height: 100%;
             }
+
+            .idWidgetContainer details{
+                width:100% ;
+            }
+
+.widgetDetails {
+    /*margin: 1rem auto;*/
+    padding: 0 1rem;
+    /*width: 35em;*/
+    max-width: calc(100% - 2rem);
+    position: relative;
+    border: 1px solid #78909C;
+    border-radius: 6px;
+    background-color: #ECEFF1;
+    color: #263238;
+    transition: background-color 0.15s;
+  }
+  .widgetDetails > :last-child {
+    margin-bottom: 1rem;
+  }
+  .widgetDetails::before {
+    width: 100%;
+    height: 100%;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: inherit;
+    opacity: 0.15;
+    box-shadow: 0 0.25em 0.5em #263238;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: -1;
+  }
+  .widgetDetails[open] {
+    background-color: #FFF;
+  }
+  .widgetDetails[open]::before {
+    opacity: 0.6;
+  }
+  
+  .widgetSummary {
+    padding: 1rem 2em 1rem 0;
+    display: block;
+    position: relative;
+    font-size: 1.33em;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .widgetSummary::before, summary::after {
+    width: 0.75em;
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    content: "";
+    background-color: currentColor;
+    text-align: right;
+    transform: translateY(-50%);
+    transition: transform 0.2s ease-in-out;
+  }
+  .widgetSummary::after {
+    transform: translateY(-50%) rotate(90deg);
+  }
+  [open] .widgetSummary::after {
+    transform: translateY(-50%) rotate(180deg);
+  }
+  .widgetSummary::-webkit-details-marker {
+    display: none;
+  }
+
+  .dailyTools{
+    width:100% ;
+    height:200px ;
+  }
         </style>
         <div class="larkCanvas">
-            <iframe class="larkFrameCalendar" src="http://127.0.0.1:9990/larkCalendar.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
-            <iframe class="larkFrameToDo" src="http://127.0.0.1:9990/larkToDo.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+            <div id="idWidgetContainer">
+
+                <details class="widgetDetails" open>
+                    <summary class="widgetSummary">Daily toolbox</summary>
+                    <div class="dailyTools">
+                        <p>It's a pretty useful element that handles accordion / collapsed text natively!</p>
+                    </div>
+                </details>
+                <details class="widgetDetails" close>
+                    <summary class="widgetSummary">Penguin Calendar</summary>
+                    <iframe  class="larkFrameCalendar" src="http://127.0.0.1:9990/larkCalendar.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+                </details>
+            </div>
+            <div id="idToDoContainer">
+                <iframe class="larkFrameToDo" src="http://127.0.0.1:9990/larkToDo.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+            </div>
+
         </div>
     ` ;
 }
@@ -108,10 +233,12 @@ function renderBookMark(jsonBookMark,tagBMContainer){
     tagBookMark.dataset.url = jsonBookMark.url ;
 
     tagBookMark.querySelector('.boxBookmarkMeta').addEventListener('click',(event)=>{
+        event.stopPropagation() ;
         window.open(tagBookMark.dataset.url, '_blank').focus();
     }) ;
 
     tagBookMark.addEventListener('click',(event)=>{
+        event.stopPropagation() ;
         window.open(tagBookMark.dataset.url, '_blank').focus();
     }) ;
 
