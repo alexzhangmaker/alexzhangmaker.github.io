@@ -16,7 +16,6 @@ function gwRenderCanvas(cssRootElement){
 
             #idWidgetContainer{
                 flex-grow:1;
-
                 /*width:65% ;*/
                 height:100% ;
 
@@ -28,21 +27,20 @@ function gwRenderCanvas(cssRootElement){
                 gap:10px;
             }
 
+            #idWidgetContainer::-webkit-scrollbar {
+                width: 3px;
+            }
 
-    #idWidgetContainer::-webkit-scrollbar {
-        width: 3px;
-    }
+            #idWidgetContainer::-webkit-scrollbar-track {
+                background: #eff5ed;
+                border-radius: 3px;
+            }
 
-    #idWidgetContainer::-webkit-scrollbar-track {
-        background: #eff5ed;
-        border-radius: 3px;
-    }
-
-    #idWidgetContainer::-webkit-scrollbar-thumb {
-        background: #011b0e;
-        border-radius: 3px;
-        border: 1px solid #232E33;
-    }
+            #idWidgetContainer::-webkit-scrollbar-thumb {
+                background: #011b0e;
+                border-radius: 3px;
+                border: 1px solid #232E33;
+            }
 
             #idToDoContainer{
                 width:30% ;
@@ -65,90 +63,125 @@ function gwRenderCanvas(cssRootElement){
                 width:100% ;
             }
 
-.widgetDetails {
-    /*margin: 1rem auto;*/
-    padding: 0 1rem;
-    /*width: 35em;*/
-    max-width: 100% /*calc(100% - 2rem)*/;
-    position: relative;
-    border: 1px solid #78909C;
-    border-radius: 6px;
-    background-color: #ECEFF1;
-    color: #263238;
-    transition: background-color 0.15s;
-  }
-  .widgetDetails > :last-child {
-    margin-bottom: 1rem;
-  }
-  .widgetDetails::before {
-    width: 100%;
-    height: 100%;
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: inherit;
-    opacity: 0.15;
-    box-shadow: 0 0.25em 0.5em #263238;
-    pointer-events: none;
-    transition: opacity 0.2s;
-    z-index: -1;
-  }
-  .widgetDetails[open] {
-    background-color: #FFF;
-  }
-  .widgetDetails[open]::before {
-    opacity: 0.6;
-  }
-  
-  .widgetSummary {
-    padding: 1rem 2em 1rem 0;
-    display: block;
-    position: relative;
-    font-size: 1.33em;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  .widgetSummary::before, summary::after {
-    width: 0.75em;
-    height: 2px;
-    position: absolute;
-    top: 50%;
-    right: 0;
-    content: "";
-    background-color: currentColor;
-    text-align: right;
-    transform: translateY(-50%);
-    transition: transform 0.2s ease-in-out;
-  }
-  .widgetSummary::after {
-    transform: translateY(-50%) rotate(90deg);
-  }
-  [open] .widgetSummary::after {
-    transform: translateY(-50%) rotate(180deg);
-  }
-  .widgetSummary::-webkit-details-marker {
-    display: none;
-  }
+            .widgetDetails {
+                /*margin: 1rem auto;*/
+                padding: 0 1rem;
+                /*width: 35em;*/
+                max-width: 100% /*calc(100% - 2rem)*/;
+                position: relative;
+                border: 1px solid #78909C;
+                border-radius: 6px;
+                background-color: #ECEFF1;
+                color: #263238;
+                transition: background-color 0.15s;
+            }
+            .widgetDetails > :last-child {
+                margin-bottom: 1rem;
+            }
+            .widgetDetails::before {
+                width: 100%;
+                height: 100%;
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                border-radius: inherit;
+                opacity: 0.15;
+                box-shadow: 0 0.25em 0.5em #263238;
+                pointer-events: none;
+                transition: opacity 0.2s;
+                z-index: -1;
+            }
+            .widgetDetails[open] {
+                background-color: #FFF;
+            }
+            .widgetDetails[open]::before {
+                opacity: 0.6;
+            }
+            
+            .widgetSummary {
+                padding: 1rem 2em 1rem 0;
+                display: block;
+                position: relative;
+                font-size: 1.33em;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            .widgetSummary::before, summary::after {
+                width: 0.75em;
+                height: 2px;
+                position: absolute;
+                top: 50%;
+                right: 0;
+                content: "";
+                background-color: currentColor;
+                text-align: right;
+                transform: translateY(-50%);
+                transition: transform 0.2s ease-in-out;
+            }
+            .widgetSummary::after {
+                transform: translateY(-50%) rotate(90deg);
+            }
+            [open] .widgetSummary::after {
+                transform: translateY(-50%) rotate(180deg);
+            }
+            .widgetSummary::-webkit-details-marker {
+                display: none;
+            }
 
-  .dailyTools{
-    width:100% ;
-    height:200px ;
-  }
+            .dailyTools{
+                width:100% ;
+                height:200px ;
+                column-count: 3;
+                font-size:18px ;
+            }
+
+            .dailyTools li{
+                padding-top:10px ;
+            }
+
+            .dailyTools li:hover {
+                cursor: pointer;
+            }
+            .dailyTools a{
+                color:black ;
+                text-decoration:none ;
+            }
+
+            .dailyTools a:hover {
+                background-color: yellow;
+            }
+
+            .dailyTools #idLogDeal:focus{
+                outline: none;
+            }
+            .dailyTools #idLogDeal{
+                width:100% ;
+                border:none ;
+            }
+
+            input[type="text"] {
+                width: 100%; 
+                border: none; /* Remove default border */
+                outline: none; /* Remove default focus outline */
+                border-bottom: 1px solid #ccc; /* Add underline for normal state */
+              }
+              
+              input[type="text"]:focus {
+                border-bottom: 1px solid #007bff; /* Change underline color on focus */
+              }
         </style>
         <div class="larkCanvas">
             <div id="idWidgetContainer">
-
-                <details class="widgetDetails" open>
+                <details class="widgetDetails openWidget" open>
                     <summary class="widgetSummary">Daily toolbox</summary>
+                    <div style="width:100%;padding-bottom:20px;">
+                        <input type="text" id="idLogDeal" placeholder="log deal as: buy/sell ticker price shares accountID">
+                    </div>
                     <div class="dailyTools">
-                        <p>It's a pretty useful element that handles accordion / collapsed text natively!</p>
                     </div>
                 </details>
-                <details class="widgetDetails" close>
-                    <summary class="widgetSummary">Penguin Calendar</summary>
-                    <iframe  class="larkFrameCalendar" src="http://127.0.0.1:9990/larkCalendar.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
-                </details>
+               
             </div>
             <div id="idToDoContainer">
                 <iframe class="larkFrameToDo" src="http://127.0.0.1:9990/larkToDo.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
@@ -156,6 +189,116 @@ function gwRenderCanvas(cssRootElement){
 
         </div>
     ` ;
+    //<p>It's a pretty useful element that handles accordion / collapsed text natively!</p>
+    let jsonDailyTools={
+        tools:[
+            {
+                title:'google',
+                url:"https://www.google.com"
+            },{
+                title:'SQLiteUI',
+                url:"http://192.168.1.119:10088/larkSQLiteAdmin.html"
+            }
+        ]
+    } ;
+    console.log(globalNavigator.jsonMustHave);
+
+    for(let i=0;i<globalNavigator.jsonMustHave.length;i++){
+        let jsonTool={
+            title:globalNavigator.jsonMustHave[i].title,
+            url:globalNavigator.jsonMustHave[i].data.url
+        };
+        jsonDailyTools.tools.push(jsonTool) ;
+    }
+    //jsonGateway.jsonMustHave
+    _renderDailyTools(jsonDailyTools) ;
+    _renderMemoAnywhere() ;
+    _renderTyping() ;
+    _renderCalendar() ;
+    _renderWidget({title:"demo Widget"}) ;
+
+    /*
+    //document.querySelector('.mustHave').classList.add('noShow') ;
+    let widgets = tagCanvas.querySelector("#idWidgetContainer").querySelectAll('.widgetDetails') ;
+    widgets.forEach(details => {
+        details.addEventListener('toggle', () => {
+            const isOpen = details.hasAttribute('open'); 
+            if (isOpen) {
+                console.log('Details element opened');
+            } else {
+                console.log('Details element closed');
+            }
+        });
+    });
+    */
+   //idLogDeal
+   tagCanvas.querySelector('#idLogDeal').addEventListener('keydown',_logDealFunc) ;
+    
+}
+
+function _renderDailyTools(jsonDailyTools){
+
+    let tagDailyTools = document.querySelector('.dailyTools');
+    if(tagDailyTools==null)return ;
+    for(let i=0;i<jsonDailyTools.tools.length;i++){
+        let tagTool = document.createElement('li') ;
+
+        //<a href="https://www.w3schools.com">Visit W3Schools.com!</a>
+        tagDailyTools.appendChild(tagTool) ;
+        tagTool.innerHTML = `
+            <a href="${jsonDailyTools.tools[i].url}" target="_blank">${jsonDailyTools.tools[i].title}</a>
+        ` ;
+    }
+}
+
+
+function _renderCalendar(){
+    let tagCalendar= document.createElement('details') ;
+    let tagWidgets = document.querySelector('#idWidgetContainer') ;
+    tagWidgets.appendChild(tagCalendar) ;
+    tagCalendar.classList.add("widgetDetails") ;
+    tagCalendar.innerHTML = `
+        <summary class="widgetSummary">Penguin Calendar</summary>
+        <iframe  class="larkFrameCalendar" src="http://127.0.0.1:9990/larkCalendar.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+    ` ;
+}
+
+
+function _renderMemoAnywhere(){
+    let tagMemoAnywhere= document.createElement('details') ;
+    let tagWidgets = document.querySelector('#idWidgetContainer') ;
+    tagWidgets.appendChild(tagMemoAnywhere) ;
+    tagMemoAnywhere.classList.add("widgetDetails") ;
+    tagMemoAnywhere.innerHTML = `
+        <summary class="widgetSummary">memo.anywhere</summary>
+        <iframe  class="larkFrameCalendar" src="http://127.0.0.1:8099/ms_Memoanywhere.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+    ` ;
+    //const isOpen = tagMemoAnywhere.hasAttribute('open'); 
+    tagMemoAnywhere.open = true; 
+    //document.getElementById("myDetails").open = true;
+
+}
+
+function _renderTyping(){
+    let tagCalendar= document.createElement('details') ;
+    let tagWidgets = document.querySelector('#idWidgetContainer') ;
+    tagWidgets.appendChild(tagCalendar) ;
+    tagCalendar.classList.add("widgetDetails") ;
+    tagCalendar.innerHTML = `
+        <summary class="widgetSummary">Typing Practice</summary>
+        <iframe  class="larkFrameCalendar" src="http://127.0.0.1:9988/msApps/ms_Typing.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+    ` ;
+}
+
+function _renderWidget(jsonWidget){
+    let tagCalendar= document.createElement('details') ;
+    let tagWidgets = document.querySelector('#idWidgetContainer') ;
+    tagWidgets.appendChild(tagCalendar) ;
+    tagCalendar.classList.add("widgetDetails") ;
+    tagCalendar.innerHTML = `
+        <summary class="widgetSummary">${jsonWidget.title}</summary>
+        <div>all set </div>
+        ` ;
 }
 
 function dlgCheckBMFunc(jsonData){

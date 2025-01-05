@@ -252,7 +252,6 @@ function createLarkDialog(jsonDialog){
         tagDialog.close() ;
         recallLarkDialog() ;
         container.style.visibility = 'hidden' ;
-
     }) ;
 
     tagDialog.querySelector('#idBTNDlgCheck').addEventListener('click',(event)=>{

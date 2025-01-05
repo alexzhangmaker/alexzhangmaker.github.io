@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thai Typing Practice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+        #thai-word {
+            font-size: 96px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        #user-input {
+            font-size: 48px;
+            padding: 10px;
+            /*width: 300px;*/
+        }
+        #feedback {
+            margin-top: 10px;
+            color: red;
+            font-size: 16px;
+        }
+
+        input[type="text"] {
+            width: 100%; 
+            border: none; 
+            outline: none; 
+            border-bottom: 1px solid #ccc; 
+            text-align: center; 
+        }
+
+        input[type="text"]:focus {
+            border-bottom: 1px solid #007bff; 
+        }
+        .widget{
+            width: 80% ;
+            height:80% ;
+            /*background-color: #816b6b;*/
+        }
+
+        .widgetHeader{
+            text-align: left;
+        }
+
+        .widgetFooter{
+            text-align: right;
+        }
+
+        .centeredDIV {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="widget centeredDIV">
+        <div class="widgetHeader">
+            <span>泰语键盘练习</span>
+        </div>
+        <div class="widgetMain">
+            <div id="thai-word">สวัสดี สวัสดี</div>
+            <input type="text" id="user-input" placeholder="Type here..." autofocus />
+            <div id="feedback"></div>
+        </div>
+        <div class="widgetFooter">
+            <span>ภาษาไทย</span>
+        </div>
+    </div>
+    <script>
+        const idUserInput   = "user-input" ;
+        const idFeedback    = "feedback" ;
+        const idThaiWord    = "thai-word" ;
+        let typingPracticeSet=[
+            "สวัสดี",
+            "ภาษาไทย"
+        ] ;
+        let typingPracticeIndex = 0 ;
+        let currentTypingIndex = 0;
+        const orderedConsonants= ['ร', 'น', 'ก', 'อ', 'ง', 'ม', 'ย', 'ว', 'ท', 'ด', 'ล', 'ต', 'ห', 'ส', 'บ', 'ค', 'ป', 'จ', 'พ', 'ข', 'ช', 'ธ', 'ผ', 'ศ', 'ถ', 'ณ', 'ซ', 'ษ', 'ญ', 'ภ', 'ฐ', 'ฟ', 'ฉ', 'ฒ', 'ฝ', 'ฎ', 'ฏ', 'ฤ', 'ฮ', 'ฑ', 'ฃ', 'ฬ', 'ฆ', 'ฌ', 'ฅ', 'ฦ'];
+
+        document.addEventListener("DOMContentLoaded", async(event) => {
+            console.log("DOM fully loaded and parsed");
+            let response = await fetch('./thai_top_200.json') ;
+            let jsonWords = await response.json() ;
+            console.log(jsonWords) ;
+            let groupKeys= Object.keys(jsonWords) ;
+            console.log(groupKeys) ;
+            console.log(jsonWords[groupKeys[0]]) ;
+            typingPracticeSet=jsonWords['ร'/*groupKeys[0]*/] ;
+            console.log(typingPracticeSet) ;
+
+            document.getElementById(idThaiWord).innerText = typingPracticeSet[typingPracticeIndex].thai ;
+
+            const inputField = document.getElementById(idUserInput);
+            const feedback = document.getElementById(idFeedback);
+
+            inputField.addEventListener("input", () => {
+                const currentLetter = typingPracticeSet[typingPracticeIndex].thai[currentTypingIndex];
+                const typedLetter = inputField.value[currentTypingIndex];
+
+                if (typedLetter === currentLetter){
+                    currentTypingIndex++;
+                    feedback.textContent = ""; // Clear feedback on correct letter
+
+                    // Check if the word is completely typed
+                    if (currentTypingIndex === typingPracticeSet[typingPracticeIndex].thai.length) {
+                        feedback.textContent = "Well done! 🎉";
+                        inputField.value = ""; // Clear input field for next round
+                        currentTypingIndex = 0; // Reset index
+
+                        typingPracticeIndex = typingPracticeIndex + 1 ;
+                        if(typingPracticeIndex>=typingPracticeSet.length){
+                            currentTypingIndex = 0 ;
+                            typingPracticeIndex = 0 ;
+                        }
+                        document.getElementById(idThaiWord).innerText = typingPracticeSet[typingPracticeIndex].thai ;
+                    }
+                }else{
+                    inputField.value = inputField.value.slice(0, currentTypingIndex); // Prevent further typing
+                    feedback.textContent = `Please type '${currentLetter}' correctly.`;
+                    
+                }
+            });
+        });
+
+        //const thaiWord = "สวัสดี สวัสดี"; // Word to type
+
+
+        
+    </script>
+</body>
+</html>

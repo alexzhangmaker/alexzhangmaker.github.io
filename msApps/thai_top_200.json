@@ -1,0 +1,504 @@
+{
+   "ก": [
+      {
+         "thai": "กลาง",
+         "meaning": "center"
+      },
+      {
+         "thai": "การ",
+         "meaning": "action"
+      },
+      {
+         "thai": "การแก้ไข",
+         "meaning": "Editing"
+      },
+      {
+         "thai": "การศึกษา",
+         "meaning": "study"
+      },
+      {
+         "thai": "กิน",
+         "meaning": "eat"
+      }
+   ],
+   "ข": [
+      {
+         "thai": "ขณะ",
+         "meaning": "while"
+      },
+      {
+         "thai": "ของ",
+         "meaning": "of"
+      },
+      {
+         "thai": "ของ",
+         "meaning": "of"
+      },
+      {
+         "thai": "ข้าง",
+         "meaning": "side"
+      },
+      {
+         "thai": "ขึ้น",
+         "meaning": "climb"
+      }
+   ],
+   "ค": [
+      {
+         "thai": "คง",
+         "meaning": "probably"
+      },
+      {
+         "thai": "คน",
+         "meaning": "person"
+      },
+      {
+         "thai": "ครั้ง",
+         "meaning": "time"
+      },
+      {
+         "thai": "ความ",
+         "meaning": "sense"
+      },
+      {
+         "thai": "ความจำเป็น",
+         "meaning": "necessity"
+      },
+      {
+         "thai": "ความสามารถ",
+         "meaning": "ability"
+      },
+      {
+         "thai": "ความสุข",
+         "meaning": "happiness"
+      },
+      {
+         "thai": "ความหมาย",
+         "meaning": "meaning"
+      },
+      {
+         "thai": "คำ",
+         "meaning": "word"
+      },
+      {
+         "thai": "คำถาม",
+         "meaning": "question"
+      },
+      {
+         "thai": "คือ",
+         "meaning": "is"
+      }
+   ],
+   "ง": [
+      {
+         "thai": "งาน",
+         "meaning": "work"
+      }
+   ],
+   "จ": [
+      {
+         "thai": "จาก",
+         "meaning": "from"
+      },
+      {
+         "thai": "จึง",
+         "meaning": "therefore"
+      }
+   ],
+   "ช": [
+      {
+         "thai": "ช้า",
+         "meaning": "slow"
+      }
+   ],
+   "ด": [
+      {
+         "thai": "ด้วย",
+         "meaning": "too"
+      },
+      {
+         "thai": "ดังนั้น",
+         "meaning": "so"
+      },
+      {
+         "thai": "ด้าน",
+         "meaning": "side"
+      },
+      {
+         "thai": "ดู",
+         "meaning": "watch"
+      }
+   ],
+   "ต": [
+      {
+         "thai": "ตลอด",
+         "meaning": "always"
+      },
+      {
+         "thai": "ต้อง",
+         "meaning": "must"
+      },
+      {
+         "thai": "ตอน",
+         "meaning": "section"
+      },
+      {
+         "thai": "ตอนนี้",
+         "meaning": "now"
+      },
+      {
+         "thai": "ต่อเนื่อง",
+         "meaning": "continuously"
+      },
+      {
+         "thai": "ตอบ",
+         "meaning": "reply"
+      },
+      {
+         "thai": "ต่อไป",
+         "meaning": "next"
+      },
+      {
+         "thai": "ต่ำ",
+         "meaning": "low"
+      }
+   ],
+   "ท": [
+      {
+         "thai": "ทราบ",
+         "meaning": "know"
+      },
+      {
+         "thai": "ทั้งที่",
+         "meaning": "Even though"
+      },
+      {
+         "thai": "ทั้งสอง",
+         "meaning": "both"
+      },
+      {
+         "thai": "ทั้งสิ้น",
+         "meaning": "all"
+      },
+      {
+         "thai": "ทั้งหมด",
+         "meaning": "all"
+      },
+      {
+         "thai": "ทันที",
+         "meaning": "immediately"
+      },
+      {
+         "thai": "ทาง",
+         "meaning": "way"
+      },
+      {
+         "thai": "ทาง",
+         "meaning": "way"
+      },
+      {
+         "thai": "ทางด้าน",
+         "meaning": "side"
+      },
+      {
+         "thai": "ทางเลือก",
+         "meaning": "choice"
+      },
+      {
+         "thai": "ทำ",
+         "meaning": "do"
+      },
+      {
+         "thai": "ทำงาน",
+         "meaning": "work"
+      },
+      {
+         "thai": "ทำให้",
+         "meaning": "make"
+      },
+      {
+         "thai": "ทำอย่างไร",
+         "meaning": "how"
+      },
+      {
+         "thai": "ที่",
+         "meaning": "at"
+      },
+      {
+         "thai": "ที่",
+         "meaning": "at"
+      },
+      {
+         "thai": "ที่แท้จริง",
+         "meaning": "real"
+      },
+      {
+         "thai": "ที่ไหน",
+         "meaning": "where"
+      },
+      {
+         "thai": "ทุก",
+         "meaning": "each"
+      },
+      {
+         "thai": "ทุกที่",
+         "meaning": "everywhere"
+      }
+   ],
+   "น": [
+      {
+         "thai": "นอกจากนี้",
+         "meaning": "in addition"
+      },
+      {
+         "thai": "นอน",
+         "meaning": "sleep"
+      },
+      {
+         "thai": "นั้น",
+         "meaning": "that"
+      }
+   ],
+   "บ": [
+      {
+         "thai": "บอก",
+         "meaning": "tell"
+      },
+      {
+         "thai": "บอกว่า",
+         "meaning": "said"
+      },
+      {
+         "thai": "บ่อย",
+         "meaning": "frequent"
+      },
+      {
+         "thai": "บาง",
+         "meaning": "thin"
+      },
+      {
+         "thai": "บางคน",
+         "meaning": "Some people"
+      },
+      {
+         "thai": "บ้าน",
+         "meaning": "house"
+      }
+   ],
+   "ป": [
+      {
+         "thai": "ประมาณ",
+         "meaning": "about"
+      },
+      {
+         "thai": "ปัจจุบัน",
+         "meaning": "current"
+      },
+      {
+         "thai": "ปัญหา",
+         "meaning": "problem"
+      },
+      {
+         "thai": "ปี",
+         "meaning": "year"
+      }
+   ],
+   "ฝ": [
+      {
+         "thai": "ฝัน",
+         "meaning": "dream"
+      }
+   ],
+   "พ": [
+      {
+         "thai": "พรุ่งนี้",
+         "meaning": "tomorrow"
+      },
+      {
+         "thai": "พวก",
+         "meaning": "guys"
+      },
+      {
+         "thai": "พอ",
+         "meaning": "enough"
+      },
+      {
+         "thai": "พัก",
+         "meaning": "stay"
+      },
+      {
+         "thai": "พิเศษ",
+         "meaning": "special"
+      }
+   ],
+   "ม": [
+      {
+         "thai": "มา",
+         "meaning": "come"
+      },
+      {
+         "thai": "มาก",
+         "meaning": "a lot"
+      },
+      {
+         "thai": "มี",
+         "meaning": "have"
+      },
+      {
+         "thai": "มีชีวิต",
+         "meaning": "live"
+      }
+   ],
+   "ย": [
+      {
+         "thai": "ยังคง",
+         "meaning": "still"
+      }
+   ],
+   "ร": [
+      {
+         "thai": "ร่วม",
+         "meaning": "join"
+      },
+      {
+         "thai": "รวมถึง",
+         "meaning": "Including"
+      },
+      {
+         "thai": "ระยะ",
+         "meaning": "phase"
+      },
+      {
+         "thai": "รู้",
+         "meaning": "know"
+      }
+   ],
+   "ว": [
+      {
+         "thai": "วัน",
+         "meaning": "day"
+      },
+      {
+         "thai": "วัน",
+         "meaning": "day"
+      },
+      {
+         "thai": "วันนี้",
+         "meaning": "today"
+      },
+      {
+         "thai": "วิเคราะห์",
+         "meaning": "analyze"
+      }
+   ],
+   "ส": [
+      {
+         "thai": "สถานที่",
+         "meaning": "location"
+      },
+      {
+         "thai": "สนุก",
+         "meaning": "fun"
+      },
+      {
+         "thai": "ส่วน",
+         "meaning": "part"
+      },
+      {
+         "thai": "ส่วนประกอบ",
+         "meaning": "component"
+      },
+      {
+         "thai": "ส่วนใหญ่",
+         "meaning": "mostly"
+      },
+      {
+         "thai": "สำคัญ",
+         "meaning": "important"
+      },
+      {
+         "thai": "สิ่ง",
+         "meaning": "thing"
+      },
+      {
+         "thai": "สิ้นสุด",
+         "meaning": "end"
+      },
+      {
+         "thai": "สุข",
+         "meaning": "happy"
+      },
+      {
+         "thai": "สุขภาพ",
+         "meaning": "health"
+      },
+      {
+         "thai": "สูง",
+         "meaning": "high"
+      }
+   ],
+   "ห": [
+      {
+         "thai": "หรือ",
+         "meaning": "or"
+      },
+      {
+         "thai": "หลาย",
+         "meaning": "many"
+      },
+      {
+         "thai": "หลายคน",
+         "meaning": "many people"
+      }
+   ],
+   "อ": [
+      {
+         "thai": "องค์ประกอบ",
+         "meaning": "component"
+      },
+      {
+         "thai": "อดีต",
+         "meaning": "past"
+      },
+      {
+         "thai": "อย่างน้อย",
+         "meaning": "at least"
+      },
+      {
+         "thai": "อย่างยิ่ง",
+         "meaning": "extremely"
+      },
+      {
+         "thai": "อย่างไร",
+         "meaning": "how"
+      },
+      {
+         "thai": "อยู่",
+         "meaning": "live"
+      },
+      {
+         "thai": "อยู่ดี",
+         "meaning": "Stay well"
+      },
+      {
+         "thai": "อยู่เสมอ",
+         "meaning": "always"
+      },
+      {
+         "thai": "อาจ",
+         "meaning": "might"
+      },
+      {
+         "thai": "อีก",
+         "meaning": "more"
+      },
+      {
+         "thai": "อีกครั้ง",
+         "meaning": "again"
+      },
+      {
+         "thai": "อื่น",
+         "meaning": "another"
+      }
+   ]
+}

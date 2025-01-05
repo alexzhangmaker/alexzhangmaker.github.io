@@ -119,9 +119,12 @@
 .mustHave{
     /*background-color:aqua;*/
     height:auto;
-    min-height: 120px;
+    /*min-height: 120px;*/
     /*flex-grow: 1;*/
     flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .Folders{

@@ -31,12 +31,19 @@ function _gwRenderNavigator(jsonGateway,cssRootElement){
             color:grey ;
             font-size:14px !important;
         }
+
+        #idMustHaveUL{
+
+        }
     </style>
     <div id="idMustHaveBar">
         <span>Daily Apps</span>
-        <i class="bi-plus-lg larkBTN" id="idBTNPlusMustHave"></i>
-    </div>
-    <ul>
+        <div>
+            <i class="bi-plus-lg larkBTN" id="idBTNPlusMustHave"></i>
+            <i class="bi-toggle-off larkBTN" id="idBTNHideMustHave"></i>
+        </div>
+    </div> 
+    <ul id="idMustHaveUL">
         <style>
             .larkMustHaveBM{
                 display:flex;
@@ -58,7 +65,7 @@ function _gwRenderNavigator(jsonGateway,cssRootElement){
         tagMustHave.classList.add('noShow') ;
     }
     tagMustHave.querySelector('#idBTNPlusMustHave').addEventListener('click',clickPlusMustHave) ;
-
+    tagMustHave.querySelector('#idBTNHideMustHave').addEventListener('click',clickHideMustHave) ;
 
     tagFolders.innerHTML = `
         <style>
@@ -143,7 +150,6 @@ document.querySelector('#idBTNCheckInChanges').addEventListener('click',(event)=
 
 function callback_PlusMustHave(jsonFormData){
     console.log(jsonFormData) ;
-    
     let jsonBMOperation={
         operation:'addMustHave',
         userID:'alexszhang',
@@ -171,8 +177,19 @@ function callback_PlusMustHave(jsonFormData){
     .then(res => console.log(res));
 }
 
+
+function clickHideMustHave(event){
+    //idMustHaveUL
+    document.querySelector('#idMustHaveUL').classList.toggle('noShow') ;
+}
+
 function clickPlusMustHave(event){
     //alert('clickPlusMustHave TBD') ;
+    let tagMustHaveUL = document.querySelector('#idMustHaveUL') ;//.classList.toggle('noShow') ;
+    if(tagMustHaveUL.classList.contains('noShow')){
+        tagMustHaveUL.classList.toggle('noShow') ;
+    }
+
     let jsonDialog={
         cssContainer:'#idDlgContainer',
         theme:{

@@ -1,0 +1,3086 @@
+{
+   "ก": [
+      {
+         "thai": "กฎ",
+         "meaning": "rule"
+      },
+      {
+         "thai": "กฎหมาย",
+         "meaning": "law"
+      },
+      {
+         "thai": "กด",
+         "meaning": "press"
+      },
+      {
+         "thai": "กรณี",
+         "meaning": "case"
+      },
+      {
+         "thai": "กรอก",
+         "meaning": "a"
+      },
+      {
+         "thai": "กรอก",
+         "meaning": "fill"
+      },
+      {
+         "thai": "กระดาษ",
+         "meaning": "paper"
+      },
+      {
+         "thai": "กระดูก",
+         "meaning": "bone"
+      },
+      {
+         "thai": "กระโดด",
+         "meaning": "jump"
+      },
+      {
+         "thai": "กระบวนการ",
+         "meaning": "process"
+      },
+      {
+         "thai": "กระแส",
+         "meaning": "stream"
+      },
+      {
+         "thai": "กรุณา",
+         "meaning": "please"
+      },
+      {
+         "thai": "กล่อง",
+         "meaning": "box"
+      },
+      {
+         "thai": "กลับ",
+         "meaning": "back"
+      },
+      {
+         "thai": "กลัว",
+         "meaning": "afraid"
+      },
+      {
+         "thai": "กล่าวว่า",
+         "meaning": "said"
+      },
+      {
+         "thai": "กลิ่น",
+         "meaning": "smell"
+      },
+      {
+         "thai": "กลุ่ม",
+         "meaning": "group"
+      },
+      {
+         "thai": "กว่า",
+         "meaning": "over"
+      },
+      {
+         "thai": "กว่า",
+         "meaning": "than"
+      },
+      {
+         "thai": "กว้าง",
+         "meaning": "wide"
+      },
+      {
+         "thai": "กว้าง",
+         "meaning": "broad"
+      },
+      {
+         "thai": "กษัตริย์",
+         "meaning": "king"
+      },
+      {
+         "thai": "ก่อนที่จะ",
+         "meaning": "before"
+      },
+      {
+         "thai": "กับ",
+         "meaning": "against"
+      },
+      {
+         "thai": "กัปตัน",
+         "meaning": "captain"
+      },
+      {
+         "thai": "ก๊าซ",
+         "meaning": "gas"
+      },
+      {
+         "thai": "การกระทำ",
+         "meaning": "act"
+      },
+      {
+         "thai": "การเก็บรวบรวม",
+         "meaning": "collect"
+      },
+      {
+         "thai": "การแก้ปัญหา",
+         "meaning": "solution"
+      },
+      {
+         "thai": "การแข่งขัน",
+         "meaning": "race"
+      },
+      {
+         "thai": "การแข่งขัน",
+         "meaning": "match"
+      },
+      {
+         "thai": "การควบคุม",
+         "meaning": "control"
+      },
+      {
+         "thai": "การค้า",
+         "meaning": "trade"
+      },
+      {
+         "thai": "การเคลื่อนไหว",
+         "meaning": "motion"
+      },
+      {
+         "thai": "การจัดเก็บ",
+         "meaning": "store"
+      },
+      {
+         "thai": "การใช้งาน",
+         "meaning": "use"
+      },
+      {
+         "thai": "การดูแล",
+         "meaning": "care"
+      },
+      {
+         "thai": "การเดินทาง",
+         "meaning": "travel"
+      },
+      {
+         "thai": "การเดินทาง",
+         "meaning": "trip"
+      },
+      {
+         "thai": "การเต้นของหัวใจ",
+         "meaning": "heart"
+      },
+      {
+         "thai": "การเต้นรำ",
+         "meaning": "dance"
+      },
+      {
+         "thai": "การเตรียมความพร้อม",
+         "meaning": "prepare"
+      },
+      {
+         "thai": "การแต่งกาย",
+         "meaning": "dress"
+      },
+      {
+         "thai": "การทดลอง",
+         "meaning": "experiment"
+      },
+      {
+         "thai": "การทดสอบ",
+         "meaning": "test"
+      },
+      {
+         "thai": "การทำงาน",
+         "meaning": "work"
+      },
+      {
+         "thai": "การทำงาน",
+         "meaning": "run"
+      },
+      {
+         "thai": "การนอนหลับ",
+         "meaning": "sleep"
+      },
+      {
+         "thai": "การปฏิบัติ",
+         "meaning": "practice"
+      },
+      {
+         "thai": "การเปลี่ยนแปลง",
+         "meaning": "change"
+      },
+      {
+         "thai": "การผลักดัน",
+         "meaning": "push"
+      },
+      {
+         "thai": "การพัฒนา",
+         "meaning": "develop"
+      },
+      {
+         "thai": "การเพาะปลูก",
+         "meaning": "crop"
+      },
+      {
+         "thai": "การแพร่กระจาย",
+         "meaning": "spread"
+      },
+      {
+         "thai": "การเยี่ยมชม",
+         "meaning": "visit"
+      },
+      {
+         "thai": "การว่ายน้ำ",
+         "meaning": "swim"
+      },
+      {
+         "thai": "การศึกษา",
+         "meaning": "study"
+      },
+      {
+         "thai": "การออกกำลังกาย",
+         "meaning": "exercise"
+      },
+      {
+         "thai": "กำหนด",
+         "meaning": "determine"
+      },
+      {
+         "thai": "กิน",
+         "meaning": "eat"
+      }
+   ],
+   "ข": [
+      {
+         "thai": "ขณะ",
+         "meaning": "moment"
+      },
+      {
+         "thai": "ขนมปัง",
+         "meaning": "bread"
+      },
+      {
+         "thai": "ขนาด",
+         "meaning": "size"
+      },
+      {
+         "thai": "ขนาด",
+         "meaning": "scale"
+      },
+      {
+         "thai": "ขนาดเล็ก",
+         "meaning": "small"
+      },
+      {
+         "thai": "ขวา",
+         "meaning": "right"
+      },
+      {
+         "thai": "ขอขอบคุณ",
+         "meaning": "thank"
+      },
+      {
+         "thai": "ของ",
+         "meaning": "of"
+      },
+      {
+         "thai": "ของเขา",
+         "meaning": "his"
+      },
+      {
+         "thai": "ของคุณ",
+         "meaning": "your"
+      },
+      {
+         "thai": "ของฉัน",
+         "meaning": "my"
+      },
+      {
+         "thai": "ของตัวเอง",
+         "meaning": "own"
+      },
+      {
+         "thai": "ของพวกเขา",
+         "meaning": "their"
+      },
+      {
+         "thai": "ของเรา",
+         "meaning": "our"
+      },
+      {
+         "thai": "ของเหลว",
+         "meaning": "liquid"
+      },
+      {
+         "thai": "ข้อตกลง",
+         "meaning": "deal"
+      },
+      {
+         "thai": "ขอแนะนำให้",
+         "meaning": "suggest"
+      },
+      {
+         "thai": "ขอบ",
+         "meaning": "edge"
+      },
+      {
+         "thai": "ขอให้",
+         "meaning": "ask"
+      },
+      {
+         "thai": "ขั้นตอนที่",
+         "meaning": "step"
+      },
+      {
+         "thai": "ขั้นพื้นฐาน",
+         "meaning": "basic"
+      },
+      {
+         "thai": "ขา",
+         "meaning": "leg"
+      },
+      {
+         "thai": "ข้างบน",
+         "meaning": "above"
+      },
+      {
+         "thai": "ข้างหน้า",
+         "meaning": "forward"
+      },
+      {
+         "thai": "ข้าม",
+         "meaning": "cross"
+      },
+      {
+         "thai": "ขาย",
+         "meaning": "sell"
+      },
+      {
+         "thai": "ข้าวโพด",
+         "meaning": "corn"
+      },
+      {
+         "thai": "ขึ้น",
+         "meaning": "up"
+      },
+      {
+         "thai": "ขึ้น",
+         "meaning": "more"
+      },
+      {
+         "thai": "ขึ้นอยู่",
+         "meaning": "depend"
+      }
+   ],
+   "ค": [
+      {
+         "thai": "คณะกรรมการ",
+         "meaning": "board"
+      },
+      {
+         "thai": "คน",
+         "meaning": "man"
+      },
+      {
+         "thai": "คน",
+         "meaning": "people"
+      },
+      {
+         "thai": "คน",
+         "meaning": "person"
+      },
+      {
+         "thai": "คนเดียว",
+         "meaning": "lone"
+      },
+      {
+         "thai": "ค้นหา",
+         "meaning": "locate"
+      },
+      {
+         "thai": "ค้นหา",
+         "meaning": "search"
+      },
+      {
+         "thai": "คมชัด",
+         "meaning": "sharp"
+      },
+      {
+         "thai": "ครอบครัว",
+         "meaning": "family"
+      },
+      {
+         "thai": "ครั้งเดียว",
+         "meaning": "once"
+      },
+      {
+         "thai": "ครึ่ง",
+         "meaning": "half"
+      },
+      {
+         "thai": "คล้ายคลึงกัน",
+         "meaning": "similar"
+      },
+      {
+         "thai": "คลื่น",
+         "meaning": "wave"
+      },
+      {
+         "thai": "ควบคุม",
+         "meaning": "govern"
+      },
+      {
+         "thai": "ควร",
+         "meaning": "should"
+      },
+      {
+         "thai": "ควอร์",
+         "meaning": "quart"
+      },
+      {
+         "thai": "ความกลัว",
+         "meaning": "fear"
+      },
+      {
+         "thai": "ความโกรธ",
+         "meaning": "anger"
+      },
+      {
+         "thai": "ความคิดที่",
+         "meaning": "idea"
+      },
+      {
+         "thai": "ความงาม",
+         "meaning": "beauty"
+      },
+      {
+         "thai": "ความตาย",
+         "meaning": "death"
+      },
+      {
+         "thai": "ความปลอดภัย",
+         "meaning": "safe"
+      },
+      {
+         "thai": "ความเป็นจริง",
+         "meaning": "fact"
+      },
+      {
+         "thai": "ความร้อน",
+         "meaning": "heat"
+      },
+      {
+         "thai": "ความรัก",
+         "meaning": "love"
+      },
+      {
+         "thai": "ความรู้สึก",
+         "meaning": "sense"
+      },
+      {
+         "thai": "ความเร็ว",
+         "meaning": "speed"
+      },
+      {
+         "thai": "ความสุข",
+         "meaning": "joy"
+      },
+      {
+         "thai": "คอ",
+         "meaning": "neck"
+      },
+      {
+         "thai": "ค่อนข้าง",
+         "meaning": "quite"
+      },
+      {
+         "thai": "ค่อนข้าง",
+         "meaning": "rather"
+      },
+      {
+         "thai": "คอร์ด",
+         "meaning": "chord"
+      },
+      {
+         "thai": "คอลัมน์",
+         "meaning": "column"
+      },
+      {
+         "thai": "คะแนน",
+         "meaning": "score"
+      },
+      {
+         "thai": "ค้างคาว",
+         "meaning": "bat"
+      },
+      {
+         "thai": "ค่าใช้จ่าย",
+         "meaning": "cost"
+      },
+      {
+         "thai": "คาดหวังว่า",
+         "meaning": "expect"
+      },
+      {
+         "thai": "ค่าย",
+         "meaning": "camp"
+      },
+      {
+         "thai": "คำ",
+         "meaning": "word"
+      },
+      {
+         "thai": "คำกริยา",
+         "meaning": "verb"
+      },
+      {
+         "thai": "คำตอบ",
+         "meaning": "answer"
+      },
+      {
+         "thai": "คำถาม",
+         "meaning": "question"
+      },
+      {
+         "thai": "คำนาม",
+         "meaning": "noun"
+      },
+      {
+         "thai": "คำพูด",
+         "meaning": "speech"
+      },
+      {
+         "thai": "คิดค้น",
+         "meaning": "invent"
+      },
+      {
+         "thai": "คิดค่าใช้จ่าย",
+         "meaning": "charge"
+      },
+      {
+         "thai": "คิดว่า",
+         "meaning": "think"
+      },
+      {
+         "thai": "คิดว่า",
+         "meaning": "thought"
+      },
+      {
+         "thai": "คืน",
+         "meaning": "night"
+      },
+      {
+         "thai": "คุณ",
+         "meaning": "you"
+      },
+      {
+         "thai": "คู่",
+         "meaning": "pair"
+      },
+      {
+         "thai": "คูณ",
+         "meaning": "multiply"
+      }
+   ],
+   "ฆ": [
+      {
+         "thai": "ฆ่า",
+         "meaning": "kill"
+      }
+   ],
+   "ง": [
+      {
+         "thai": "งาน",
+         "meaning": "job"
+      },
+      {
+         "thai": "ง่าย",
+         "meaning": "simple"
+      }
+   ],
+   "จ": [
+      {
+         "thai": "จดหมาย",
+         "meaning": "letter"
+      },
+      {
+         "thai": "จนกระทั่ง",
+         "meaning": "until"
+      },
+      {
+         "thai": "จมูก",
+         "meaning": "nose"
+      },
+      {
+         "thai": "จริง",
+         "meaning": "real"
+      },
+      {
+         "thai": "จะ",
+         "meaning": "will"
+      },
+      {
+         "thai": "จะ",
+         "meaning": "would"
+      },
+      {
+         "thai": "จะต้อง",
+         "meaning": "shall"
+      },
+      {
+         "thai": "จะเป็น",
+         "meaning": "be"
+      },
+      {
+         "thai": "จะไม่",
+         "meaning": "won’t"
+      },
+      {
+         "thai": "จัด",
+         "meaning": "arrange"
+      },
+      {
+         "thai": "จับ",
+         "meaning": "catch"
+      },
+      {
+         "thai": "จับ",
+         "meaning": "caught"
+      },
+      {
+         "thai": "จาก",
+         "meaning": "from"
+      },
+      {
+         "thai": "จ่าย",
+         "meaning": "pay"
+      },
+      {
+         "thai": "จำได้ว่า",
+         "meaning": "remember"
+      },
+      {
+         "thai": "จำนวน",
+         "meaning": "number"
+      },
+      {
+         "thai": "จำเป็น",
+         "meaning": "necessary"
+      },
+      {
+         "thai": "จิตใจ",
+         "meaning": "mind"
+      },
+      {
+         "thai": "จินตนาการ",
+         "meaning": "imagine"
+      },
+      {
+         "thai": "จิ๋ว",
+         "meaning": "tiny"
+      },
+      {
+         "thai": "จุด",
+         "meaning": "point"
+      },
+      {
+         "thai": "จุด",
+         "meaning": "spot"
+      }
+   ],
+   "ฉ": [
+      {
+         "thai": "ฉัน",
+         "meaning": "I"
+      },
+      {
+         "thai": "ฉัน",
+         "meaning": "me"
+      },
+      {
+         "thai": "ฉับพลัน",
+         "meaning": "sudden"
+      }
+   ],
+   "ช": [
+      {
+         "thai": "ชนะ",
+         "meaning": "win"
+      },
+      {
+         "thai": "ชนิด",
+         "meaning": "kind"
+      },
+      {
+         "thai": "ชนิด",
+         "meaning": "type"
+      },
+      {
+         "thai": "ชม",
+         "meaning": "watch"
+      },
+      {
+         "thai": "ช่วง",
+         "meaning": "range"
+      },
+      {
+         "thai": "ช่วงปลายเดือน",
+         "meaning": "late"
+      },
+      {
+         "thai": "ช่วย",
+         "meaning": "help"
+      },
+      {
+         "thai": "ชอบ",
+         "meaning": "favor"
+      },
+      {
+         "thai": "ชั้น",
+         "meaning": "class"
+      },
+      {
+         "thai": "ชั้น",
+         "meaning": "floor"
+      },
+      {
+         "thai": "ชั่วโมง",
+         "meaning": "hour"
+      },
+      {
+         "thai": "ช้า",
+         "meaning": "slow"
+      },
+      {
+         "thai": "ชายฝั่ง",
+         "meaning": "coast"
+      },
+      {
+         "thai": "ชำระ",
+         "meaning": "settle"
+      },
+      {
+         "thai": "ชิ้นส่วน",
+         "meaning": "piece"
+      },
+      {
+         "thai": "ชีวิต",
+         "meaning": "life"
+      },
+      {
+         "thai": "ชื่อ",
+         "meaning": "name"
+      },
+      {
+         "thai": "ชุด",
+         "meaning": "set"
+      },
+      {
+         "thai": "ชู",
+         "meaning": "held"
+      }
+   ],
+   "ซ": [
+      {
+         "thai": "ซึ่ง",
+         "meaning": "which"
+      },
+      {
+         "thai": "ซื้อ",
+         "meaning": "buy"
+      },
+      {
+         "thai": "ซื้อ",
+         "meaning": "bought"
+      }
+   ],
+   "ฐ": [
+      {
+         "thai": "ฐาน",
+         "meaning": "base"
+      }
+   ],
+   "ด": [
+      {
+         "thai": "ดวงจันทร์",
+         "meaning": "moon"
+      },
+      {
+         "thai": "ดวงอาทิตย์",
+         "meaning": "sun"
+      },
+      {
+         "thai": "ด้วย",
+         "meaning": "with"
+      },
+      {
+         "thai": "ด้วย",
+         "meaning": "also"
+      },
+      {
+         "thai": "ดอกกุหลาบ",
+         "meaning": "rose"
+      },
+      {
+         "thai": "ดอกไม้",
+         "meaning": "flower"
+      },
+      {
+         "thai": "ดอลล่า",
+         "meaning": "dollar"
+      },
+      {
+         "thai": "ดังนั้น",
+         "meaning": "so"
+      },
+      {
+         "thai": "ดังนั้น",
+         "meaning": "thus"
+      },
+      {
+         "thai": "ด้าน",
+         "meaning": "side"
+      },
+      {
+         "thai": "ด้านซ้าย",
+         "meaning": "left"
+      },
+      {
+         "thai": "ด้านบน",
+         "meaning": "top"
+      },
+      {
+         "thai": "ด้านล่าง",
+         "meaning": "bottom"
+      },
+      {
+         "thai": "ด้านหน้า",
+         "meaning": "front"
+      },
+      {
+         "thai": "ดาว",
+         "meaning": "star"
+      },
+      {
+         "thai": "ดาวเคราะห์",
+         "meaning": "planet"
+      },
+      {
+         "thai": "ดำเนินการ",
+         "meaning": "operate"
+      },
+      {
+         "thai": "ดำเนินการต่อไป",
+         "meaning": "continue"
+      },
+      {
+         "thai": "ดิน",
+         "meaning": "soil"
+      },
+      {
+         "thai": "ดี",
+         "meaning": "well"
+      },
+      {
+         "thai": "ดี",
+         "meaning": "good"
+      },
+      {
+         "thai": "ดีใจ",
+         "meaning": "glad"
+      },
+      {
+         "thai": "ดึง",
+         "meaning": "pull"
+      },
+      {
+         "thai": "ดู",
+         "meaning": "look"
+      },
+      {
+         "thai": "ดูเหมือน",
+         "meaning": "seem"
+      }
+   ],
+   "ต": [
+      {
+         "thai": "ตก",
+         "meaning": "fall"
+      },
+      {
+         "thai": "ตกแต่ง",
+         "meaning": "clothe"
+      },
+      {
+         "thai": "ตกลง",
+         "meaning": "agree"
+      },
+      {
+         "thai": "ต้นไม้",
+         "meaning": "tree"
+      },
+      {
+         "thai": "ตนเอง",
+         "meaning": "self"
+      },
+      {
+         "thai": "ตรง",
+         "meaning": "straight"
+      },
+      {
+         "thai": "ตรงกลาง",
+         "meaning": "middle"
+      },
+      {
+         "thai": "ตรงข้าม",
+         "meaning": "opposite"
+      },
+      {
+         "thai": "ตรวจสอบ",
+         "meaning": "check"
+      },
+      {
+         "thai": "ตลอด",
+         "meaning": "through"
+      },
+      {
+         "thai": "ตลาด",
+         "meaning": "market"
+      },
+      {
+         "thai": "ต่อ",
+         "meaning": "toward"
+      },
+      {
+         "thai": "ต้อง",
+         "meaning": "must"
+      },
+      {
+         "thai": "ต้อง",
+         "meaning": "need"
+      },
+      {
+         "thai": "ต้องการ",
+         "meaning": "want"
+      },
+      {
+         "thai": "ต้องการ",
+         "meaning": "require"
+      },
+      {
+         "thai": "ต่อท้าย",
+         "meaning": "suffix"
+      },
+      {
+         "thai": "ตอนเช้า",
+         "meaning": "morning"
+      },
+      {
+         "thai": "ตอนต้น",
+         "meaning": "early"
+      },
+      {
+         "thai": "ตอนนี้",
+         "meaning": "now"
+      },
+      {
+         "thai": "ตอนเย็น",
+         "meaning": "evening"
+      },
+      {
+         "thai": "ตอบ",
+         "meaning": "reply"
+      },
+      {
+         "thai": "ตอบสนองความ",
+         "meaning": "meet"
+      },
+      {
+         "thai": "ต่อไป",
+         "meaning": "next"
+      },
+      {
+         "thai": "ตะโกน",
+         "meaning": "shout"
+      },
+      {
+         "thai": "ตั้งแต่",
+         "meaning": "since"
+      },
+      {
+         "thai": "ตัด",
+         "meaning": "cut"
+      },
+      {
+         "thai": "ตัดสินใจ",
+         "meaning": "decide"
+      },
+      {
+         "thai": "ตัวเลข",
+         "meaning": "numeral"
+      },
+      {
+         "thai": "ตัวอย่างเช่น",
+         "meaning": "example"
+      },
+      {
+         "thai": "ตัวอักษร",
+         "meaning": "character"
+      },
+      {
+         "thai": "ตา",
+         "meaning": "eye"
+      },
+      {
+         "thai": "ตาย",
+         "meaning": "die"
+      },
+      {
+         "thai": "ตาราง",
+         "meaning": "table"
+      },
+      {
+         "thai": "ตาราง",
+         "meaning": "square"
+      },
+      {
+         "thai": "ต่ำ",
+         "meaning": "low"
+      },
+      {
+         "thai": "ตำแหน่ง",
+         "meaning": "position"
+      },
+      {
+         "thai": "ติด",
+         "meaning": "stick"
+      },
+      {
+         "thai": "ติดตาม",
+         "meaning": "track"
+      },
+      {
+         "thai": "ตี",
+         "meaning": "hit"
+      },
+      {
+         "thai": "ตื่นเต้น",
+         "meaning": "excite"
+      }
+   ],
+   "ถ": [
+      {
+         "thai": "ถนน",
+         "meaning": "street"
+      },
+      {
+         "thai": "ถนน",
+         "meaning": "road"
+      },
+      {
+         "thai": "ถ้า",
+         "meaning": "if"
+      },
+      {
+         "thai": "ถือ",
+         "meaning": "hold"
+      },
+      {
+         "thai": "ถือเอา",
+         "meaning": "equate"
+      },
+      {
+         "thai": "ถู",
+         "meaning": "rub"
+      },
+      {
+         "thai": "ถูกต้อง",
+         "meaning": "correct"
+      }
+   ],
+   "ท": [
+      {
+         "thai": "ทราบ",
+         "meaning": "know"
+      },
+      {
+         "thai": "ทราย",
+         "meaning": "sand"
+      },
+      {
+         "thai": "ทวีป",
+         "meaning": "continent"
+      },
+      {
+         "thai": "ทศนิยม",
+         "meaning": "decimal"
+      },
+      {
+         "thai": "ทหาร",
+         "meaning": "soldier"
+      },
+      {
+         "thai": "ทอง",
+         "meaning": "gold"
+      },
+      {
+         "thai": "ท้องฟ้า",
+         "meaning": "sky"
+      },
+      {
+         "thai": "ทะเล",
+         "meaning": "sea"
+      },
+      {
+         "thai": "ทะเลทราย",
+         "meaning": "desert"
+      },
+      {
+         "thai": "ทะเลสาบ",
+         "meaning": "lake"
+      },
+      {
+         "thai": "ทักษะ",
+         "meaning": "skill"
+      },
+      {
+         "thai": "ทั้ง",
+         "meaning": "whole"
+      },
+      {
+         "thai": "ทั้งสอง",
+         "meaning": "both"
+      },
+      {
+         "thai": "ทั้งหมด",
+         "meaning": "all"
+      },
+      {
+         "thai": "ทั้งหมด",
+         "meaning": "total"
+      },
+      {
+         "thai": "ทันที",
+         "meaning": "instant"
+      },
+      {
+         "thai": "ทั่วไป",
+         "meaning": "general"
+      },
+      {
+         "thai": "ทาง",
+         "meaning": "way"
+      },
+      {
+         "thai": "ทางตอนใต้",
+         "meaning": "south"
+      },
+      {
+         "thai": "ทางทิศตะวันตก",
+         "meaning": "west"
+      },
+      {
+         "thai": "ทางทิศตะวันออก",
+         "meaning": "east"
+      },
+      {
+         "thai": "ทางรถไฟ",
+         "meaning": "rail"
+      },
+      {
+         "thai": "ท่าทาง",
+         "meaning": "pose"
+      },
+      {
+         "thai": "ทารก",
+         "meaning": "baby"
+      },
+      {
+         "thai": "ทาส",
+         "meaning": "slave"
+      },
+      {
+         "thai": "ทาสี",
+         "meaning": "paint"
+      },
+      {
+         "thai": "ทำ",
+         "meaning": "do"
+      },
+      {
+         "thai": "ทำ",
+         "meaning": "made"
+      },
+      {
+         "thai": "ทำความสะอาด",
+         "meaning": "clean"
+      },
+      {
+         "thai": "ทำซ้ำ",
+         "meaning": "repeat"
+      },
+      {
+         "thai": "ทำตาม",
+         "meaning": "follow"
+      },
+      {
+         "thai": "ทำไม่ได้",
+         "meaning": "don’t"
+      },
+      {
+         "thai": "ทำลาย",
+         "meaning": "break"
+      },
+      {
+         "thai": "ทำให้",
+         "meaning": "make"
+      },
+      {
+         "thai": "ที่",
+         "meaning": "at"
+      },
+      {
+         "thai": "ที่",
+         "meaning": "where"
+      },
+      {
+         "thai": "ที่",
+         "meaning": "who"
+      },
+      {
+         "thai": "ที่แข็งแกร่ง",
+         "meaning": "strong"
+      },
+      {
+         "thai": "ที่จะ",
+         "meaning": "to"
+      },
+      {
+         "thai": "ที่ชัดเจน",
+         "meaning": "clear"
+      },
+      {
+         "thai": "ที่ดิน",
+         "meaning": "land"
+      },
+      {
+         "thai": "ที่ดี",
+         "meaning": "great"
+      },
+      {
+         "thai": "ที่ดีกว่า",
+         "meaning": "better"
+      },
+      {
+         "thai": "ที่ดีที่สุด",
+         "meaning": "best"
+      },
+      {
+         "thai": "ที่ตายแล้ว",
+         "meaning": "dead"
+      },
+      {
+         "thai": "ที่ทันสมัย",
+         "meaning": "modern"
+      },
+      {
+         "thai": "ที่แท้จริง",
+         "meaning": "TRUE"
+      },
+      {
+         "thai": "ที่นั่ง",
+         "meaning": "seat"
+      },
+      {
+         "thai": "ที่น่าสงสาร",
+         "meaning": "poor"
+      },
+      {
+         "thai": "ที่น่าสนใจ",
+         "meaning": "interest"
+      },
+      {
+         "thai": "ที่นี่",
+         "meaning": "here"
+      },
+      {
+         "thai": "ที่แน่นอน",
+         "meaning": "exact"
+      },
+      {
+         "thai": "ที่ผ่านมา",
+         "meaning": "ago"
+      },
+      {
+         "thai": "ที่ผ่านมา",
+         "meaning": "past"
+      },
+      {
+         "thai": "ที่พบบ่อย",
+         "meaning": "common"
+      },
+      {
+         "thai": "ทีมงาน",
+         "meaning": "team"
+      },
+      {
+         "thai": "ที่มีขนาดใหญ่",
+         "meaning": "large"
+      },
+      {
+         "thai": "ที่มีชื่อเสียง",
+         "meaning": "famous"
+      },
+      {
+         "thai": "ที่รัก",
+         "meaning": "dear"
+      },
+      {
+         "thai": "ที่สอง",
+         "meaning": "second"
+      },
+      {
+         "thai": "ที่สาม",
+         "meaning": "third"
+      },
+      {
+         "thai": "ที่สำคัญ",
+         "meaning": "key"
+      },
+      {
+         "thai": "ที่ห่างไกล",
+         "meaning": "distant"
+      },
+      {
+         "thai": "ที่เหมาะสม",
+         "meaning": "proper"
+      },
+      {
+         "thai": "ที่อยู่เบื้องหลัง",
+         "meaning": "behind"
+      },
+      {
+         "thai": "ทุก",
+         "meaning": "every"
+      },
+      {
+         "thai": "ทุน",
+         "meaning": "capital"
+      }
+   ],
+   "ธ": [
+      {
+         "thai": "ธนาคาร",
+         "meaning": "bank"
+      },
+      {
+         "thai": "ธรรมชาติ",
+         "meaning": "natural"
+      },
+      {
+         "thai": "ธรรมชาติ",
+         "meaning": "nature"
+      },
+      {
+         "thai": "ธรรมดา",
+         "meaning": "plain"
+      }
+   ],
+   "น": [
+      {
+         "thai": "นก",
+         "meaning": "bird"
+      },
+      {
+         "thai": "นม",
+         "meaning": "milk"
+      },
+      {
+         "thai": "น้องสาวของ",
+         "meaning": "sister"
+      },
+      {
+         "thai": "น้อย",
+         "meaning": "few"
+      },
+      {
+         "thai": "น้อย",
+         "meaning": "less"
+      },
+      {
+         "thai": "นักเรียน",
+         "meaning": "student"
+      },
+      {
+         "thai": "นั่ง",
+         "meaning": "ride"
+      },
+      {
+         "thai": "นั่ง",
+         "meaning": "sit"
+      },
+      {
+         "thai": "นั่ง",
+         "meaning": "sat"
+      },
+      {
+         "thai": "นับ",
+         "meaning": "count"
+      },
+      {
+         "thai": "น่าจะเป็น",
+         "meaning": "probable"
+      },
+      {
+         "thai": "นาที",
+         "meaning": "minute"
+      },
+      {
+         "thai": "นาฬิกา",
+         "meaning": "clock"
+      },
+      {
+         "thai": "นำ",
+         "meaning": "brought"
+      },
+      {
+         "thai": "นำ",
+         "meaning": "led"
+      },
+      {
+         "thai": "น้ำ",
+         "meaning": "water"
+      },
+      {
+         "thai": "น้ำแข็ง",
+         "meaning": "ice"
+      },
+      {
+         "thai": "น้ำตาล",
+         "meaning": "sugar"
+      },
+      {
+         "thai": "นำไปสู่",
+         "meaning": "lead"
+      },
+      {
+         "thai": "น้ำมัน",
+         "meaning": "oil"
+      },
+      {
+         "thai": "นำมาซึ่ง",
+         "meaning": "bring"
+      },
+      {
+         "thai": "น้ำหนัก",
+         "meaning": "weight"
+      },
+      {
+         "thai": "นิ้ว",
+         "meaning": "inch"
+      },
+      {
+         "thai": "นี้",
+         "meaning": "this"
+      }
+   ],
+   "บ": [
+      {
+         "thai": "บทกวี",
+         "meaning": "poem"
+      },
+      {
+         "thai": "บน",
+         "meaning": "on"
+      },
+      {
+         "thai": "บรรเทา",
+         "meaning": "ease"
+      },
+      {
+         "thai": "บริษัท",
+         "meaning": "company"
+      },
+      {
+         "thai": "บล็อก",
+         "meaning": "block"
+      },
+      {
+         "thai": "บอก",
+         "meaning": "tell"
+      },
+      {
+         "thai": "บอก",
+         "meaning": "told"
+      },
+      {
+         "thai": "บัตร",
+         "meaning": "card"
+      },
+      {
+         "thai": "บันทึก",
+         "meaning": "record"
+      },
+      {
+         "thai": "บันทึก",
+         "meaning": "note"
+      },
+      {
+         "thai": "บันทึก",
+         "meaning": "save"
+      },
+      {
+         "thai": "บาง",
+         "meaning": "some"
+      },
+      {
+         "thai": "บาง",
+         "meaning": "thin"
+      },
+      {
+         "thai": "บางทีอาจจะเป็น",
+         "meaning": "perhaps"
+      },
+      {
+         "thai": "บางอย่าง",
+         "meaning": "certain"
+      },
+      {
+         "thai": "บ้าน",
+         "meaning": "home"
+      },
+      {
+         "thai": "บ้าน",
+         "meaning": "house"
+      },
+      {
+         "thai": "บาร์",
+         "meaning": "bar"
+      },
+      {
+         "thai": "บิต",
+         "meaning": "bit"
+      },
+      {
+         "thai": "บิน",
+         "meaning": "an"
+      },
+      {
+         "thai": "บิน",
+         "meaning": "fly"
+      },
+      {
+         "thai": "บุคคลที่",
+         "meaning": "party"
+      },
+      {
+         "thai": "บุตรชาย",
+         "meaning": "son"
+      }
+   ],
+   "ป": [
+      {
+         "thai": "ปก",
+         "meaning": "cover"
+      },
+      {
+         "thai": "ปกติ",
+         "meaning": "usual"
+      },
+      {
+         "thai": "ประกอบด้วย",
+         "meaning": "include"
+      },
+      {
+         "thai": "ประตู",
+         "meaning": "door"
+      },
+      {
+         "thai": "ประเทศ",
+         "meaning": "country"
+      },
+      {
+         "thai": "ประเทศชาติ",
+         "meaning": "nation"
+      },
+      {
+         "thai": "ประโยค",
+         "meaning": "sentence"
+      },
+      {
+         "thai": "ประวัติศาสตร์",
+         "meaning": "history"
+      },
+      {
+         "thai": "ประสบการณ์",
+         "meaning": "experience"
+      },
+      {
+         "thai": "ประสบความสำเร็จ",
+         "meaning": "success"
+      },
+      {
+         "thai": "ปรับ",
+         "meaning": "fine"
+      },
+      {
+         "thai": "ปรากฏ",
+         "meaning": "appear"
+      },
+      {
+         "thai": "ปริญญาโท",
+         "meaning": "master"
+      },
+      {
+         "thai": "ปรุงอาหาร",
+         "meaning": "cook"
+      },
+      {
+         "thai": "ปลา",
+         "meaning": "fish"
+      },
+      {
+         "thai": "ปลาย",
+         "meaning": "end"
+      },
+      {
+         "thai": "ป้องกัน",
+         "meaning": "protect"
+      },
+      {
+         "thai": "ปอนด์",
+         "meaning": "pound"
+      },
+      {
+         "thai": "ปัจจุบัน",
+         "meaning": "present"
+      },
+      {
+         "thai": "ปัจจุบัน",
+         "meaning": "current"
+      },
+      {
+         "thai": "ปัญหา",
+         "meaning": "problem"
+      },
+      {
+         "thai": "ปัญหา",
+         "meaning": "trouble"
+      },
+      {
+         "thai": "ป่า",
+         "meaning": "forest"
+      },
+      {
+         "thai": "ป่า",
+         "meaning": "wild"
+      },
+      {
+         "thai": "ปาก",
+         "meaning": "mouth"
+      },
+      {
+         "thai": "ปี",
+         "meaning": "year"
+      },
+      {
+         "thai": "ปีก",
+         "meaning": "wing"
+      },
+      {
+         "thai": "ปีน",
+         "meaning": "climb"
+      },
+      {
+         "thai": "ปืน",
+         "meaning": "gun"
+      }
+   ],
+   "ผ": [
+      {
+         "thai": "ผนัง",
+         "meaning": "wall"
+      },
+      {
+         "thai": "ผม",
+         "meaning": "hair"
+      },
+      {
+         "thai": "ผล",
+         "meaning": "result"
+      },
+      {
+         "thai": "ผลกระทบ",
+         "meaning": "effect"
+      },
+      {
+         "thai": "ผลไม้",
+         "meaning": "fruit"
+      },
+      {
+         "thai": "ผลิต",
+         "meaning": "produce"
+      },
+      {
+         "thai": "ผลิตภัณฑ์",
+         "meaning": "product"
+      },
+      {
+         "thai": "ผสม",
+         "meaning": "mix"
+      },
+      {
+         "thai": "ผ่าน",
+         "meaning": "pass"
+      },
+      {
+         "thai": "ผ้าฝ้าย",
+         "meaning": "cotton"
+      },
+      {
+         "thai": "ผิด",
+         "meaning": "wrong"
+      },
+      {
+         "thai": "ผิว",
+         "meaning": "skin"
+      },
+      {
+         "thai": "ผูกเน็คไท",
+         "meaning": "tie"
+      },
+      {
+         "thai": "ผู้ชาย",
+         "meaning": "men"
+      },
+      {
+         "thai": "ผู้ที่",
+         "meaning": "those"
+      },
+      {
+         "thai": "ผู้ปกครอง",
+         "meaning": "parent"
+      },
+      {
+         "thai": "ผู้หญิง",
+         "meaning": "women"
+      }
+   ],
+   "ฝ": [
+      {
+         "thai": "ฝน",
+         "meaning": "rain"
+      },
+      {
+         "thai": "ฝั่ง",
+         "meaning": "shore"
+      },
+      {
+         "thai": "ฝัน",
+         "meaning": "dream"
+      },
+      {
+         "thai": "ฝูงชน",
+         "meaning": "crowd"
+      }
+   ],
+   "พ": [
+      {
+         "thai": "พกพา",
+         "meaning": "carry"
+      },
+      {
+         "thai": "พจนานุกรม",
+         "meaning": "dictionary"
+      },
+      {
+         "thai": "พบ",
+         "meaning": "found"
+      },
+      {
+         "thai": "พยัญชนะ",
+         "meaning": "consonant"
+      },
+      {
+         "thai": "พยางค์",
+         "meaning": "syllable"
+      },
+      {
+         "thai": "พยายาม",
+         "meaning": "try"
+      },
+      {
+         "thai": "พร้อมแล้ว",
+         "meaning": "ready"
+      },
+      {
+         "thai": "พลังงาน",
+         "meaning": "energy"
+      },
+      {
+         "thai": "พลาด",
+         "meaning": "miss"
+      },
+      {
+         "thai": "พวกเขา",
+         "meaning": "they"
+      },
+      {
+         "thai": "พวกเขา",
+         "meaning": "them"
+      },
+      {
+         "thai": "พหูพจน์",
+         "meaning": "plural"
+      },
+      {
+         "thai": "พอ",
+         "meaning": "enough"
+      },
+      {
+         "thai": "พ่อ",
+         "meaning": "dad"
+      },
+      {
+         "thai": "พ่อของ",
+         "meaning": "father"
+      },
+      {
+         "thai": "พอดี",
+         "meaning": "fit"
+      },
+      {
+         "thai": "พอร์ต",
+         "meaning": "port"
+      },
+      {
+         "thai": "พักอยู่",
+         "meaning": "stay"
+      },
+      {
+         "thai": "พัน",
+         "meaning": "thousand"
+      },
+      {
+         "thai": "พิจารณา",
+         "meaning": "consider"
+      },
+      {
+         "thai": "พิมพ์",
+         "meaning": "print"
+      },
+      {
+         "thai": "พิเศษ",
+         "meaning": "special"
+      },
+      {
+         "thai": "พิสูจน์",
+         "meaning": "prove"
+      },
+      {
+         "thai": "พี่ชายของ",
+         "meaning": "brother"
+      },
+      {
+         "thai": "พืช",
+         "meaning": "plant"
+      },
+      {
+         "thai": "พื้นดิน",
+         "meaning": "ground"
+      },
+      {
+         "thai": "พื้นที่",
+         "meaning": "area"
+      },
+      {
+         "thai": "พื้นที่",
+         "meaning": "space"
+      },
+      {
+         "thai": "พื้นผิว",
+         "meaning": "surface"
+      },
+      {
+         "thai": "พูด",
+         "meaning": "say"
+      },
+      {
+         "thai": "พูด",
+         "meaning": "speak"
+      },
+      {
+         "thai": "พูด",
+         "meaning": "spoke"
+      },
+      {
+         "thai": "พูดคุย",
+         "meaning": "talk"
+      }
+   ],
+   "ฟ": [
+      {
+         "thai": "ฟรี",
+         "meaning": "free"
+      },
+      {
+         "thai": "ฟัง",
+         "meaning": "listen"
+      },
+      {
+         "thai": "ฟัน",
+         "meaning": "teeth"
+      },
+      {
+         "thai": "ฟาร์ม",
+         "meaning": "farm"
+      },
+      {
+         "thai": "ฟุต",
+         "meaning": "feet"
+      }
+   ],
+   "ภ": [
+      {
+         "thai": "ภรรยา",
+         "meaning": "wife"
+      },
+      {
+         "thai": "ภาพ",
+         "meaning": "picture"
+      },
+      {
+         "thai": "ภายใต้",
+         "meaning": "under"
+      },
+      {
+         "thai": "ภาษา",
+         "meaning": "language"
+      },
+      {
+         "thai": "ภูเขา",
+         "meaning": "mountain"
+      },
+      {
+         "thai": "ภูเขา",
+         "meaning": "mount"
+      },
+      {
+         "thai": "ภูมิภาค",
+         "meaning": "region"
+      }
+   ],
+   "ม": [
+      {
+         "thai": "มนุษย์",
+         "meaning": "human"
+      },
+      {
+         "thai": "ม้วน",
+         "meaning": "roll"
+      },
+      {
+         "thai": "มวล",
+         "meaning": "mass"
+      },
+      {
+         "thai": "มหาสมุทร",
+         "meaning": "ocean"
+      },
+      {
+         "thai": "มะเดื่อ",
+         "meaning": "fig"
+      },
+      {
+         "thai": "มักจะ",
+         "meaning": "often"
+      },
+      {
+         "thai": "มัน",
+         "meaning": "it"
+      },
+      {
+         "thai": "มา",
+         "meaning": "came"
+      },
+      {
+         "thai": "มา",
+         "meaning": "come"
+      },
+      {
+         "thai": "ม้า",
+         "meaning": "horse"
+      },
+      {
+         "thai": "มาก",
+         "meaning": "very"
+      },
+      {
+         "thai": "มาก",
+         "meaning": "much"
+      },
+      {
+         "thai": "มากที่สุด",
+         "meaning": "most"
+      },
+      {
+         "thai": "มาถึง",
+         "meaning": "arrive"
+      },
+      {
+         "thai": "มี",
+         "meaning": "are"
+      },
+      {
+         "thai": "มี",
+         "meaning": "have"
+      },
+      {
+         "thai": "มี",
+         "meaning": "had"
+      },
+      {
+         "thai": "มี",
+         "meaning": "there"
+      },
+      {
+         "thai": "มี",
+         "meaning": "has"
+      },
+      {
+         "thai": "มี",
+         "meaning": "contain"
+      },
+      {
+         "thai": "มีความสุข",
+         "meaning": "happy"
+      },
+      {
+         "thai": "มีชีวิต",
+         "meaning": "live"
+      },
+      {
+         "thai": "มืด",
+         "meaning": "dark"
+      },
+      {
+         "thai": "มือ",
+         "meaning": "hand"
+      },
+      {
+         "thai": "มุม",
+         "meaning": "corner"
+      },
+      {
+         "thai": "มุมมอง",
+         "meaning": "view"
+      },
+      {
+         "thai": "มูลค่า",
+         "meaning": "value"
+      }
+   ],
+   "ย": [
+      {
+         "thai": "ยก",
+         "meaning": "raise"
+      },
+      {
+         "thai": "ยกเว้น",
+         "meaning": "except"
+      },
+      {
+         "thai": "ยัง",
+         "meaning": "yet"
+      },
+      {
+         "thai": "ยังคง",
+         "meaning": "still"
+      },
+      {
+         "thai": "ยาก",
+         "meaning": "difficult"
+      },
+      {
+         "thai": "ยากจน",
+         "meaning": "broke"
+      },
+      {
+         "thai": "ยาง",
+         "meaning": "tire"
+      },
+      {
+         "thai": "ย้าย",
+         "meaning": "move"
+      },
+      {
+         "thai": "ยาว",
+         "meaning": "long"
+      },
+      {
+         "thai": "ยิ่งใหญ่",
+         "meaning": "grand"
+      },
+      {
+         "thai": "ยี่สิบ",
+         "meaning": "twenty"
+      },
+      {
+         "thai": "ยืด",
+         "meaning": "stretch"
+      },
+      {
+         "thai": "ยืน",
+         "meaning": "stand"
+      },
+      {
+         "thai": "ยืนอยู่",
+         "meaning": "stood"
+      },
+      {
+         "thai": "ยุ่ง",
+         "meaning": "busy"
+      },
+      {
+         "thai": "ยุติธรรม",
+         "meaning": "fair"
+      }
+   ],
+   "ร": [
+      {
+         "thai": "รถ",
+         "meaning": "car"
+      },
+      {
+         "thai": "รถบรรทุก",
+         "meaning": "truck"
+      },
+      {
+         "thai": "รถไฟ",
+         "meaning": "train"
+      },
+      {
+         "thai": "รวบรวม",
+         "meaning": "gather"
+      },
+      {
+         "thai": "ร่วม",
+         "meaning": "join"
+      },
+      {
+         "thai": "รองเท้า",
+         "meaning": "shoe"
+      },
+      {
+         "thai": "ร้องเพลง",
+         "meaning": "sing"
+      },
+      {
+         "thai": "ร้องไห้",
+         "meaning": "cry"
+      },
+      {
+         "thai": "ร้อน",
+         "meaning": "hot"
+      },
+      {
+         "thai": "ร้อน",
+         "meaning": "hot"
+      },
+      {
+         "thai": "รอบ",
+         "meaning": "round"
+      },
+      {
+         "thai": "ร้อย",
+         "meaning": "hundred"
+      },
+      {
+         "thai": "รอยพับ",
+         "meaning": "crease"
+      },
+      {
+         "thai": "รอยยิ้ม",
+         "meaning": "smile"
+      },
+      {
+         "thai": "ร้อยละ",
+         "meaning": "cent"
+      },
+      {
+         "thai": "รอสักครู่",
+         "meaning": "wait"
+      },
+      {
+         "thai": "ระฆัง",
+         "meaning": "bell"
+      },
+      {
+         "thai": "ระดับ",
+         "meaning": "level"
+      },
+      {
+         "thai": "ระบบ",
+         "meaning": "system"
+      },
+      {
+         "thai": "ระเบิด",
+         "meaning": "blow"
+      },
+      {
+         "thai": "ระยะ",
+         "meaning": "term"
+      },
+      {
+         "thai": "ระยะเวลา",
+         "meaning": "length"
+      },
+      {
+         "thai": "ระยะเวลา",
+         "meaning": "period"
+      },
+      {
+         "thai": "ระหว่าง",
+         "meaning": "between"
+      },
+      {
+         "thai": "รัฐ",
+         "meaning": "state"
+      },
+      {
+         "thai": "รับ",
+         "meaning": "been"
+      },
+      {
+         "thai": "ราก",
+         "meaning": "root"
+      },
+      {
+         "thai": "ร่างกาย",
+         "meaning": "body"
+      },
+      {
+         "thai": "ร้านขายของ",
+         "meaning": "shop"
+      },
+      {
+         "thai": "รายการ",
+         "meaning": "list"
+      },
+      {
+         "thai": "รีบ",
+         "meaning": "hurry"
+      },
+      {
+         "thai": "รู้",
+         "meaning": "knew"
+      },
+      {
+         "thai": "รูปที่",
+         "meaning": "figure"
+      },
+      {
+         "thai": "รูปแบบ",
+         "meaning": "form"
+      },
+      {
+         "thai": "รูปร่าง",
+         "meaning": "shape"
+      },
+      {
+         "thai": "รู้สึก",
+         "meaning": "feel"
+      },
+      {
+         "thai": "รู้สึกว่า",
+         "meaning": "felt"
+      }
+   ],
+   "ล": [
+      {
+         "thai": "ลง",
+         "meaning": "down"
+      },
+      {
+         "thai": "ลดลง",
+         "meaning": "fell"
+      },
+      {
+         "thai": "ลบ",
+         "meaning": "subtract"
+      },
+      {
+         "thai": "ลม",
+         "meaning": "wind"
+      },
+      {
+         "thai": "ลวด",
+         "meaning": "wire"
+      },
+      {
+         "thai": "ลวดลาย",
+         "meaning": "pattern"
+      },
+      {
+         "thai": "ล้อ",
+         "meaning": "wheel"
+      },
+      {
+         "thai": "ล่า",
+         "meaning": "hunt"
+      },
+      {
+         "thai": "ล้าง",
+         "meaning": "wash"
+      },
+      {
+         "thai": "ลาน",
+         "meaning": "yard"
+      },
+      {
+         "thai": "ล้าน",
+         "meaning": "million"
+      },
+      {
+         "thai": "ลายนิ้วมือ",
+         "meaning": "finger"
+      },
+      {
+         "thai": "ลิฟท์",
+         "meaning": "lift"
+      },
+      {
+         "thai": "ลึก",
+         "meaning": "deep"
+      },
+      {
+         "thai": "ลื่น",
+         "meaning": "slip"
+      },
+      {
+         "thai": "ลุกขึ้น",
+         "meaning": "rise"
+      },
+      {
+         "thai": "ลูก",
+         "meaning": "ball"
+      }
+   ],
+   "ว": [
+      {
+         "thai": "วงกลม",
+         "meaning": "circle"
+      },
+      {
+         "thai": "วงดนตรี",
+         "meaning": "band"
+      },
+      {
+         "thai": "วรรค",
+         "meaning": "paragraph"
+      },
+      {
+         "thai": "วลี",
+         "meaning": "phrase"
+      },
+      {
+         "thai": "วัด",
+         "meaning": "measure"
+      },
+      {
+         "thai": "วัตถุ",
+         "meaning": "object"
+      },
+      {
+         "thai": "วัน",
+         "meaning": "day"
+      },
+      {
+         "thai": "วัว",
+         "meaning": "cow"
+      },
+      {
+         "thai": "วัสดุ",
+         "meaning": "material"
+      },
+      {
+         "thai": "ว่า",
+         "meaning": "that"
+      },
+      {
+         "thai": "วาง",
+         "meaning": "lay"
+      },
+      {
+         "thai": "วาด",
+         "meaning": "draw"
+      },
+      {
+         "thai": "วิ่ง",
+         "meaning": "ran"
+      },
+      {
+         "thai": "วิทยาศาสตร์",
+         "meaning": "science"
+      },
+      {
+         "thai": "วิทยุ",
+         "meaning": "radio"
+      },
+      {
+         "thai": "วิธี",
+         "meaning": "how"
+      },
+      {
+         "thai": "วิธีการ",
+         "meaning": "method"
+      }
+   ],
+   "ศ": [
+      {
+         "thai": "ศตวรรษที่",
+         "meaning": "century"
+      },
+      {
+         "thai": "ศัตรู",
+         "meaning": "enemy"
+      },
+      {
+         "thai": "ศิลปะ",
+         "meaning": "art"
+      },
+      {
+         "thai": "ศูนย์",
+         "meaning": "center"
+      }
+   ],
+   "ส": [
+      {
+         "thai": "ส่ง",
+         "meaning": "sent"
+      },
+      {
+         "thai": "ส่ง",
+         "meaning": "send"
+      },
+      {
+         "thai": "สงคราม",
+         "meaning": "war"
+      },
+      {
+         "thai": "สด",
+         "meaning": "fresh"
+      },
+      {
+         "thai": "สดใส",
+         "meaning": "bright"
+      },
+      {
+         "thai": "สตริง",
+         "meaning": "string"
+      },
+      {
+         "thai": "สถานที่ที่",
+         "meaning": "place"
+      },
+      {
+         "thai": "สถานที่ให้บริการ",
+         "meaning": "property"
+      },
+      {
+         "thai": "สถานี",
+         "meaning": "station"
+      },
+      {
+         "thai": "สนับสนุน",
+         "meaning": "support"
+      },
+      {
+         "thai": "สนาม",
+         "meaning": "field"
+      },
+      {
+         "thai": "สนาม",
+         "meaning": "pitch"
+      },
+      {
+         "thai": "สนุก",
+         "meaning": "fun"
+      },
+      {
+         "thai": "สภาพ",
+         "meaning": "condition"
+      },
+      {
+         "thai": "สภาพอากาศ",
+         "meaning": "weather"
+      },
+      {
+         "thai": "สมบูรณ์",
+         "meaning": "complete"
+      },
+      {
+         "thai": "สระ",
+         "meaning": "vowel"
+      },
+      {
+         "thai": "สร้าง",
+         "meaning": "build"
+      },
+      {
+         "thai": "สร้าง",
+         "meaning": "create"
+      },
+      {
+         "thai": "สลาก",
+         "meaning": "lot"
+      },
+      {
+         "thai": "สวน",
+         "meaning": "garden"
+      },
+      {
+         "thai": "ส่วน",
+         "meaning": "fraction"
+      },
+      {
+         "thai": "ส่วน",
+         "meaning": "section"
+      },
+      {
+         "thai": "ส่วน",
+         "meaning": "division"
+      },
+      {
+         "thai": "ส่วน",
+         "meaning": "segment"
+      },
+      {
+         "thai": "ส่วนที่เหลือ",
+         "meaning": "rest"
+      },
+      {
+         "thai": "ส่วนแบ่ง",
+         "meaning": "share"
+      },
+      {
+         "thai": "ส่วนหนึ่ง",
+         "meaning": "part"
+      },
+      {
+         "thai": "สวมใส่",
+         "meaning": "wear"
+      },
+      {
+         "thai": "สวย",
+         "meaning": "pretty"
+      },
+      {
+         "thai": "สอง",
+         "meaning": "two"
+      },
+      {
+         "thai": "สอง",
+         "meaning": "double"
+      },
+      {
+         "thai": "สะกด",
+         "meaning": "spell"
+      },
+      {
+         "thai": "สังเกต",
+         "meaning": "observe"
+      },
+      {
+         "thai": "สั่งสอน",
+         "meaning": "teach"
+      },
+      {
+         "thai": "สัญลักษณ์",
+         "meaning": "symbol"
+      },
+      {
+         "thai": "สัตว์",
+         "meaning": "animal"
+      },
+      {
+         "thai": "สั้น",
+         "meaning": "short"
+      },
+      {
+         "thai": "สัปดาห์ที่",
+         "meaning": "week"
+      },
+      {
+         "thai": "สาขา",
+         "meaning": "branch"
+      },
+      {
+         "thai": "สาม",
+         "meaning": "three"
+      },
+      {
+         "thai": "สามเหลี่ยม",
+         "meaning": "triangle"
+      },
+      {
+         "thai": "สามารถ",
+         "meaning": "can"
+      },
+      {
+         "thai": "สามารถ",
+         "meaning": "able"
+      },
+      {
+         "thai": "สามารถทำได้",
+         "meaning": "could"
+      },
+      {
+         "thai": "สาย",
+         "meaning": "line"
+      },
+      {
+         "thai": "สายตา",
+         "meaning": "sight"
+      },
+      {
+         "thai": "สาร",
+         "meaning": "substance"
+      },
+      {
+         "thai": "สาว",
+         "meaning": "girl"
+      },
+      {
+         "thai": "สาเหตุ",
+         "meaning": "cause"
+      },
+      {
+         "thai": "สำคัญ",
+         "meaning": "major"
+      },
+      {
+         "thai": "สำนักงาน",
+         "meaning": "office"
+      },
+      {
+         "thai": "สำเนา",
+         "meaning": "copy"
+      },
+      {
+         "thai": "สำหรับ",
+         "meaning": "for"
+      },
+      {
+         "thai": "สิ่งที่",
+         "meaning": "what"
+      },
+      {
+         "thai": "สิ่งที่",
+         "meaning": "thing"
+      },
+      {
+         "thai": "สิบ",
+         "meaning": "ten"
+      },
+      {
+         "thai": "สี",
+         "meaning": "color"
+      },
+      {
+         "thai": "สี่",
+         "meaning": "four"
+      },
+      {
+         "thai": "สีขาว",
+         "meaning": "white"
+      },
+      {
+         "thai": "สีเขียว",
+         "meaning": "green"
+      },
+      {
+         "thai": "สีเงิน",
+         "meaning": "silver"
+      },
+      {
+         "thai": "สีดำ",
+         "meaning": "black"
+      },
+      {
+         "thai": "สีแดง",
+         "meaning": "red"
+      },
+      {
+         "thai": "สีเทา",
+         "meaning": "gray"
+      },
+      {
+         "thai": "สีน้ำตาล",
+         "meaning": "brown"
+      },
+      {
+         "thai": "สีฟ้า",
+         "meaning": "blue"
+      },
+      {
+         "thai": "สีเหลือง",
+         "meaning": "yellow"
+      },
+      {
+         "thai": "สุดท้าย",
+         "meaning": "last"
+      },
+      {
+         "thai": "สุดท้าย",
+         "meaning": "final"
+      },
+      {
+         "thai": "สุนัข",
+         "meaning": "dog"
+      },
+      {
+         "thai": "สุภาพสตรี",
+         "meaning": "lady"
+      },
+      {
+         "thai": "สู้",
+         "meaning": "fight"
+      },
+      {
+         "thai": "สูง",
+         "meaning": "high"
+      },
+      {
+         "thai": "สูง",
+         "meaning": "tall"
+      },
+      {
+         "thai": "สูท",
+         "meaning": "suit"
+      }
+   ],
+   "ห": [
+      {
+         "thai": "หก",
+         "meaning": "six"
+      },
+      {
+         "thai": "หญ้า",
+         "meaning": "grass"
+      },
+      {
+         "thai": "หญิง",
+         "meaning": "woman"
+      },
+      {
+         "thai": "หน่วย",
+         "meaning": "unit"
+      },
+      {
+         "thai": "หนัก",
+         "meaning": "heavy"
+      },
+      {
+         "thai": "หนังสือ",
+         "meaning": "book"
+      },
+      {
+         "thai": "หนา",
+         "meaning": "thick"
+      },
+      {
+         "thai": "หน้า",
+         "meaning": "page"
+      },
+      {
+         "thai": "หน้าต่าง",
+         "meaning": "window"
+      },
+      {
+         "thai": "หนึ่ง",
+         "meaning": "one"
+      },
+      {
+         "thai": "หนุ่ม",
+         "meaning": "young"
+      },
+      {
+         "thai": "หมวก",
+         "meaning": "hat"
+      },
+      {
+         "thai": "หมายความ",
+         "meaning": "mean"
+      },
+      {
+         "thai": "หมายความว่า",
+         "meaning": "meant"
+      },
+      {
+         "thai": "หมู่บ้าน",
+         "meaning": "village"
+      },
+      {
+         "thai": "หยุด",
+         "meaning": "stop"
+      },
+      {
+         "thai": "หรือ",
+         "meaning": "or"
+      },
+      {
+         "thai": "หรือ",
+         "meaning": "nor"
+      },
+      {
+         "thai": "หล่น",
+         "meaning": "drop"
+      },
+      {
+         "thai": "หลอด",
+         "meaning": "tube"
+      },
+      {
+         "thai": "หลัก",
+         "meaning": "main"
+      },
+      {
+         "thai": "หลังจากที่",
+         "meaning": "after"
+      },
+      {
+         "thai": "หลาย",
+         "meaning": "many"
+      },
+      {
+         "thai": "หลาย",
+         "meaning": "several"
+      },
+      {
+         "thai": "หลุม",
+         "meaning": "hole"
+      },
+      {
+         "thai": "หวังว่า",
+         "meaning": "wish"
+      },
+      {
+         "thai": "หวังว่า",
+         "meaning": "hope"
+      },
+      {
+         "thai": "ห้อง",
+         "meaning": "room"
+      },
+      {
+         "thai": "หัว",
+         "meaning": "head"
+      },
+      {
+         "thai": "หัวเราะ",
+         "meaning": "laugh"
+      },
+      {
+         "thai": "หัวหน้า",
+         "meaning": "chief"
+      },
+      {
+         "thai": "หา",
+         "meaning": "find"
+      },
+      {
+         "thai": "ห้า",
+         "meaning": "five"
+      },
+      {
+         "thai": "หาง",
+         "meaning": "tail"
+      },
+      {
+         "thai": "ห่างไกล",
+         "meaning": "far"
+      },
+      {
+         "thai": "หายไป",
+         "meaning": "gone"
+      },
+      {
+         "thai": "หายไป",
+         "meaning": "lost"
+      },
+      {
+         "thai": "หารือเกี่ยวกับ",
+         "meaning": "discuss"
+      },
+      {
+         "thai": "หิน",
+         "meaning": "rock"
+      },
+      {
+         "thai": "หิน",
+         "meaning": "stone"
+      },
+      {
+         "thai": "หิมะ",
+         "meaning": "snow"
+      },
+      {
+         "thai": "หุบเขา",
+         "meaning": "valley"
+      },
+      {
+         "thai": "หู",
+         "meaning": "ear"
+      }
+   ],
+   "อ": [
+      {
+         "thai": "องค์ประกอบ",
+         "meaning": "element"
+      },
+      {
+         "thai": "องศา",
+         "meaning": "degree"
+      },
+      {
+         "thai": "อธิบาย",
+         "meaning": "describe"
+      },
+      {
+         "thai": "อนุญาตให้",
+         "meaning": "allow"
+      },
+      {
+         "thai": "อบอุ่น",
+         "meaning": "warm"
+      },
+      {
+         "thai": "อย่างใดอย่างหนึ่ง",
+         "meaning": "either"
+      },
+      {
+         "thai": "อย่างน้อย",
+         "meaning": "least"
+      },
+      {
+         "thai": "อย่างรวดเร็ว",
+         "meaning": "quick"
+      },
+      {
+         "thai": "อย่างรวดเร็ว",
+         "meaning": "fast"
+      },
+      {
+         "thai": "อย่างหนัก",
+         "meaning": "hard"
+      },
+      {
+         "thai": "อยู่ใกล้",
+         "meaning": "near"
+      },
+      {
+         "thai": "อวัยวะ",
+         "meaning": "organ"
+      },
+      {
+         "thai": "ออก",
+         "meaning": "out"
+      },
+      {
+         "thai": "ออก",
+         "meaning": "off"
+      },
+      {
+         "thai": "ออกจาก",
+         "meaning": "leave"
+      },
+      {
+         "thai": "ออกซิเจน",
+         "meaning": "oxygen"
+      },
+      {
+         "thai": "ออกแบบ",
+         "meaning": "design"
+      },
+      {
+         "thai": "อ่อน",
+         "meaning": "soft"
+      },
+      {
+         "thai": "อ่อนโยน",
+         "meaning": "gentle"
+      },
+      {
+         "thai": "อะตอม",
+         "meaning": "atom"
+      },
+      {
+         "thai": "อันตราย",
+         "meaning": "danger"
+      },
+      {
+         "thai": "อากาศ",
+         "meaning": "air"
+      },
+      {
+         "thai": "อ้าง",
+         "meaning": "claim"
+      },
+      {
+         "thai": "อาจ",
+         "meaning": "may"
+      },
+      {
+         "thai": "อาจ",
+         "meaning": "might"
+      },
+      {
+         "thai": "อาณานิคม",
+         "meaning": "colony"
+      },
+      {
+         "thai": "อ่าน",
+         "meaning": "read"
+      },
+      {
+         "thai": "อายุ",
+         "meaning": "age"
+      },
+      {
+         "thai": "อาหาร",
+         "meaning": "food"
+      },
+      {
+         "thai": "อาหารสัตว์",
+         "meaning": "feed"
+      },
+      {
+         "thai": "อำนาจ",
+         "meaning": "power"
+      },
+      {
+         "thai": "อีกครั้ง",
+         "meaning": "again"
+      },
+      {
+         "thai": "อื่น ๆ",
+         "meaning": "other"
+      },
+      {
+         "thai": "อื่น",
+         "meaning": "else"
+      },
+      {
+         "thai": "อุณหภูมิ",
+         "meaning": "temperature"
+      },
+      {
+         "thai": "อุดมไปด้วย",
+         "meaning": "rich"
+      },
+      {
+         "thai": "อุตสาหกรรม",
+         "meaning": "industry"
+      },
+      {
+         "thai": "อุปทาน",
+         "meaning": "supply"
+      }
+   ]
+}
