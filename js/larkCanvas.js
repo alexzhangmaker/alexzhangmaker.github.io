@@ -131,7 +131,7 @@ function gwRenderCanvas(cssRootElement){
 
             .dailyTools{
                 width:100% ;
-                height:200px ;
+                max-height:180px ;
                 column-count: 3;
                 font-size:18px ;
             }
@@ -165,17 +165,27 @@ function gwRenderCanvas(cssRootElement){
                 border: none; /* Remove default border */
                 outline: none; /* Remove default focus outline */
                 border-bottom: 1px solid #ccc; /* Add underline for normal state */
-              }
-              
-              input[type="text"]:focus {
+
+            }
+            
+            input[type="text"]:focus {
                 border-bottom: 1px solid #007bff; /* Change underline color on focus */
-              }
+            }
+
+            input::placeholder {
+                font-family: 'Courier New', Courier, monospace; /* Change font family */
+                font-size: 14px; /* Change font size */
+                font-weight: bold; /* Make it bold */
+                color: #888; /* Change text color */
+            }
+
         </style>
         <div class="larkCanvas">
             <div id="idWidgetContainer">
                 <details class="widgetDetails openWidget" open>
                     <summary class="widgetSummary">Daily toolbox</summary>
                     <div style="width:100%;padding-bottom:20px;">
+                        <span>log deal as: buy/sell ticker price shares accountID</span>
                         <input type="text" id="idLogDeal" placeholder="log deal as: buy/sell ticker price shares accountID">
                     </div>
                     <div class="dailyTools">
@@ -192,13 +202,14 @@ function gwRenderCanvas(cssRootElement){
     //<p>It's a pretty useful element that handles accordion / collapsed text natively!</p>
     let jsonDailyTools={
         tools:[
+            /*
             {
                 title:'google',
                 url:"https://www.google.com"
-            },{
+            }*//*,{
                 title:'SQLiteUI',
                 url:"http://192.168.1.119:10088/larkSQLiteAdmin.html"
-            }
+            }*/
         ]
     } ;
     console.log(globalNavigator.jsonMustHave);
@@ -212,8 +223,8 @@ function gwRenderCanvas(cssRootElement){
     }
     //jsonGateway.jsonMustHave
     _renderDailyTools(jsonDailyTools) ;
-    _renderMemoAnywhere() ;
-    _renderTyping() ;
+    //_renderMemoAnywhere() ;
+    //_renderTyping() ;
     _renderCalendar() ;
     _renderWidget({title:"demo Widget"}) ;
 
@@ -271,7 +282,7 @@ function _renderMemoAnywhere(){
     tagMemoAnywhere.classList.add("widgetDetails") ;
     tagMemoAnywhere.innerHTML = `
         <summary class="widgetSummary">memo.anywhere</summary>
-        <iframe  class="larkFrameCalendar" src="http://127.0.0.1:8099/ms_Memoanywhere.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+        <iframe  class="larkFrameCalendar" style="height:300px;" src="http://127.0.0.1:8999/ms_Memoanywhere.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
     ` ;
     //const isOpen = tagMemoAnywhere.hasAttribute('open'); 
     tagMemoAnywhere.open = true; 
@@ -286,7 +297,7 @@ function _renderTyping(){
     tagCalendar.classList.add("widgetDetails") ;
     tagCalendar.innerHTML = `
         <summary class="widgetSummary">Typing Practice</summary>
-        <iframe  class="larkFrameCalendar" src="http://127.0.0.1:9988/msApps/ms_Typing.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
+        <iframe  class="larkFrameCalendar" style="height:300px;" src="http://127.0.0.1:8081/ms_Typing.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
     ` ;
 }
 
