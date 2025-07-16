@@ -7,7 +7,6 @@ let _global_OnClickBookmark = 'onClickBookmark' ;
 
 
 function setWorkingNavigator(jsonData){
-    //jsonGateway
     globalNavigator = jsonData ;
 }
 
@@ -816,7 +815,7 @@ async function checkInChanges(){
                 break ;
             case "removeFolder":
                 checkRemoveFolder(globalChanges[i]) ;
-                
+
                 break ;
             case "insertFolderBefore":
                 checkInsertFolder(globalChanges[i]) ;

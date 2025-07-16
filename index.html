@@ -197,7 +197,7 @@ document.querySelector("#idBTNHomeScreen").addEventListener('click',async (event
 document.addEventListener('DOMContentLoaded',async (event)=>{
 
     const jsonUserGateway = await _apiLoadData() ;
-    setWorkingNavigator(/*jsonGateway*/jsonUserGateway) ;
+    setWorkingNavigator(jsonUserGateway) ;
     gwRenderNavigator('.PanelNavigator') ;
     gwRenderCanvas('.mainCanvas') ;
 

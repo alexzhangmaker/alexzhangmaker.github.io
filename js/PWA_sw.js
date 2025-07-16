@@ -3,13 +3,6 @@ console.log('PWA service worker 注册成功')
 
 var cacheName = 'signpostCache';
 var urlsToCache = [
-  'https://alexzhangmaker.github.io/indexPWA.html',
-  'https://alexzhangmaker.github.io/signpostPortfolio.js',
-  'https://alexzhangmaker.github.io/signpostMessage.js',
-  'https://alexzhangmaker.github.io/signpostNews.js',
-  'https://alexzhangmaker.github.io/signpostDividends.js',
-  'https://alexzhangmaker.github.io/signpostCompanyKPI.js',
-  'https://alexzhangmaker.github.io/json/athenaBookmarks.json',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
   'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css',
   'https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css',
