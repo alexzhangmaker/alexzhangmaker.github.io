@@ -1,0 +1,477 @@
+{
+    "userID": "alexszhang",
+    "jsonMeta": {
+        "application": "athena",
+        "version": "1.0.01",
+        "author": "alexszhang@gmail.com",
+        "user": "alexszhang@gmail.com",
+        "timestamp": "Mon Aug 21 2023 21:16:43 GMT+0700 (中南半岛时间)"
+    },
+    "jsonMustHave": [
+        {
+            "id": "1038b1f3-e6c6-4fd6-9bc3-aa7dabdf2eec",
+            "type": "Gateway.Bookmark",
+            "title": "90Days Immigration",
+            "data": {
+                "url": "https://tm47.immigration.go.th/tm47/#/login"
+            }
+        },
+        {
+            "id": "d3e79100-d302-4649-86be-e3a86e96ac24",
+            "type": "Gateway.Bookmark",
+            "title": "firebase",
+            "data": {
+                "url": "https://console.firebase.google.com/?fb_gclid=Cj0KCQjw16O_BhDNARIsAC3i2GBOUiJfjv14yM2K2e5YAECde77Q81kzY493Z0Tn7GJWko3saEIZ61YaAqaCEALw_wcB"
+            }
+        },
+        {
+            "id": "6237ae54-0ad0-4a10-bd90-9009a9a2af8e",
+            "type": "Gateway.Bookmark",
+            "title": "outpost.Github",
+            "data": {
+                "url": "https://alexzhangmaker.github.io/outpost/"
+            }
+        },
+        {
+            "id": "ac3998a8-09ea-4513-b323-f88ff637b391",
+            "type": "Gateway.Bookmark",
+            "title": "thai.miniPC",
+            "data": {
+                "url": "http://192.168.1.120:8081/studyJourney.html"
+            }
+        },
+        {
+            "id": "50092766-841b-47b2-8d72-5e3308349ed4",
+            "type": "Gateway.Bookmark",
+            "title": "aesop.Portfolio",
+            "data": {
+                "url": "http://192.168.1.120:8100/aesopPortfolio.html"
+            }
+        },
+        {
+            "id": "d7c61609-bfdd-463b-95c7-105cd03edaa0",
+            "type": "Gateway.Bookmark",
+            "title": "aesop.Studio",
+            "data": {
+                "url": "https://docs.google.com/spreadsheets/d/1VEeo0uxMVjsZX6-gVQQS8LZPvtOgel4etPgGr1W1Hqg/edit?gid=1089549123#gid=1089549123"
+            }
+        },
+        {
+            "id": "85ccb187-7e3a-4c06-848d-8c0494d8da86",
+            "type": "Gateway.Bookmark",
+            "title": "signpost.Studio",
+            "data": {
+                "url": "https://docs.google.com/spreadsheets/d/1OuJKw6GOTaiWCIUdARAAWDSVDhNle3Uu58Y0CV2B5Lg/edit?pli=1&gid=0#gid=0"
+            }
+        },
+        {
+            "id": "37792f54-bad5-488f-a250-1116b84f5ed8",
+            "type": "Gateway.Bookmark",
+            "title": "schedule.Studio",
+            "data": {
+                "url": "https://docs.google.com/spreadsheets/d/1w9mIKWs1sGLFWTQ7a8YBm6G-yCu3EuTh2oz0Lm_9Yyg/edit?gid=0#gid=0"
+            }
+        },
+        {
+            "id": "1abf9295-1a43-41c8-b8c5-f7b6ea690b3b",
+            "type": "Gateway.Bookmark",
+            "title": "Quiz.Studio",
+            "data": {
+                "url": "https://docs.google.com/spreadsheets/d/1nmHeyoVx_Ur6mNnULUnIxgZxpTFeEEBSgSN16iZIdyc/edit?gid=0#gid=0"
+            }
+        },
+        {
+            "id": "e803104f-8250-490d-8c63-c8de07d52309",
+            "type": "Gateway.Bookmark",
+            "title": "outpost",
+            "data": {
+                "url": "https://alexzhangmaker.github.io/outpost/index.html"
+            }
+        }
+    ],
+    "jsonFolders": [
+        {
+            "id": "7d97c392-3f76-4df5-8c46-797f587ec993",
+            "type": "Gateway.Folder",
+            "title": "AI Playground",
+            "Contents": []
+        },
+        {
+            "id": "17872a12-f322-440a-9573-c047d374784b",
+            "type": "Gateway.Folder",
+            "title": "CMU Apps",
+            "Contents": []
+        },
+        {
+            "id": "a66863ef-c945-4e35-a381-bf286bb9d8f5",
+            "type": "Gateway.Folder",
+            "title": "字典工具",
+            "Contents": []
+        },
+        {
+            "id": "ef0342b9-bc6f-4870-9dec-c6273a5e7c66",
+            "type": "Gateway.Folder",
+            "title": "金融分析",
+            "Contents": []
+        },
+        {
+            "id": "41fdb0bd-24a0-4fe9-bbd9-5c925d90418d",
+            "type": "Gateway.Folder",
+            "title": "Learning Apps",
+            "Contents": []
+        },
+        {
+            "id": "78f079e5-93fe-4f0b-a401-f273df42bb72",
+            "type": "Gateway.Folder",
+            "title": "我的项目",
+            "Contents": [
+                {
+                    "id": "4fe1f56f-c971-4e11-be14-fbb2b21a8194",
+                    "type": "Gateway.Folder",
+                    "title": "Refer:Bookmarks",
+                    "Contents": []
+                },
+                {
+                    "id": "5ccbfef7-e3b9-4f6d-9a1d-ee292f5d96d7",
+                    "type": "Gateway.Folder",
+                    "title": "...new folder",
+                    "Contents": []
+                }
+            ]
+        },
+        {
+            "id": "c641655e-48e8-43a0-9629-c428e726e3a2",
+            "type": "Gateway.Folder",
+            "title": "articles.DEV",
+            "Contents": [
+                {
+                    "id": "d514ae4f-ccd2-451a-9c9e-f375f4f4e378",
+                    "type": "Gateway.Folder",
+                    "title": "Chrome扩展",
+                    "Contents": []
+                },
+                {
+                    "id": "906e3edd-7674-408b-bc81-e695dcc5f480",
+                    "type": "Gateway.Folder",
+                    "title": "tech.Reading",
+                    "Contents": []
+                },
+                {
+                    "id": "8d922758-84a3-4a1e-bfe4-4285b0419747",
+                    "type": "Gateway.Folder",
+                    "title": "awesome",
+                    "Contents": []
+                },
+                {
+                    "id": "f40a6449-3125-43a6-839b-2e9f2dba2436",
+                    "type": "Gateway.Folder",
+                    "title": "tech.Web",
+                    "Contents": [
+                        {
+                            "id": "fe47ae9c-52de-40b1-91de-58330a0a7471",
+                            "type": "Gateway.Folder",
+                            "title": "Ext.Chrome",
+                            "Contents": []
+                        },
+                        {
+                            "id": "6b1a0ca6-855e-40ca-9cbb-fa46ba962166",
+                            "type": "Gateway.Folder",
+                            "title": "Web.info",
+                            "Contents": []
+                        },
+                        {
+                            "id": "a392a2d1-e43d-41f9-8345-6e130d4fec16",
+                            "type": "Gateway.Folder",
+                            "title": "Table.JS",
+                            "Contents": []
+                        },
+                        {
+                            "id": "3516b91a-77ba-4beb-a6cf-86f607630b4d",
+                            "type": "Gateway.Folder",
+                            "title": "dialog.js",
+                            "Contents": []
+                        }
+                    ]
+                },
+                {
+                    "id": "3479d5a6-31c9-4302-90b4-ed4303c04735",
+                    "type": "Gateway.Folder",
+                    "title": "tips.CSS",
+                    "Contents": []
+                },
+                {
+                    "id": "e98b5635-3d37-44ba-bae6-402d2c7eb760",
+                    "type": "Gateway.Folder",
+                    "title": "tailwind.CSS",
+                    "Contents": []
+                },
+                {
+                    "id": "73c33f63-94ea-4fc2-ab55-c1c085fa011f",
+                    "type": "Gateway.Folder",
+                    "title": "icons.CSS",
+                    "Contents": []
+                },
+                {
+                    "id": "a15c6028-45ca-4c1c-b4d0-38a68df8d35b",
+                    "type": "Gateway.Folder",
+                    "title": "multi-Columns",
+                    "Contents": []
+                },
+                {
+                    "id": "b3f7e817-ebb9-4e10-9689-792813314c8d",
+                    "type": "Gateway.Folder",
+                    "title": "Grid",
+                    "Contents": []
+                },
+                {
+                    "id": "c6a289c5-e0c2-4b0e-b813-31da216a3356",
+                    "type": "Gateway.Folder",
+                    "title": "tooltip.js",
+                    "Contents": []
+                },
+                {
+                    "id": "471d8483-5e73-4b57-b1fe-c79c1bb39d70",
+                    "type": "Gateway.Folder",
+                    "title": "dialog.js",
+                    "Contents": []
+                },
+                {
+                    "id": "fdff7fd1-09eb-4604-bc60-15488984f9d3",
+                    "type": "Gateway.Folder",
+                    "title": "colors.CSS",
+                    "Contents": []
+                },
+                {
+                    "id": "d48674b8-f0ca-47db-a6ab-8a7bd0b3aadc",
+                    "type": "Gateway.Folder",
+                    "title": "Typograph.CSS",
+                    "Contents": []
+                },
+                {
+                    "id": "1a339fee-073c-4d32-8f5c-4cc81842c9d6",
+                    "type": "Gateway.Folder",
+                    "title": "data Tables",
+                    "Contents": []
+                },
+                {
+                    "id": "6ffca375-8746-4050-b12c-e499dbb44e98",
+                    "type": "Gateway.Folder",
+                    "title": "多媒体",
+                    "Contents": []
+                },
+                {
+                    "id": "f1608e30-765e-4374-bec1-a7a0a4532aa6",
+                    "type": "Gateway.Folder",
+                    "title": "Push Tech",
+                    "Contents": []
+                },
+                {
+                    "id": "eb558eee-358d-43ea-a2f1-cb4669654bc4",
+                    "type": "Gateway.Folder",
+                    "title": "文字处理",
+                    "Contents": []
+                },
+                {
+                    "id": "b2c2f58d-2bfd-4fb8-818c-683f5ed4a3ae",
+                    "type": "Gateway.Folder",
+                    "title": "Web Recording",
+                    "Contents": []
+                },
+                {
+                    "id": "de29e074-0f3e-4a04-a38f-b73fb1a5fbe4",
+                    "type": "Gateway.Folder",
+                    "title": "slideshow",
+                    "Contents": []
+                }
+            ]
+        },
+        {
+            "id": "30c3f9af-cdb7-4bfb-a62d-116acf9c2453",
+            "type": "Gateway.Folder",
+            "title": "article.投资方法论",
+            "Contents": []
+        },
+        {
+            "id": "b64e4ca3-76e0-4a6f-a686-1c7d909dbd8f",
+            "type": "Gateway.Folder",
+            "title": "证券投资",
+            "Contents": [
+                {
+                    "id": "60d34cb6-0323-42d0-9159-2c2ead365416",
+                    "type": "Gateway.Folder",
+                    "title": "交易所",
+                    "Contents": []
+                },
+                {
+                    "id": "9c197389-d89c-4b1d-9d2c-0926156d34da",
+                    "type": "Gateway.Folder",
+                    "title": "非银金融保险",
+                    "Contents": []
+                },
+                {
+                    "id": "f20d5421-a9da-444f-8945-ff931236f0e1",
+                    "type": "Gateway.Folder",
+                    "title": "另类投资",
+                    "Contents": []
+                },
+                {
+                    "id": "c4b52807-11af-44f9-a7c9-0c84222e9ebf",
+                    "type": "Gateway.Folder",
+                    "title": "基础设施硬资产",
+                    "Contents": []
+                },
+                {
+                    "id": "07ca6295-09a6-4bfe-a063-90609ae0b9be",
+                    "type": "Gateway.Folder",
+                    "title": "金融硬资产",
+                    "Contents": []
+                },
+                {
+                    "id": "94ce1660-f931-44f3-9564-e4eb26c2fadc",
+                    "type": "Gateway.Folder",
+                    "title": "指数基金",
+                    "Contents": []
+                },
+                {
+                    "id": "68a0c85d-6a99-44d3-85b6-ebecfaea23c8",
+                    "type": "Gateway.Folder",
+                    "title": "科技行业",
+                    "Contents": []
+                },
+                {
+                    "id": "d4708648-6181-4a2a-973b-5f6a0227fb39",
+                    "type": "Gateway.Folder",
+                    "title": "房地产",
+                    "Contents": []
+                },
+                {
+                    "id": "d4232548-8aee-4f5f-8ab7-8de94fe20a62",
+                    "type": "Gateway.Folder",
+                    "title": "财经媒体",
+                    "Contents": []
+                },
+                {
+                    "id": "a8c53546-07bc-4ea7-bd39-597f0e29a5fb",
+                    "type": "Gateway.Folder",
+                    "title": "金融基础设施",
+                    "Contents": []
+                },
+                {
+                    "id": "dfee55bc-eef4-44f3-ac1f-0e9ec93dbe8b",
+                    "type": "Gateway.Folder",
+                    "title": "硬资产投资",
+                    "Contents": []
+                },
+                {
+                    "id": "4fa65fd6-4cda-4f21-b644-3d16bf38c403",
+                    "type": "Gateway.Folder",
+                    "title": "指数基金",
+                    "Contents": []
+                },
+                {
+                    "id": "1fc0fec4-2f0d-44c5-b1cd-d9d0eac5c656",
+                    "type": "Gateway.Folder",
+                    "title": "科技行业",
+                    "Contents": []
+                },
+                {
+                    "id": "4f5f4028-b4f8-472e-a9ca-3982e9b5eafb",
+                    "type": "Gateway.Folder",
+                    "title": "股息贵族",
+                    "Contents": []
+                },
+                {
+                    "id": "337bf516-58f4-4cd8-b563-96790c1d5ca2",
+                    "type": "Gateway.Folder",
+                    "title": "房地产",
+                    "Contents": []
+                },
+                {
+                    "id": "62249d69-1f61-4627-84e5-f6bfed928c8a",
+                    "type": "Gateway.Folder",
+                    "title": "REITs.新加坡",
+                    "Contents": []
+                }
+            ]
+        },
+        {
+            "id": "d438eb4f-fb6a-45a9-895b-6acf3fa830f5",
+            "type": "Gateway.Folder",
+            "title": "TV.投资媒体",
+            "Contents": []
+        },
+        {
+            "id": "6fb7e8e3-fb7b-4735-b691-308c20042537",
+            "type": "Gateway.Folder",
+            "title": "TV.投资",
+            "Contents": []
+        },
+        {
+            "id": "2f32e65e-8014-4801-b3b7-143d758c8ed8",
+            "type": "Gateway.Folder",
+            "title": "旅游攻略",
+            "Contents": [
+                {
+                    "id": "bfbb19b4-8c5e-4f05-80a2-706f56f14bbf",
+                    "type": "Gateway.Folder",
+                    "title": "澳大利亚",
+                    "Contents": []
+                },
+                {
+                    "id": "63ec0f3b-069b-456b-bc75-7bf79d3819b0",
+                    "type": "Gateway.Folder",
+                    "title": "新西兰",
+                    "Contents": []
+                },
+                {
+                    "id": "2cc95d06-1f3b-45a6-b42c-fe91701f2709",
+                    "type": "Gateway.Folder",
+                    "title": "西班牙",
+                    "Contents": []
+                },
+                {
+                    "id": "aa116471-545b-4a97-acb9-9520981316a4",
+                    "type": "Gateway.Folder",
+                    "title": "华欣度假",
+                    "Contents": []
+                }
+            ]
+        },
+        {
+            "id": "9834bf64-996d-45d8-ae81-67c98b33b2be",
+            "type": "Gateway.Folder",
+            "title": "Insurance",
+            "Contents": []
+        },
+        {
+            "id": "81073d71-5b0c-4d22-bf45-06f27a8f6ba9",
+            "type": "Gateway.Folder",
+            "title": "泰语资源",
+            "Contents": []
+        },
+        {
+            "id": "8f8845a2-841f-4999-82dd-468002059be6",
+            "type": "Gateway.Folder",
+            "title": "终身学习",
+            "Contents": []
+        },
+        {
+            "id": "8f0765ca-734c-4918-8507-07614923036e",
+            "type": "Gateway.Folder",
+            "title": "油管频道",
+            "Contents": []
+        },
+        {
+            "id": "8c2dc2cd-0b9b-4f01-8845-a7fac91172f5",
+            "type": "Gateway.Folder",
+            "title": "Google App Script",
+            "Contents": []
+        },
+        {
+            "id": "ecb5a9ec-da05-4149-8f70-be4298cd7674",
+            "type": "Gateway.Folder",
+            "title": "Vanilla.JS UIs",
+            "Contents": []
+        }
+    ]
+}

@@ -199,18 +199,9 @@ function gwRenderCanvas(cssRootElement){
 
         </div>
     ` ;
-    //<p>It's a pretty useful element that handles accordion / collapsed text natively!</p>
+
     let jsonDailyTools={
-        tools:[
-            /*
-            {
-                title:'google',
-                url:"https://www.google.com"
-            }*//*,{
-                title:'SQLiteUI',
-                url:"http://192.168.1.119:10088/larkSQLiteAdmin.html"
-            }*/
-        ]
+        tools:[]
     } ;
     console.log(globalNavigator.jsonMustHave);
 
@@ -228,21 +219,6 @@ function gwRenderCanvas(cssRootElement){
     _renderCalendar() ;
     _renderWidget({title:"demo Widget"}) ;
 
-    /*
-    //document.querySelector('.mustHave').classList.add('noShow') ;
-    let widgets = tagCanvas.querySelector("#idWidgetContainer").querySelectAll('.widgetDetails') ;
-    widgets.forEach(details => {
-        details.addEventListener('toggle', () => {
-            const isOpen = details.hasAttribute('open'); 
-            if (isOpen) {
-                console.log('Details element opened');
-            } else {
-                console.log('Details element closed');
-            }
-        });
-    });
-    */
-   //idLogDeal
    tagCanvas.querySelector('#idLogDeal').addEventListener('keydown',_logDealFunc) ;
     
 }
@@ -254,7 +230,6 @@ function _renderDailyTools(jsonDailyTools){
     for(let i=0;i<jsonDailyTools.tools.length;i++){
         let tagTool = document.createElement('li') ;
 
-        //<a href="https://www.w3schools.com">Visit W3Schools.com!</a>
         tagDailyTools.appendChild(tagTool) ;
         tagTool.innerHTML = `
             <a href="${jsonDailyTools.tools[i].url}" target="_blank">${jsonDailyTools.tools[i].title}</a>
@@ -325,17 +300,11 @@ function dlgCheckBMFunc(jsonData){
 }
 
 function renderBookMark(jsonBookMark,tagBMContainer){
-    console.log(`will render ${JSON.stringify(jsonBookMark,null,3)}`) ;
+    //console.log(`will render ${JSON.stringify(jsonBookMark,null,3)}`) ;
     let tagBookMark =document.createElement('div') ;
     tagBookMark.classList.add('boxBookmark') ;
 
     var url = new URL(jsonBookMark.url);
-    /*
-    url.protocol;  // "http:"
-    url.hostname;  // "aaa.bbb.ccc.com"
-    url.pathname;  // "/asdf/asdf/sadf.aspx"
-    url.search;    // "?blah"
-    */
 
     // Return true if file exists, false otherwise
     function _existsFavICON(hostName) {
@@ -359,7 +328,6 @@ function renderBookMark(jsonBookMark,tagBMContainer){
         });
     }
 
-    
 
     //console.log(_existsFavICON(url.hostname)) ; 
     //internet-4848.png
@@ -380,9 +348,6 @@ function renderBookMark(jsonBookMark,tagBMContainer){
     ` ;
 
     tagBMContainer.appendChild(tagBookMark) ;
-    //tagBookMark.classList.add('larkDraggable') ;
-    //tagBookMark.setAttribute('draggable', true);
-
     tagBookMark.dataset.larkID = jsonBookMark.id ;
     tagBookMark.dataset.url = jsonBookMark.url ;
 
@@ -407,7 +372,6 @@ function renderBookMark(jsonBookMark,tagBMContainer){
         } ;
         logChange(jsonChange) ;
         readyToCheckIn() ;
-
     }) ;
 
 
@@ -453,12 +417,12 @@ function renderBookMark(jsonBookMark,tagBMContainer){
     let faviconUrl = `https://${url.hostname}/favicon.ico` ;
     _checkFavicon(faviconUrl).then(exists => {
         if (exists) {
-          console.log("Favicon exists:", faviconUrl);
+          //console.log("Favicon exists:", faviconUrl);
           // You can display the favicon or add it to your app here
         } else {
-          console.log("Favicon does not exist:", faviconUrl);
+          //console.log("Favicon does not exist:", faviconUrl);
           // You can use a fallback icon here if desired
-          tagBookMark.querySelector('.image-LAVC').src = '/images/icons/internet-4848.png' ;
+          tagBookMark.querySelector('.image-LAVC').src = 'http://127.0.0.1:9988/images/icons/internet-4848.png' ;
         }
     });
 
