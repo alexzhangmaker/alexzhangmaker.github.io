@@ -26,6 +26,7 @@ async function readUserValue(){
     }
 }
 
+/*
 async function readJSONURL(){
     try {
         const value = await localforage.getItem('outPost');
@@ -51,22 +52,36 @@ async function readJSONURL(){
         console.log(err);
     }
 }
+*/
+const localKeyBookmarks='outpost.Bookmarks' ;
+const localKeyNavigator='outpost.Navigator' ;
 
 document.querySelector('#idBTNFetchBMTree').addEventListener('click',async (event)=>{
+    let dataNavigator = await localforage.getItem(localKeyNavigator);
+    let jsonNavigator={} ;
+    if(dataNavigator==null){
+        let firebaseURL = `https://outpost-8d74e.asia-southeast1.firebasedatabase.app/Portal.json` ;
+        let response = await fetch(firebaseURL);
+        const jsonPortal = await response.json() ;
+        jsonNavigator.jsonMeta = jsonPortal.jsonMeta ;
+        jsonNavigator.jsonFolders = jsonPortal.jsonFolders ;
+        jsonNavigator.jsonMustHave = jsonPortal.jsonMustHave ;
+        console.log(jsonNavigator) ;
+        await localforage.setItem(localKeyNavigator,JSON.stringify(jsonNavigator));
 
-    
-    //let srcURL = '/fetchGateway.V1/:alexszhang@outlook.com' ;
-    let cUser = await readUserValue() ;
-    let srcURL = `http://127.0.0.1:9988/fetchGateway.V1/:${cUser}` ;//`https://alexzhangmaker.github.io/json/Gateway.json` ;//`http://127.0.0.1:9988/fetchGateway.V1/:alexszhang@outlook.com` ;
-    let response = await fetch(srcURL/*,{mode: 'no-cors'}*/);
+        let jsonBookmarks = jsonPortal.Bookmarks ;
+        await localforage.setItem(localKeyBookmarks,JSON.stringify(jsonBookmarks));
 
-    const string = await response.text();
-    const jsonUserGateway = string === "" ? {} : JSON.parse(string);
+    }else{
+        jsonNavigator = JSON.parse(dataNavigator) ;
+        console.log(jsonNavigator) ;
+    }
+    //let dataBookmarks = await localforage.getItem(localKeyBookmarks);
+
 
     let tagFolders = document.querySelector('#idFolderSelector') ;
-    for(let i=0;i<jsonUserGateway.data.Folders.length;i++){
-        renderFolder(tagFolders,jsonUserGateway.data.Folders[i]) ;
-
+    for(let i=0;i<jsonNavigator.jsonFolders.length;i++){
+        renderFolder(tagFolders,jsonNavigator.jsonFolders[i]) ;
     }
 
     let currentTab = await getCurrentTab() ;
@@ -75,6 +90,7 @@ document.querySelector('#idBTNFetchBMTree').addEventListener('click',async (even
     document.querySelector('#idComment').value = 'tbd' ;
 
 
+    /*
     //const jsonUserGateway = await response.json();
     console.log(JSON.stringify(jsonUserGateway,null,3)) ; 
     //log2Console(JSON.stringify(jsonUserGateway,null,3)) ;
@@ -87,6 +103,7 @@ document.querySelector('#idBTNFetchBMTree').addEventListener('click',async (even
         // This code runs if there were any errors
         console.log(err);
     });
+    */
     
 
 }) ;
@@ -102,12 +119,15 @@ function renderFolder(tagParent,jsonFolder){
             <article></article>
     ` ;
     tagFolder.dataset.uuid = jsonFolder.id ;
-    if(jsonFolder.Contents.length>0){
-        let tagContainer = tagFolder.querySelector('article') ;
-        for(let i=0;i<jsonFolder.Contents.length;i++){
-            renderFolder(tagContainer,jsonFolder.Contents[i]);
+    if(jsonFolder.hasOwnProperty('Contents')==true){
+        if(jsonFolder.Contents.length>0){
+            let tagContainer = tagFolder.querySelector('article') ;
+            for(let i=0;i<jsonFolder.Contents.length;i++){
+                renderFolder(tagContainer,jsonFolder.Contents[i]);
+            }
         }
     }
+    
     tagFolder.addEventListener('click',(event)=>{
         document.querySelector('#idFolder').value = jsonFolder.title ;
         document.querySelector('#idFolder').dataset.folderID = jsonFolder.id ;
@@ -208,15 +228,6 @@ document.querySelector('#idBTNSubmit').addEventListener('click',async (event)=>{
 }) ;
 
 
-/*
-function log2Console(csLog){
-    let tagConsole = document.querySelector('#idConsole') ;
-    let tagMsgUL = tagConsole.querySelector('#idConsoleList') ;
-    let tagMsg = document.createElement('li') ;
-    tagMsgUL.appendChild(tagMsg) ;
-    tagMsg.innerText = csLog ;
-}
-*/
 
 
 async function getCurrentTab() {

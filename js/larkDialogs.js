@@ -56,6 +56,61 @@ function renderDlg_BMEdit(jsonDlg={}){
 }
 
 
+function renderDlg_PlusBookmark(jsonDlg){
+    let cDialogHTML = `
+        <div class="larkDlg">
+            <div class="larkDlgHeader">
+                <div class="larkDlgTitle">Title goes here</div>
+                <div class="larkDlgHeaderBar">
+                    <i class="bi-x-square larkBTN"></i>
+                </div>
+            </div>
+            <div class="larkDlgBody">
+                <input type="text" id="idBMTitle" name="lname" style="width:100%;height:1.2em;" value="...title" >
+                <input type="text" id="idBMURI" name="lname" style="width:100%;height:1.2em;" value="...url" >
+                <input type="text" id="idBMDescription" name="lname" style="width:100%;height:1.2em;" value="memo..." >
+            </div>
+            <div class="larkDlgFooter">
+                <button id="idBTNCloseDlg"><i class="bi-x larkBTN"></i>close</button>
+                <button id="idBTNDlgCheck"><i class="bi-check2-square larkBTN"></i>check</button>
+            </div>
+        </div>
+    ` ;
+
+    let tagLarkDlg = document.createElement('dialog') ;
+    document.body.appendChild(tagLarkDlg) ;
+    tagLarkDlg.innerHTML = cDialogHTML ;
+    tagLarkDlg.id = 'idLarkDialog' ;
+    tagLarkDlg.classList.add('modal') ;
+    tagLarkDlg.classList.add('ui-dialog-shadow') ;
+
+    tagLarkDlg.querySelector('#idBTNCloseDlg').addEventListener('click', () => {
+        tagLarkDlg.close();
+        tagLarkDlg.remove() ;
+    });
+
+    tagLarkDlg.querySelector('#idBTNDlgCheck').addEventListener('click', () => {
+        
+        let jsonData = {
+            bookmarkID:'',
+            folderID:jsonDlg.larkFolderID,
+            bookmarkTitle:tagLarkDlg.querySelector('#idBMTitle').value,
+            bookmarkNote:tagLarkDlg.querySelector('#idBMDescription').value,
+            bookmarkURL:tagLarkDlg.querySelector('#idBMURI').value
+        } ;
+        
+        if(jsonDlg.hasOwnProperty('checkFunc')){
+            eval(jsonDlg.checkFunc)(jsonData) ;
+        }
+        
+        tagLarkDlg.close();
+        tagLarkDlg.remove() ;
+    });
+
+    tagLarkDlg.showModal();
+}
+
+
 
 
 

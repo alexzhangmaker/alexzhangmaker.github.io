@@ -439,8 +439,53 @@ document.querySelector('#idBTNToggleLeftPannel').addEventListener('click',(event
     }
 }) ;
 
-document.querySelector('#idBTNPlusApp').addEventListener('click',(event)=>{
 
+
+async function dlgPlusBookmarkFunc(jsonData){
+    //alert('dlgPlusBookmarkFunc  tbd') ;
+    console.log(jsonData) ;
+    tagBookmarksUL = document.querySelector('#idBookmarkBrowser')
+    let jsonBookmark={
+        "id": uuid(),
+        "type": "Gateway.Bookmark",
+        "title": jsonData.bookmarkTitle,
+        url:jsonData.bookmarkURL,
+        "data": {
+         "url": jsonData.bookmarkURL
+        },
+        folderID:jsonData.folderID,
+        userID:"alexszhang"
+    };
+
+    renderBookMark(jsonBookmark,tagBookmarksUL) ; 
+    await _apiCheckPlusBookmark(jsonBookmark) ;
+    /* 
+    let jsonChange = {
+        operation:'plusBookmark',
+        itemID:jsonBookmark.id,
+        title:jsonBookmark.title,
+        url:jsonBookmark.url,
+        description:jsonData.bookmarkNote
+    } ;
+    logChange(jsonChange) ;
+    readyToCheckIn() ;
+    */
+    
+}
+
+document.querySelector('#idBTNPlusApp').addEventListener('click',(event)=>{
+    //alert('larkCanvas.js #idBTNPlusApp tbd') ;
+
+    let tagCurSelected = document.querySelector('.larkSelected') ;
+    let tagBookmarksUL = null ;
+
+    let jsonPlusBookmarkDlg={
+        checkFunc:"dlgPlusBookmarkFunc",
+        larkFolderID:tagCurSelected==null?'':tagCurSelected.dataset.larkID // '' stand for root section, no parent 
+    } ;
+    renderDlg_PlusBookmark(jsonPlusBookmarkDlg) ;
+
+    /*
     let tagCurSelected = document.querySelector('.larkSelected') ;
     let tagBookmarksUL = null ;
     if(tagCurSelected!=null){
@@ -465,12 +510,11 @@ document.querySelector('#idBTNPlusApp').addEventListener('click',(event)=>{
 
     let jsonChange = {
         operation:'plusBookmark',
-        parentID:'',                /* '' stand for root section, no parent */
-        bookmark:jsonBookmark       /* json of the new plus folder */
+        parentID:tagCurSelected==null?'':tagCurSelected.dataset.larkID, // '' stand for root section, no parent 
+        bookmark:jsonBookmark                                           // json of the new plus folder 
     } ;
-    if(tagCurSelected!=null){
-        jsonChange.parentID = tagCurSelected.dataset.larkID ;
-    }
-     logChange(jsonChange) ;
-     readyToCheckIn() ;
+
+    logChange(jsonChange) ;
+    readyToCheckIn() ;
+    */
 }) ;

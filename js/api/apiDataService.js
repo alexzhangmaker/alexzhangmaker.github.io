@@ -193,6 +193,26 @@ async function _dataRemote_apiFetchBookmark(folderID){
 }
 
 
+async function _apiCheckPlusBookmark(jsonBookmark){
+    if(globalWhereData=='outpost.cache'){
+        _dataLocal_CheckPlusBookmark(jsonBookmark) ;
+    }else{
+        await _dataRemote_CheckPlusBookmark(jsonBookmark) ;
+    }
+}
+
+async function _dataLocal_CheckPlusBookmark(jsonBookmark){
+    console.log(jsonBookmark) ;
+    globalBookmarks.push(jsonBookmark) ;
+    //await localStorage setItem
+    await checkInLocalCache_Bookmarks() ;
+}
+
+async function _dataRemote_CheckPlusBookmark(jsonBookmark){
+    console.log(jsonBookmark) ;
+
+}
+
 async function _apiCheckRemoveBookmark(bookmarkID){
     if(globalWhereData=='outpost.cache'){
         _dataLocal_CheckRemoveBookmark(bookmarkID) ;
@@ -268,7 +288,9 @@ async function _apiLoadData(){
         let dataBookmarks = await localforage.getItem(localKeyBookmarks);
         if(dataBookmarks!=null && dataNavigator!=null){
             _globalNavigator_ = JSON.parse(dataNavigator) ;
+            console.log(_globalNavigator_) ;
             globalBookmarks = JSON.parse(dataBookmarks) ;
+            console.log(globalBookmarks) ;
             return _globalNavigator_ ;
         }
     }
