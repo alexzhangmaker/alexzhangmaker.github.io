@@ -132,7 +132,7 @@ function gwRenderCanvas(cssRootElement){
             .dailyTools{
                 width:100% ;
                 max-height:180px ;
-                column-count: 3;
+                column-count: 4;
                 font-size:18px ;
             }
 
