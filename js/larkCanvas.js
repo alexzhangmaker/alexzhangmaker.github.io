@@ -193,7 +193,7 @@ function gwRenderCanvas(cssRootElement){
                 </details>
                
             </div>
-            <div id="idToDoContainer">
+            <div id="idToDoContainer" class="noShow">
                 <iframe class="larkFrameToDo" src="http://127.0.0.1:9990/larkToDo.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
             </div>
 
@@ -243,6 +243,8 @@ function _renderCalendar(){
     let tagWidgets = document.querySelector('#idWidgetContainer') ;
     tagWidgets.appendChild(tagCalendar) ;
     tagCalendar.classList.add("widgetDetails") ;
+    tagCalendar.classList.add("noShow") ;
+
     tagCalendar.innerHTML = `
         <summary class="widgetSummary">Penguin Calendar</summary>
         <iframe  class="larkFrameCalendar" src="http://127.0.0.1:9990/larkCalendar.html" title="calendar" frameborder="0" border="0" cellspacing="0"></iframe>
