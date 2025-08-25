@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务条款 - 示例应用</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #4285F4;
+            --secondary-color: #34A853;
+            --accent-color: #EA4335;
+            --text-color: #202124;
+            --light-gray: #f8f9fa;
+            --medium-gray: #dadce0;
+            --dark-gray: #5f6368;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+        }
+        
+        body {
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: #fff;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 1px solid var(--medium-gray);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            background-color: white;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 32px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .last-updated {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            padding: 20px 0;
+        }
+        
+        h2 {
+            font-size: 22px;
+            margin: 30px 0 15px;
+            color: var(--primary-color);
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--medium-gray);
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        .highlight {
+            background-color: var(--light-gray);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .contact {
+            background-color: var(--light-gray);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 1px solid var(--medium-gray);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px 0;
+            color: var(--dark-gray);
+            font-size: 14px;
+            border-top: 1px solid var(--medium-gray);
+            margin-top: 40px;
+        }
+        
+        .agree-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        
+        .btn:hover {
+            background-color: #3367d6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+            
+            .btn {
+                display: block;
+                margin: 10px 0;
+                width: 100%;
+            }
+        }
+        
+        .section-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="app-icon">App</div>
+            <h1>服务条款</h1>
+            <p class="last-updated">最后更新日期：2023年10月15日</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="content">
+            <div class="highlight">
+                <p><strong>重要提示：</strong>请仔细阅读本服务条款（以下简称"条款"），然后再使用我们的服务。通过访问或使用我们的服务，您同意受这些条款的约束。如果您不同意这些条款，请不要使用我们的服务。</p>
+            </div>
+            
+            <h2><span class="section-number">1</span> 接受条款</h2>
+            <p>通过访问或使用示例应用公司（以下简称"我们"或"我们的"）提供的网站、应用程序和其他产品与服务（以下简称"服务"），您同意受以下条款的约束。如果您代表某个组织同意这些条款，您声明并保证您有权使该组织受这些条款的约束，在这种情况下，"您"和"您的"将指该组织。</p>
+            
+            <h2><span class="section-number">2</span> 服务描述</h2>
+            <p>我们通过移动应用程序、网站和相关技术提供以下服务：</p>
+            <ul>
+                <li>提供内容创建和分享平台</li>
+                <li>促进用户之间的沟通和协作</li>
+                <li>提供个性化内容和推荐</li>
+                <li>其他相关功能和服务</li>
+            </ul>
+            <p>我们保留随时修改或中止全部或部分服务的权利，恕不另行通知。</p>
+            
+            <h2><span class="section-number">3</span> 用户账户</h2>
+            <p>为了使用某些服务功能，您可能需要创建一个用户账户。您同意：</p>
+            <ol>
+                <li>提供真实、准确、最新和完整的信息</li>
+                <li>维护并及时更新您的账户信息</li>
+                <li>对您的账户和密码的保密性负责</li>
+                <li>对在您账户下发生的所有活动负责</li>
+                <li>立即通知我们任何未经授权使用您账户的情况</li>
+            </ol>
+            
+            <h2><span class="section-number">4</span> 用户行为准则</h2>
+            <p>在使用我们的服务时，您同意不会：</p>
+            <ul>
+                <li>违反任何适用的法律或法规</li>
+                <li>侵犯他人的知识产权、隐私权或其他权利</li>
+                <li>发布、上传或传播任何非法、有害、威胁、辱骂、骚扰、诽谤、粗俗、淫秽、仇恨或其他令人反感的材料</li>
+                <li>传输任何包含病毒、恶意代码或其他有害组件的材料</li>
+                <li干扰或破坏服务的完整性或性能</li>
+                <li>尝试未经授权访问我们的系统或网络</li>
+            </ul>
+            
+            <h2><span class="section-number">5</span> 知识产权</h2>
+            <p>我们服务中的所有内容，包括但不限于文本、图形、徽标、按钮图标、图像、音频剪辑、数字下载、数据编译和软件，是我们的财产或我们的内容供应商的财产，受国际版权法的保护。</p>
+            <p>您保留对您通过服务提交、发布或展示的内容的所有权。通过提交、发布或展示内容，您授予我们全球性、免版税、非独占性的许可，以使用、复制、修改、改编、发布、翻译、创作衍生作品、分发和展示此类内容。</p>
+            
+            <h2><span class="section-number">6</span> 终止</h2>
+            <p>我们可能因任何原因随时终止或暂停您的账户和访问服务的权限，恕不另行通知或承担责任。终止后，您使用服务的权利将立即停止。</p>
+            
+            <h2><span class="section-number">7</span> 免责声明</h2>
+            <p>服务按"原样"和"可用"的基础提供，不附有任何明示或暗示的保证，包括但不限于对适销性、特定用途适用性和不侵权的暗示保证。我们不保证服务将 uninterrupted、及时、安全或无错误。</p>
+            
+            <h2><span class="section-number">8</span> 责任限制</h2>
+            <p>在任何情况下，我们均不对任何间接、附带、特殊、后果性或惩罚性损害承担责任，包括但不限于利润损失、数据损失、商誉损失或其他无形损失，无论原因如何。</p>
+            
+            <h2><span class="section-number">9</span> 赔偿</h2>
+            <p>您同意赔偿、辩护并使我们免受因您违反这些条款或使用服务而引起的或与之相关的任何及所有索赔、责任、损害、损失和费用（包括合理的律师费）。</p>
+            
+            <h2><span class="section-number">10</span> 适用法律</h2>
+            <p>这些条款应按照[您所在国家/州]法律解释和管辖，不考虑其冲突法规定。</p>
+            
+            <h2><span class="section-number">11</span> 变更</h2>
+            <p>我们保留随时修改这些条款的权利。如果我们做出重大变更，我们将通过服务通知您和/或寻求您的同意。您在变更生效后继续使用服务将构成您接受修订后的条款。</p>
+            
+            <div class="contact">
+                <h2><span class="section-number">12</span> 联系我们</h2>
+                <p>如果您对这些服务条款有任何疑问，请通过以下方式与我们联系：</p>
+                <p>电子邮件：terms@example.com</p>
+                <p>邮寄地址：Example Street 123, Example City, 12345, Example Country</p>
+            </div>
+            
+            <div class="agree-section">
+                <h3>您是否接受这些服务条款？</h3>
+                <p>要继续使用我们的服务，您需要接受这些条款</p>
+                <div>
+                    <button class="btn">接受</button>
+                    <button class="btn btn-outline">拒绝</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 示例应用公司 版权所有</p>
+            <p>这些服务条款最后更新于2023年10月15日</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const acceptBtn = document.querySelector('.btn');
+            const declineBtn = document.querySelector('.btn-outline');
+            
+            acceptBtn.addEventListener('click', function() {
+                alert('感谢您接受我们的服务条款！');
+            });
+            
+            declineBtn.addEventListener('click', function() {
+                alert('您需要接受服务条款才能使用我们的服务。');
+            });
+        });
+    </script>
+</body>
+</html>
