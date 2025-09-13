@@ -216,8 +216,8 @@ function gwRenderCanvas(cssRootElement){
     _renderDailyTools(jsonDailyTools) ;
     //_renderMemoAnywhere() ;
     //_renderTyping() ;
-    _renderCalendar() ;
-    _renderWidget({title:"demo Widget"}) ;
+    //_renderCalendar() ;
+    //_renderWidget({title:"demo Widget"}) ;
 
    tagCanvas.querySelector('#idLogDeal').addEventListener('keydown',_logDealFunc) ;
     
