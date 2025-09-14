@@ -74,6 +74,8 @@ function gwRenderCanvas(cssRootElement){
                 background-color: #ECEFF1;
                 color: #263238;
                 transition: background-color 0.15s;
+
+                flex-grow:1 ;
             }
             .widgetDetails > :last-child {
                 margin-bottom: 1rem;
