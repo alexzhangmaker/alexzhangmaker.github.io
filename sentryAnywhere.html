@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>目录树管理应用</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .tree-node {
+            transition: all 0.2s ease;
+        }
+        .tree-node.dragging {
+            opacity: 0.6;
+            background-color: #f3f4f6;
+        }
+        .tree-node.drag-over {
+            background-color: #e5e7eb;
+        }
+        .tree-children {
+            margin-left: 1.5rem;
+            border-left: 1px dashed #d1d5db;
+        }
+        .node-content {
+            cursor: pointer;
+            user-select: none;
+        }
+        .resize-handle {
+            width: 5px;
+            background: transparent;
+            cursor: col-resize;
+            transition: background 0.2s;
+        }
+        .resize-handle:hover, .resize-handle.active {
+            background: #3b82f6;
+        }
+        .sidebar {
+            min-width: 200px;
+            max-width: 80%;
+        }
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .node-actions {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .tree-node:hover .node-actions {
+            opacity: 1;
+        }
+        .file-item {
+            transition: all 0.2s;
+        }
+        .file-item:hover {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col">
+    <!-- 顶部工具栏 -->
+    <header class="bg-white shadow-sm py-3 px-6 flex items-center justify-between">
+        <div class="flex items-center">
+            <h1 class="text-xl font-bold text-blue-700">目录树管理应用</h1>
+        </div>
+        <div class="flex space-x-4">
+            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
+                <i class="fas fa-sync-alt mr-2"></i>刷新数据
+            </button>
+            <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
+                <i class="fas fa-save mr-2"></i>保存更改
+            </button>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- 左侧导航栏 -->
+        <aside class="sidebar bg-white shadow-md p-4 overflow-y-auto relative" id="sidebar">
+            <div class="mb-4">
+                <h2 class="text-lg font-semibold text-gray-700">目录导航</h2>
+                <div class="relative mt-2">
+                    <input type="text" placeholder="搜索目录..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <h3 class="text-md font-medium text-gray-600 mb-2 flex items-center justify-between">
+                    <span>目录结构</span>
+                    <div>
+                        <i class="fas fa-info-circle text-blue-400 cursor-pointer mr-2" title="拖拽节点可以重新排序"></i>
+                        <i class="fas fa-plus-circle text-green-500 cursor-pointer" id="add-node-btn" title="添加新节点"></i>
+                    </div>
+                </h3>
+                <div id="directory-tree" class="mt-2">
+                    <!-- 目录树将通过JS动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 调整宽度的拖拽手柄 -->
+            <div class="resize-handle absolute top-0 right-0 h-full" id="resize-handle"></div>
+        </aside>
+
+        <!-- 右侧内容展示区 -->
+        <main class="flex-1 bg-gray-50 p-6 overflow-y-auto" id="main-content">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800" id="current-folder">内容展示区域</h2>
+                        <span class="ml-2 text-sm text-gray-500" id="items-count"></span>
+                    </div>
+                    
+                    <!-- 文件列表区域 -->
+                    <div id="folder-contents">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-blue-50 p-5 rounded-lg">
+                                <h3 class="text-lg font-semibold text-blue-700 mb-3">目录树功能</h3>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li>从Firebase获取目录数据</li>
+                                    <li>树形结构展示</li>
+                                    <li>拖拽排序兄弟节点</li>
+                                    <li>展开/折叠子节点</li>
+                                    <li>拖拽右侧边界调整导航区宽度</li>
+                                    <li>添加新节点功能</li>
+                                    <li>删除节点功能</li>
+                                    <li>点击文件夹查看内容</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-green-50 p-5 rounded-lg">
+                                <h3 class="text-lg font-semibold text-green-700 mb-3">操作指南</h3>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li>点击节点可以展开或折叠</li>
+                                    <li>拖拽节点到其他位置可以重新排序</li>
+                                    <li>使用顶部按钮刷新或保存数据</li>
+                                    <li>在搜索框输入内容过滤目录</li>
+                                    <li>拖拽左侧导航区右边界调整宽度</li>
+                                    <li>点击+图标添加新节点</li>
+                                    <li>点击X图标删除节点</li>
+                                    <li>点击文件夹查看内容</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 添加节点的模态框 -->
+    <div class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden" id="add-node-modal">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">添加新节点</h3>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="node-name">
+                    节点名称
+                </label>
+                <input type="text" id="node-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded" id="cancel-add">
+                    取消
+                </button>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" id="confirm-add">
+                    确认添加
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认模态框 -->
+    <div class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden" id="delete-node-modal">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">确认删除</h3>
+            <p class="text-gray-600 mb-6" id="delete-confirm-msg">确定要删除这个节点吗？此操作不可撤销。</p>
+            <div class="flex justify-end space-x-3">
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded" id="cancel-delete">
+                    取消
+                </button>
+                <button class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" id="confirm-delete">
+                    确认删除
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟从Firebase获取的数据
+        let mockFirebaseData = [
+            {
+                id: "1",
+                name: "项目文档",
+                type: "folder",
+                children: [
+                    {
+                        id: "1-1",
+                        name: "需求分析",
+                        type: "folder",
+                        children: [
+                            { id: "1-1-1", name: "用户需求文档.pdf", type: "file" },
+                            { id: "1-1-2", name: "功能规格说明.docx", type: "file" }
+                        ]
+                    },
+                    {
+                        id: "1-2",
+                        name: "设计文档",
+                        type: "folder",
+                        children: [
+                            { id: "1-2-1", name: "系统架构图.vsd", type: "file" },
+                            { id: "1-2-2", name: "UI设计稿", type: "folder", children: [
+                                { id: "1-2-2-1", name: "首页设计.psd", type: "file" },
+                                { id: "1-2-2-2", name: "用户界面.sketch", type: "file" }
+                            ] }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "2",
+                name: "开发资源",
+                type: "folder",
+                children: [
+                    {
+                        id: "2-1",
+                        name: "前端代码",
+                        type: "folder",
+                        children: [
+                            { id: "2-1-1", name: "组件库", type: "folder", children: [
+                                { id: "2-1-1-1", name: "按钮组件.vue", type: "file" },
+                                { id: "2-1-1-2", name: "表单组件.vue", type: "file" }
+                            ] },
+                            { id: "2-1-2", name: "页面模板", type: "folder", children: [] }
+                        ]
+                    },
+                    {
+                        id: "2-2",
+                        name: "后端代码",
+                        type: "folder",
+                        children: [
+                            { id: "2-2-1", name: "API接口", type: "folder", children: [
+                                { id: "2-2-1-1", name: "用户接口.js", type: "file" },
+                                { id: "2-2-1-2", name: "产品接口.js", type: "file" }
+                            ] },
+                            { id: "2-2-2", name: "数据库设计", type: "folder", children: [
+                                { id: "2-2-2-1", name: "表结构.sql", type: "file" }
+                            ] }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "3",
+                name: "会议记录",
+                type: "folder",
+                children: [
+                    { id: "3-1", name: "周会记录", type: "folder", children: [
+                        { id: "3-1-1", name: "2023年10月会议.docx", type: "file" }
+                    ] },
+                    { id: "3-2", name: "评审会议", type: "folder", children: [] }
+                ]
+            }
+        ];
+
+        // 当前选中的节点
+        let selectedNode = null;
+        let nodeToDelete = null;
+
+        // 目录树渲染功能
+        function renderTree(data, parentElement, level = 0) {
+            data.forEach(item => {
+                const hasChildren = item.children && item.children.length > 0;
+                
+                const nodeElement = document.createElement('div');
+                nodeElement.className = 'tree-node';
+                nodeElement.dataset.id = item.id;
+                nodeElement.draggable = true;
+                
+                // 所有节点都显示为文件夹图标
+                nodeElement.innerHTML = `
+                    <div class="node-content py-2 px-3 rounded-lg flex items-center hover:bg-gray-100 group">
+                        <span class="toggle-icon mr-2 text-gray-500 ${hasChildren ? '' : 'invisible'}">
+                            <i class="fas fa-caret-right"></i>
+                        </span>
+                        <i class="fas fa-folder text-yellow-500 mr-2"></i>
+                        <span class="text-gray-700 flex-grow">${item.name}</span>
+                        <div class="node-actions flex">
+                            <i class="fas fa-times text-red-400 hover:text-red-600 ml-2 delete-node" title="删除节点"></i>
+                        </div>
+                    </div>
+                    ${hasChildren ? 
+                        `<div class="tree-children ${level > 0 ? 'pl-4' : ''}"></div>` : 
+                        ''}
+                `;
+                
+                parentElement.appendChild(nodeElement);
+                
+                // 添加展开/折叠功能
+                const toggleIcon = nodeElement.querySelector('.toggle-icon');
+                const childrenContainer = nodeElement.querySelector('.tree-children');
+                
+                if (hasChildren && childrenContainer) {
+                    let expanded = false;
+                    
+                    toggleIcon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        expanded = !expanded;
+                        
+                        if (expanded) {
+                            childrenContainer.style.display = 'block';
+                            toggleIcon.innerHTML = '<i class="fas fa-caret-down"></i>';
+                            renderTree(item.children, childrenContainer, level + 1);
+                        } else {
+                            childrenContainer.style.display = 'none';
+                            toggleIcon.innerHTML = '<i class="fas fa-caret-right"></i>';
+                            childrenContainer.innerHTML = '';
+                        }
+                    });
+                }
+                
+                // 添加点击事件
+                const nodeContent = nodeElement.querySelector('.node-content');
+                nodeContent.addEventListener('click', () => {
+                    document.querySelectorAll('.node-content').forEach(el => {
+                        el.classList.remove('bg-blue-100', 'font-semibold');
+                    });
+                    nodeContent.classList.add('bg-blue-100', 'font-semibold');
+                    
+                    // 更新当前选中的节点
+                    selectedNode = item;
+                    
+                    // 显示文件夹内容
+                    displayFolderContents(item);
+                });
+                
+                // 添加删除节点事件
+                const deleteBtn = nodeElement.querySelector('.delete-node');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    nodeToDelete = item;
+                    showDeleteModal();
+                });
+                
+                // 添加拖拽事件
+                nodeElement.addEventListener('dragstart', handleDragStart);
+                nodeElement.addEventListener('dragover', handleDragOver);
+                nodeElement.addEventListener('dragenter', handleDragEnter);
+                nodeElement.addEventListener('dragleave', handleDragLeave);
+                nodeElement.addEventListener('drop', handleDrop);
+                nodeElement.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        // 显示文件夹内容
+        function displayFolderContents(folder) {
+            const folderContents = document.getElementById('folder-contents');
+            const currentFolder = document.getElementById('current-folder');
+            
+            // 更新标题
+            currentFolder.textContent = folder.name;
+            
+            // 清空内容区域
+            folderContents.innerHTML = '';
+            
+            // 检查文件夹是否为空
+            if (!folder.children || folder.children.length === 0) {
+                folderContents.innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-folder-open text-5xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500 text-lg">此文件夹为空</p>
+                    </div>
+                `;
+                document.getElementById('items-count').textContent = '(0 个项目)';
+                return;
+            }
+            
+            // 显示项目数量
+            const itemsCount = folder.children.length;
+            document.getElementById('items-count').textContent = `(${itemsCount} 个项目)`;
+            
+            // 创建文件列表容器
+            const fileList = document.createElement('div');
+            fileList.className = 'bg-gray-50 rounded-lg p-4';
+            
+            // 添加标题
+            const title = document.createElement('h3');
+            title.className = 'text-lg font-semibold text-gray-700 mb-4';
+            title.textContent = '内容';
+            fileList.appendChild(title);
+            
+            // 添加文件和文件夹项目
+            folder.children.forEach(item => {
+                const isFolder = item.type === 'folder';
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = 'file-item flex items-center py-3 px-4 border-b border-gray-200 last:border-b-0';
+                
+                itemElement.innerHTML = `
+                    <i class="fas ${isFolder ? 'fa-folder text-yellow-500' : 'fa-file text-blue-400'} mr-3"></i>
+                    <span class="text-gray-700 flex-grow">${item.name}</span>
+                    <span class="text-xs text-gray-500">${isFolder ? '文件夹' : '文件'}</span>
+                `;
+                
+                // 添加点击事件（如果是文件夹）
+                if (isFolder) {
+                    itemElement.style.cursor = 'pointer';
+                    itemElement.addEventListener('click', () => {
+                        // 在目录树中找到并高亮对应的节点
+                        highlightTreeNode(item.id);
+                        // 显示文件夹内容
+                        displayFolderContents(item);
+                    });
+                }
+                
+                fileList.appendChild(itemElement);
+            });
+            
+            folderContents.appendChild(fileList);
+        }
+
+        // 高亮目录树中的节点
+        function highlightTreeNode(nodeId) {
+            // 清除所有高亮
+            document.querySelectorAll('.node-content').forEach(el => {
+                el.classList.remove('bg-blue-100', 'font-semibold');
+            });
+            
+            // 找到对应节点并高亮
+            const nodeElement = document.querySelector(`.tree-node[data-id="${nodeId}"]`);
+            if (nodeElement) {
+                const nodeContent = nodeElement.querySelector('.node-content');
+                nodeContent.classList.add('bg-blue-100', 'font-semibold');
+                
+                // 确保节点可见（展开父节点）
+                let parent = nodeElement.parentElement;
+                while (parent && parent.classList.contains('tree-children')) {
+                    const parentNode = parent.previousElementSibling;
+                    if (parentNode) {
+                        const toggleIcon = parentNode.querySelector('.toggle-icon');
+                        if (toggleIcon && !toggleIcon.classList.contains('invisible')) {
+                            const childrenContainer = parentNode.nextElementSibling;
+                            if (childrenContainer.style.display === 'none') {
+                                toggleIcon.click();
+                            }
+                        }
+                    }
+                    parent = parent.parentElement;
+                }
+                
+                // 滚动到节点位置
+                nodeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // 显示添加节点模态框
+        function showAddModal() {
+            if (!selectedNode) {
+                alert('请先选择一个节点作为父节点');
+                return;
+            }
+            document.getElementById('add-node-modal').classList.remove('hidden');
+            document.getElementById('node-name').value = '';
+            document.getElementById('node-name').focus();
+        }
+
+        // 隐藏添加节点模态框
+        function hideAddModal() {
+            document.getElementById('add-node-modal').classList.add('hidden');
+        }
+
+        // 显示删除确认模态框
+        function showDeleteModal() {
+            if (!nodeToDelete) return;
+            
+            const hasChildren = nodeToDelete.children && nodeToDelete.children.length > 0;
+            
+            if (hasChildren) {
+                document.getElementById('delete-confirm-msg').textContent = 
+                    '该节点包含子节点，无法删除。请先删除所有子节点。';
+                document.getElementById('confirm-delete').disabled = true;
+                document.getElementById('confirm-delete').classList.add('opacity-50');
+            } else {
+                document.getElementById('delete-confirm-msg').textContent = 
+                    '确定要删除这个节点吗？此操作不可撤销。';
+                document.getElementById('confirm-delete').disabled = false;
+                document.getElementById('confirm-delete').classList.remove('opacity-50');
+            }
+            
+            document.getElementById('delete-node-modal').classList.remove('hidden');
+        }
+
+        // 隐藏删除确认模态框
+        function hideDeleteModal() {
+            document.getElementById('delete-node-modal').classList.add('hidden');
+            nodeToDelete = null;
+        }
+
+        // 添加新节点
+        function addNewNode() {
+            const nodeName = document.getElementById('node-name').value.trim();
+            if (!nodeName) {
+                alert('请输入节点名称');
+                return;
+            }
+            
+            if (!selectedNode) {
+                alert('请先选择一个节点作为父节点');
+                return;
+            }
+            
+            // 生成唯一ID
+            const newId = `${selectedNode.id}-${Date.now()}`;
+            
+            // 确保selectedNode有children数组
+            if (!selectedNode.children) {
+                selectedNode.children = [];
+            }
+            
+            // 添加新节点（作为文件夹）
+            selectedNode.children.push({
+                id: newId,
+                name: nodeName,
+                type: "folder",
+                children: []
+            });
+            
+            // 重新渲染目录树
+            const treeContainer = document.getElementById('directory-tree');
+            treeContainer.innerHTML = '';
+            renderTree(mockFirebaseData, treeContainer);
+            
+            // 隐藏模态框
+            hideAddModal();
+            
+            // 更新内容显示
+            displayFolderContents(selectedNode);
+        }
+
+        // 删除节点
+        function deleteNode() {
+            if (!nodeToDelete) return;
+            
+            // 检查是否有子节点
+            const hasChildren = nodeToDelete.children && nodeToDelete.children.length > 0;
+            if (hasChildren) {
+                alert('无法删除包含子节点的节点');
+                hideDeleteModal();
+                return;
+            }
+            
+            // 从数据中删除节点
+            function removeNode(data, nodeId) {
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].id === nodeId) {
+                        data.splice(i, 1);
+                        return true;
+                    }
+                    if (data[i].children && data[i].children.length > 0) {
+                        if (removeNode(data[i].children, nodeId)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            
+            removeNode(mockFirebaseData, nodeToDelete.id);
+            
+            // 重新渲染目录树
+            const treeContainer = document.getElementById('directory-tree');
+            treeContainer.innerHTML = '';
+            renderTree(mockFirebaseData, treeContainer);
+            
+            // 隐藏模态框
+            hideDeleteModal();
+            
+            // 清除当前选中节点
+            selectedNode = null;
+            
+            // 重置内容显示
+            document.getElementById('current-folder').textContent = '内容展示区域';
+            document.getElementById('items-count').textContent = '';
+            document.getElementById('folder-contents').innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-blue-50 p-5 rounded-lg">
+                        <h3 class="text-lg font-semibold text-blue-700 mb-3">目录树功能</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2">
+                            <li>从Firebase获取目录数据</li>
+                            <li>树形结构展示</li>
+                            <li>拖拽排序兄弟节点</li>
+                            <li>展开/折叠子节点</li>
+                            <li>拖拽右侧边界调整导航区宽度</li>
+                            <li>添加新节点功能</li>
+                            <li>删除节点功能</li>
+                            <li>点击文件夹查看内容</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-green-50 p-5 rounded-lg">
+                        <h3 class="text-lg font-semibold text-green-700 mb-3">操作指南</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2">
+                            <li>点击节点可以展开或折叠</li>
+                            <li>拖拽节点到其他位置可以重新排序</li>
+                            <li>使用顶部按钮刷新或保存数据</li>
+                            <li>在搜索框输入内容过滤目录</li>
+                            <li>拖拽左侧导航区右边界调整宽度</li>
+                            <li>点击+图标添加新节点</li>
+                            <li>点击X图标删除节点</li>
+                            <li>点击文件夹查看内容</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 拖拽相关变量
+        let draggedItem = null;
+
+        // 拖拽事件处理函数
+        function handleDragStart(e) {
+            draggedItem = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.dataset.id);
+            this.classList.add('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDragEnter(e) {
+            this.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            if (draggedItem !== this) {
+                // 检查是否是兄弟节点（简单实现，实际应用中需要更复杂的验证）
+                const parent = this.parentElement;
+                if (parent === draggedItem.parentElement) {
+                    // 获取所有兄弟节点
+                    const siblings = Array.from(parent.children);
+                    const thisIndex = siblings.indexOf(this);
+                    const draggedIndex = siblings.indexOf(draggedItem);
+                    
+                    if (draggedIndex < thisIndex) {
+                        parent.insertBefore(draggedItem, this.nextSibling);
+                    } else {
+                        parent.insertBefore(draggedItem, this);
+                    }
+                }
+            }
+            
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.tree-node').forEach(node => {
+                node.classList.remove('drag-over');
+            });
+        }
+
+        // 调整侧边栏宽度功能
+        function initResizeHandler() {
+            const resizeHandle = document.getElementById('resize-handle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            
+            let isResizing = false;
+            
+            resizeHandle.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                resizeHandle.classList.add('active');
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                
+                const containerRect = sidebar.parentElement.getBoundingClientRect();
+                const widthPercentage = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+                
+                // 设置最小和最大宽度限制
+                const newWidth = Math.max(20, Math.min(80, widthPercentage));
+                
+                sidebar.style.width = `${newWidth}%`;
+                mainContent.style.width = `${100 - newWidth}%`;
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    resizeHandle.classList.remove('active');
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                }
+            });
+        }
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            const treeContainer = document.getElementById('directory-tree');
+            
+            // 渲染目录树
+            renderTree(mockFirebaseData, treeContainer);
+            
+            // 初始化调整宽度功能
+            initResizeHandler();
+            
+            // 添加刷新按钮事件
+            document.querySelector('button').addEventListener('click', () => {
+                treeContainer.innerHTML = '';
+                renderTree(mockFirebaseData, treeContainer);
+                
+                // 重置内容显示
+                document.getElementById('current-folder').textContent = '内容展示区域';
+                document.getElementById('items-count').textContent = '';
+                document.getElementById('folder-contents').innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-5 rounded-lg">
+                            <h3 class="text-lg font-semibold text-blue-700 mb-3">目录树功能</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                <li>从Firebase获取目录数据</li>
+                                <li>树形结构展示</li>
+                                <li>拖拽排序兄弟节点</li>
+                                <li>展开/折叠子节点</li>
+                                <li>拖拽右侧边界调整导航区宽度</li>
+                                <li>添加新节点功能</li>
+                                <li>删除节点功能</li>
+                                <li>点击文件夹查看内容</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-green-50 p-5 rounded-lg">
+                            <h3 class="text-lg font-semibold text-green-700 mb-3">操作指南</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                <li>点击节点可以展开或折叠</li>
+                                <li>拖拽节点到其他位置可以重新排序</li>
+                                <li>使用顶部按钮刷新或保存数据</li>
+                                <li>在搜索框输入内容过滤目录</li>
+                                <li>拖拽左侧导航区右边界调整宽度</li>
+                                <li>点击+图标添加新节点</li>
+                                <li>点击X图标删除节点</li>
+                                <li>点击文件夹查看内容</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // 添加搜索功能
+            const searchInput = document.querySelector('input[type="text"]');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                
+                document.querySelectorAll('.node-content').forEach(node => {
+                    const nodeText = node.textContent.toLowerCase();
+                    const treeNode = node.closest('.tree-node');
+                    
+                    if (nodeText.includes(searchTerm)) {
+                        treeNode.style.display = 'block';
+                        // 展开父节点
+                        let parent = treeNode.parentElement;
+                        while (parent && parent.classList.contains('tree-children')) {
+                            const parentNode = parent.previousElementSibling;
+                            if (parentNode) {
+                                const toggleIcon = parentNode.querySelector('.toggle-icon');
+                                if (toggleIcon && !toggleIcon.classList.contains('invisible')) {
+                                    const childrenContainer = parentNode.nextElementSibling;
+                                    if (childrenContainer.style.display === 'none') {
+                                        toggleIcon.click();
+                                    }
+                                }
+                            }
+                            parent = parent.parentElement;
+                        }
+                    } else {
+                        treeNode.style.display = 'none';
+                    }
+                });
+            });
+            
+            // 添加节点按钮事件
+            document.getElementById('add-node-btn').addEventListener('click', showAddModal);
+            
+            // 模态框按钮事件
+            document.getElementById('cancel-add').addEventListener('click', hideAddModal);
+            document.getElementById('confirm-add').addEventListener('click', addNewNode);
+            document.getElementById('cancel-delete').addEventListener('click', hideDeleteModal);
+            document.getElementById('confirm-delete').addEventListener('click', deleteNode);
+            
+            // 按ESC键关闭模态框
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    hideAddModal();
+                    hideDeleteModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
