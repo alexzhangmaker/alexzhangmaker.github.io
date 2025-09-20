@@ -55,6 +55,16 @@
             background-color: #f3f4f6;
         }
     </style>
+    <style>
+        .dailyTool{
+            display: flex;
+            flex-direction: row;
+        }
+
+        .dailyTool :hover{
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 h-screen flex flex-col">
     <!-- 顶部工具栏 -->
@@ -84,6 +94,16 @@
             </div>
             
             <div class="mt-6">
+                <h3 class="text-md font-medium text-gray-600 mb-2 flex items-center justify-between">
+                    <span>每日工具</span>
+                    <div>
+                        <i class="fas fa-info-circle text-blue-400 cursor-pointer mr-2" title="拖拽节点可以重新排序"></i>
+                        <i class="fas fa-plus-circle text-green-500 cursor-pointer" id="add-DailyTool-btn" title="添加新节点"></i>
+                    </div>
+                </h3>
+                <div id="idDailyToolbox" class="mt-2">
+                    <!-- 目录树将通过JS动态生成 -->
+                </div>
                 <h3 class="text-md font-medium text-gray-600 mb-2 flex items-center justify-between">
                     <span>目录结构</span>
                     <div>
@@ -183,86 +203,44 @@
         </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="./Lab/DataAPI.js"></script>
     <script>
-        // 模拟从Firebase获取的数据
-        let mockFirebaseData = [
-            {
-                id: "1",
-                name: "项目文档",
-                type: "folder",
-                children: [
-                    {
-                        id: "1-1",
-                        name: "需求分析",
-                        type: "folder",
-                        children: [
-                            { id: "1-1-1", name: "用户需求文档.pdf", type: "file" },
-                            { id: "1-1-2", name: "功能规格说明.docx", type: "file" }
-                        ]
-                    },
-                    {
-                        id: "1-2",
-                        name: "设计文档",
-                        type: "folder",
-                        children: [
-                            { id: "1-2-1", name: "系统架构图.vsd", type: "file" },
-                            { id: "1-2-2", name: "UI设计稿", type: "folder", children: [
-                                { id: "1-2-2-1", name: "首页设计.psd", type: "file" },
-                                { id: "1-2-2-2", name: "用户界面.sketch", type: "file" }
-                            ] }
-                        ]
-                    }
-                ]
-            },
-            {
-                id: "2",
-                name: "开发资源",
-                type: "folder",
-                children: [
-                    {
-                        id: "2-1",
-                        name: "前端代码",
-                        type: "folder",
-                        children: [
-                            { id: "2-1-1", name: "组件库", type: "folder", children: [
-                                { id: "2-1-1-1", name: "按钮组件.vue", type: "file" },
-                                { id: "2-1-1-2", name: "表单组件.vue", type: "file" }
-                            ] },
-                            { id: "2-1-2", name: "页面模板", type: "folder", children: [] }
-                        ]
-                    },
-                    {
-                        id: "2-2",
-                        name: "后端代码",
-                        type: "folder",
-                        children: [
-                            { id: "2-2-1", name: "API接口", type: "folder", children: [
-                                { id: "2-2-1-1", name: "用户接口.js", type: "file" },
-                                { id: "2-2-1-2", name: "产品接口.js", type: "file" }
-                            ] },
-                            { id: "2-2-2", name: "数据库设计", type: "folder", children: [
-                                { id: "2-2-2-1", name: "表结构.sql", type: "file" }
-                            ] }
-                        ]
-                    }
-                ]
-            },
-            {
-                id: "3",
-                name: "会议记录",
-                type: "folder",
-                children: [
-                    { id: "3-1", name: "周会记录", type: "folder", children: [
-                        { id: "3-1-1", name: "2023年10月会议.docx", type: "file" }
-                    ] },
-                    { id: "3-2", name: "评审会议", type: "folder", children: [] }
-                ]
-            }
-        ];
+
 
         // 当前选中的节点
         let selectedNode = null;
         let nodeToDelete = null;
+
+        /*
+        {
+            "data": {
+                "url": "https://tm47.immigration.go.th/tm47/#/login"
+            },
+            "id": "1038b1f3-e6c6-4fd6-9bc3-aa7dabdf2eec",
+            "title": "90Days Immigration",
+            "type": "Gateway.Bookmark"
+        }
+        */
+        function renderDailyToolbox(dailyTools,parentElement){
+            for(let i=0;i<dailyTools.length;i++){
+                let toolNode = document.createElement('div') ;
+                toolNode.className = 'dailyTool';
+                toolNode.dataset.id = dailyTools[i].id;
+                toolNode.dataset.url = dailyTools[i].data.url;
+                toolNode.innerHTML=`
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 6h11M3.8 5.8l.8.8l2-2m-2.8 7.2l.8.8l2-2m-2.8 7.2l.8.8l2-2M9 12h11M9 18h11"/></svg>                    
+                    <span class="text-gray-700 flex-grow">${dailyTools[i].title}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 9l-1.995 11.346A2 2 0 0 1 16.035 22h-8.07a2 2 0 0 1-1.97-1.654L4 9m17-3h-5.625M3 6h5.625m0 0V4a2 2 0 0 1 2-2h2.75a2 2 0 0 1 2 2v2m-6.75 0h6.75"/></svg>
+                ` ;
+                parentElement.appendChild(toolNode) ;
+
+                toolNode.addEventListener('click',(event)=>{
+                    window.open(toolNode.dataset.url,"_blank") ;
+                }) ;
+            }
+        }
 
         // 目录树渲染功能
         function renderTree(data, parentElement, level = 0) {
@@ -707,10 +685,14 @@
         }
 
         // 初始化应用
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const treeContainer = document.getElementById('directory-tree');
-            
+            //loadAppData() ;
+            await asyncLoadAppData() ;
+            console.log("====>>>=======") ;
+            console.log(mockFirebaseData);
             // 渲染目录树
+            renderDailyToolbox(dialyTools,document.getElementById('idDailyToolbox')) ;
             renderTree(mockFirebaseData, treeContainer);
             
             // 初始化调整宽度功能
