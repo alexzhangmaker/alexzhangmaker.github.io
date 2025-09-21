@@ -75,6 +75,7 @@ let mockFirebaseData = [
 ];
 
 let dialyTools=[] ;
+let bookmarks=[] ;
 
 // Firebase配置 - 需要替换为实际配置
 const firebaseConfig = {
@@ -126,6 +127,9 @@ async function asyncLoadAppData(){
     mockFirebaseData = jsonPortal.jsonFolders ;
 
     dialyTools = jsonPortal.jsonMustHave ;
+
+    bookmarks = jsonPortal.Bookmarks ;
+
 }
 
 function loadAppData() {

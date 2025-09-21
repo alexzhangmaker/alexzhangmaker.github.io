@@ -64,6 +64,16 @@
         .dailyTool :hover{
             cursor: pointer;
         }
+
+        .dailyToolAction {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .dailyTool:hover .dailyToolAction {
+            opacity: 1;
+        }
+        
     </style>
 </head>
 <body class="bg-gray-100 h-screen flex flex-col">
@@ -213,16 +223,6 @@
         let selectedNode = null;
         let nodeToDelete = null;
 
-        /*
-        {
-            "data": {
-                "url": "https://tm47.immigration.go.th/tm47/#/login"
-            },
-            "id": "1038b1f3-e6c6-4fd6-9bc3-aa7dabdf2eec",
-            "title": "90Days Immigration",
-            "type": "Gateway.Bookmark"
-        }
-        */
         function renderDailyToolbox(dailyTools,parentElement){
             for(let i=0;i<dailyTools.length;i++){
                 let toolNode = document.createElement('div') ;
@@ -232,7 +232,7 @@
                 toolNode.innerHTML=`
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 6h11M3.8 5.8l.8.8l2-2m-2.8 7.2l.8.8l2-2m-2.8 7.2l.8.8l2-2M9 12h11M9 18h11"/></svg>                    
                     <span class="text-gray-700 flex-grow">${dailyTools[i].title}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 9l-1.995 11.346A2 2 0 0 1 16.035 22h-8.07a2 2 0 0 1-1.97-1.654L4 9m17-3h-5.625M3 6h5.625m0 0V4a2 2 0 0 1 2-2h2.75a2 2 0 0 1 2 2v2m-6.75 0h6.75"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="dailyToolAction" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 9l-1.995 11.346A2 2 0 0 1 16.035 22h-8.07a2 2 0 0 1-1.97-1.654L4 9m17-3h-5.625M3 6h5.625m0 0V4a2 2 0 0 1 2-2h2.75a2 2 0 0 1 2 2v2m-6.75 0h6.75"/></svg>
                 ` ;
                 parentElement.appendChild(toolNode) ;
 
@@ -264,10 +264,9 @@
                             <i class="fas fa-times text-red-400 hover:text-red-600 ml-2 delete-node" title="删除节点"></i>
                         </div>
                     </div>
-                    ${hasChildren ? 
-                        `<div class="tree-children ${level > 0 ? 'pl-4' : ''}"></div>` : 
-                        ''}
+                    ${hasChildren ? `<div class="tree-children ${level > 0 ? 'pl-4' : ''}"></div>` : ''}
                 `;
+
                 
                 parentElement.appendChild(nodeElement);
                 
