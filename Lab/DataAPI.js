@@ -1,81 +1,10 @@
 // 模拟从Firebase获取的数据
-let mockFirebaseData = [
-    {
-        id: "1",
-        name: "项目文档",
-        type: "folder",
-        children: [
-            {
-                id: "1-1",
-                name: "需求分析",
-                type: "folder",
-                children: [
-                    { id: "1-1-1", name: "用户需求文档.pdf", type: "file" },
-                    { id: "1-1-2", name: "功能规格说明.docx", type: "file" }
-                ]
-            },
-            {
-                id: "1-2",
-                name: "设计文档",
-                type: "folder",
-                children: [
-                    { id: "1-2-1", name: "系统架构图.vsd", type: "file" },
-                    { id: "1-2-2", name: "UI设计稿", type: "folder", children: [
-                        { id: "1-2-2-1", name: "首页设计.psd", type: "file" },
-                        { id: "1-2-2-2", name: "用户界面.sketch", type: "file" }
-                    ] }
-                ]
-            }
-        ]
-    },
-    {
-        id: "2",
-        name: "开发资源",
-        type: "folder",
-        children: [
-            {
-                id: "2-1",
-                name: "前端代码",
-                type: "folder",
-                children: [
-                    { id: "2-1-1", name: "组件库", type: "folder", children: [
-                        { id: "2-1-1-1", name: "按钮组件.vue", type: "file" },
-                        { id: "2-1-1-2", name: "表单组件.vue", type: "file" }
-                    ] },
-                    { id: "2-1-2", name: "页面模板", type: "folder", children: [] }
-                ]
-            },
-            {
-                id: "2-2",
-                name: "后端代码",
-                type: "folder",
-                children: [
-                    { id: "2-2-1", name: "API接口", type: "folder", children: [
-                        { id: "2-2-1-1", name: "用户接口.js", type: "file" },
-                        { id: "2-2-1-2", name: "产品接口.js", type: "file" }
-                    ] },
-                    { id: "2-2-2", name: "数据库设计", type: "folder", children: [
-                        { id: "2-2-2-1", name: "表结构.sql", type: "file" }
-                    ] }
-                ]
-            }
-        ]
-    },
-    {
-        id: "3",
-        name: "会议记录",
-        type: "folder",
-        children: [
-            { id: "3-1", name: "周会记录", type: "folder", children: [
-                { id: "3-1-1", name: "2023年10月会议.docx", type: "file" }
-            ] },
-            { id: "3-2", name: "评审会议", type: "folder", children: [] }
-        ]
-    }
-];
-
-let dialyTools=[] ;
-let bookmarks=[] ;
+let gFolderTree = [];
+let gDialyTools=[] ;
+let gBookmarks=[] ;
+let flagFolderChanged = false ;
+let flagBookmarksChanged = false ;
+let flagDailyToolChanged = false ;
 
 // Firebase配置 - 需要替换为实际配置
 const firebaseConfig = {
@@ -95,8 +24,6 @@ const gPortalPath = "Portal" ;
 // 初始化Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
-
-
 
 // 从Firebase获取课件列表
 function _transformPortal(portalEntries){
@@ -118,17 +45,35 @@ function _transformPortal(portalEntries){
 }
 
 async function asyncLoadAppData(){
-    let urlAppData = `https://outpost-8d74e.asia-southeast1.firebasedatabase.app/Portal.json` ;
-    let response = await fetch(urlAppData) ;
-    const jsonPortal = await response.json() ;
+    const snapshot = await database.ref('Portal').once('value');
+    const jsonPortal = snapshot.val();
     console.log(jsonPortal) ;
-    _transformPortal(jsonPortal.jsonFolders) ;
+    
+    //_transformPortal(jsonPortal.jsonFolders) ;
     console.log(jsonPortal.jsonFolders) ;
-    mockFirebaseData = jsonPortal.jsonFolders ;
+    gFolderTree = jsonPortal.jsonFolders ;
+    gDialyTools = jsonPortal.jsonMustHave ;
+    gBookmarks = jsonPortal.Bookmarks ;
+    flagFolderChanged = false ;
+    flagBookmarksChanged = false ;
+    flagDailyToolChanged = false ;
+}
 
-    dialyTools = jsonPortal.jsonMustHave ;
+async function asyncSaveAppData(){
+    if(flagBookmarksChanged){
+        await database.ref(`Portal/Bookmarks`).set(gBookmarks);
+        flagBookmarksChanged = false ;
+    }
+    if(flagDailyToolChanged){
+        await database.ref(`Portal/jsonMustHave`).set(gDialyTools);
+        flagDailyToolChanged = false ;
+    }
+    if(flagFolderChanged){
+        await database.ref(`Portal/jsonFolders`).set(gFolderTree);
+        flagFolderChanged = false ;
+    }
 
-    bookmarks = jsonPortal.Bookmarks ;
+    document.querySelector("#idBTNSaveChange").style.color="white" ;
 
 }
 
@@ -142,23 +87,136 @@ function loadAppData() {
         //let dataEntries = 
         _transformPortal(jsonPortal.jsonFolders) ;
         console.log(jsonPortal.jsonFolders) ;
-        mockFirebaseData = jsonPortal.jsonFolders ;
+        gFolderTree = jsonPortal.jsonFolders ;
 
-        /*
-        const treeContainer = document.getElementById('directory-tree');
-        renderTree(mockFirebaseData, treeContainer);
-        */
-        /*
-        if (jsonPortal) {
-            
-            
-        } else {
-
-        }
-        */
     }, (error) => {
         console.error('加载Portal数据失败:', error);
     });
 }
 
 //loadAppData() ;
+function fetchFolderBookmarks(folder){
+    const bookmarks = [] ;
+    gBookmarks.forEach(jsonBookmark => {
+        if(jsonBookmark.folderID == folder.id )bookmarks.push(jsonBookmark) ;
+    });
+    return bookmarks ;
+}
+
+
+function findObjectsWithSameValue(array, attribute) {
+    // Create a Map to group objects by attribute value
+    const groupedByValue = new Map();
+    
+    // Iterate through the array and group objects
+    array.forEach(obj => {
+        const value = obj[attribute];
+        if (value !== undefined) {
+            if (!groupedByValue.has(value)) {
+                groupedByValue.set(value, []);
+            }
+            groupedByValue.get(value).push(obj);
+        }
+    });
+    
+    // Convert Map to array of groups, filtering out groups with single objects
+    const result = Array.from(groupedByValue.entries())
+        .filter(([_, group]) => group.length > 1)
+        .map(([value, objects]) => ({
+            attributeValue: value,
+            objects: objects
+        }));
+    
+    return result;
+}
+
+async function removeBookmark(bookmarkID){
+    console.log(`will removeBookmark:${bookmarkID}`) ;
+    //gBookmarks
+    for(let i=0;i<gBookmarks.length;i++){
+        if(gBookmarks[i].id == bookmarkID){
+            gBookmarks.splice(i,1) ;
+            if(flagBookmarksChanged==false){
+                flagBookmarksChanged = true ;
+                document.querySelector("#idBTNSaveChange").style.color="red" ;
+            }
+            return ;
+        }
+    }
+
+    return ;
+}
+
+function plusDailyTool(jsonTool){
+    gDialyTools.push(jsonTool) ;
+    flagDailyToolChanged = true ;
+    document.querySelector("#idBTNSaveChange").style.color="red" ;
+}
+
+function plusFolderatRoot(jsonFolder){
+    gFolderTree.push(jsonFolder) ;
+    flagFolderChanged = true ;
+    document.querySelector("#idBTNSaveChange").style.color="red" ;
+
+}
+
+function plusFolder2Folder(jsonFolder,selectedNode){
+    // 确保selectedNode有children数组
+    if (!selectedNode.children) {
+        selectedNode.children = [];
+    }
+    // 添加新节点（作为文件夹）
+    selectedNode.children.push(jsonFolder);
+    flagFolderChanged = true ;
+    document.querySelector("#idBTNSaveChange").style.color="red" ;
+}
+
+// 从数据中删除节点
+function removeFolderFromForest(folderID) {
+
+    function _callRemoved(){
+        flagFolderChanged = true ;
+        document.querySelector("#idBTNSaveChange").style.color="red" ;    
+    }
+    
+    function _removeFolder(jsonRoot,folderID){
+        console.log(jsonRoot) ;
+
+        if(!jsonRoot.children)return false ;
+        if(jsonRoot.children.length==0)return false ;
+        for(let i=0;i<jsonRoot.children.length;i++){
+            //console.log(jsonRoot.children[i]) ;
+            if(jsonRoot.children[i].id == folderID){
+                jsonRoot.children.splice(i,1) ;
+                return true ;
+            }
+            let bRemoved =_removeFolder(jsonRoot.children[i],folderID) ;
+            if(bRemoved)return true ;
+        }
+        return false ;
+    }
+
+    for (let i = 0; i < gFolderTree.length; i++) {
+        if(gFolderTree[i].id == folderID){
+            if(!gFolderTree[i].children){
+                gFolderTree.splice(i,1) ;
+                _callRemoved() ;
+                return true ;
+            }
+
+            if(gFolderTree[i].children.length==0){
+                gFolderTree.splice(i,1) ;
+                _callRemoved() ;
+                return true ;
+            }
+            return false ;
+        }
+
+        let bRemoved = _removeFolder(gFolderTree[i],folderID) ;
+        if(bRemoved){
+            _callRemoved() ;
+            return true ;
+        }
+    }
+    return false;
+}
