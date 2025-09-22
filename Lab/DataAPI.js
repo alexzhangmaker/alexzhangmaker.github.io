@@ -153,6 +153,18 @@ function plusDailyTool(jsonTool){
     document.querySelector("#idBTNSaveChange").style.color="red" ;
 }
 
+function removeDailyTool(toolID){
+    for(let i=0;i<gDialyTools.length;i++){
+        if(gDialyTools[i].id == toolID){
+            gDialyTools.splice(i,1) ;
+            flagDailyToolChanged = true ;
+            document.querySelector("#idBTNSaveChange").style.color="red" ;
+            return true ;
+        }
+    }
+    return false ;
+}
+
 function plusFolderatRoot(jsonFolder){
     gFolderTree.push(jsonFolder) ;
     flagFolderChanged = true ;
