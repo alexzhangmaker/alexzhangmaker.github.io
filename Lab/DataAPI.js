@@ -21,6 +21,8 @@ const firebaseConfig = {
 const gPortalPath = "Portal" ;
 
 
+const color2Save = "#0000FF" ;
+const colorSaved = "#FFFFFF" ;
 // 初始化Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
@@ -73,7 +75,10 @@ async function asyncSaveAppData(){
         flagFolderChanged = false ;
     }
 
-    document.querySelector("#idBTNSaveChange").style.color="white" ;
+    //document.querySelector("#idBTNSaveChange").style.color="white" ;
+    // Select the SVG element (or a specific path/shape)
+    const svgElement = document.querySelector('#idBTNSaveChange'); // Adjust selector as needed
+    svgElement.setAttribute('fill', colorSaved); // Sets fill to red
 
 }
 
@@ -138,7 +143,10 @@ async function removeBookmark(bookmarkID){
             gBookmarks.splice(i,1) ;
             if(flagBookmarksChanged==false){
                 flagBookmarksChanged = true ;
-                document.querySelector("#idBTNSaveChange").style.color="red" ;
+                //document.querySelector("#idBTNSaveChange").style.color="red" ;
+                // Select the SVG element (or a specific path/shape)
+                const svgElement = document.querySelector('#idBTNSaveChange'); // Adjust selector as needed
+                svgElement.setAttribute('fill', color2Save); // Sets fill to red
             }
             return ;
         }
@@ -150,7 +158,10 @@ async function removeBookmark(bookmarkID){
 function plusDailyTool(jsonTool){
     gDialyTools.push(jsonTool) ;
     flagDailyToolChanged = true ;
-    document.querySelector("#idBTNSaveChange").style.color="red" ;
+    //document.querySelector("#idBTNSaveChange").style.color="red" ;
+    // Select the SVG element (or a specific path/shape)
+    const svgElement = document.querySelector('#idBTNSaveChange'); // Adjust selector as needed
+    svgElement.setAttribute('fill', color2Save); // Sets fill to red
 }
 
 function removeDailyTool(toolID){
@@ -158,7 +169,9 @@ function removeDailyTool(toolID){
         if(gDialyTools[i].id == toolID){
             gDialyTools.splice(i,1) ;
             flagDailyToolChanged = true ;
-            document.querySelector("#idBTNSaveChange").style.color="red" ;
+            //document.querySelector("#idBTNSaveChange").style.color="red" ;
+            const svgElement = document.querySelector('#idBTNSaveChange'); // Adjust selector as needed
+            svgElement.setAttribute('fill', color2Save); // Sets fill to red
             return true ;
         }
     }
@@ -168,9 +181,14 @@ function removeDailyTool(toolID){
 function plusFolderatRoot(jsonFolder){
     gFolderTree.push(jsonFolder) ;
     flagFolderChanged = true ;
-    document.querySelector("#idBTNSaveChange").style.color="red" ;
+    //document.querySelector("#idBTNSaveChange").style.color="red" ;
+    // Select the SVG element (or a specific path/shape)
+    const svgElement = document.querySelector('#idBTNSaveChange'); // Adjust selector as needed
+    svgElement.setAttribute('fill', color2Save); // Sets fill to red
 
 }
+
+
 
 function plusFolder2Folder(jsonFolder,selectedNode){
     // 确保selectedNode有children数组
@@ -180,7 +198,11 @@ function plusFolder2Folder(jsonFolder,selectedNode){
     // 添加新节点（作为文件夹）
     selectedNode.children.push(jsonFolder);
     flagFolderChanged = true ;
-    document.querySelector("#idBTNSaveChange").style.color="red" ;
+    //document.querySelector("#idBTNSaveChange").style.color="red" ;
+    
+    // Select the SVG element (or a specific path/shape)
+    const svgElement = document.querySelector('#idBTNSaveChange'); // Adjust selector as needed
+    svgElement.setAttribute('fill', color2Save); // Sets fill to red
 }
 
 // 从数据中删除节点
@@ -188,7 +210,9 @@ function removeFolderFromForest(folderID) {
 
     function _callRemoved(){
         flagFolderChanged = true ;
-        document.querySelector("#idBTNSaveChange").style.color="red" ;    
+        //document.querySelector("#idBTNSaveChange").style.color="red" ;    
+        const svgElement = document.querySelector('#idBTNSaveChange'); // Adjust selector as needed
+        svgElement.setAttribute('fill', color2Save); // Sets fill to red
     }
     
     function _removeFolder(jsonRoot,folderID){
@@ -231,4 +255,16 @@ function removeFolderFromForest(folderID) {
         }
     }
     return false;
+}
+
+function plusBookmark2Folder(jsonBookmark,folderNode){
+    if(!folderNode){
+        alert('something wrong in plusBookmark2Folder') ;
+    }else{
+        jsonBookmark.folderID = folderNode.id ;
+        gBookmarks.push(jsonBookmark) ;
+        flagBookmarksChanged = true ;
+        const svgElement = document.querySelector('#idBTNSaveChange'); // Adjust selector as needed
+        svgElement.setAttribute('fill', color2Save); // Sets fill to red
+    }
 }

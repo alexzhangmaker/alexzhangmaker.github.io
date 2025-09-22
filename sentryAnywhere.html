@@ -447,6 +447,21 @@
             folderContents.appendChild(fileList);
         }
 
+        const callbackPlusBookmark = (formData)=>{
+            let jsonBookmark = {
+                id:crypto.randomUUID(),
+                type:"Gateway.Bookmark",
+                title:formData.title,
+                url:formData.url,
+                userID:'alexszhang'
+            } ;
+            plusBookmark2Folder(jsonBookmark,selectedNode) ;
+            //_renderDailyTool(jsonTool,tagToolsContainer) ;
+            //displayFolderContents(selectedNode) ;
+            let tagCanvas = document.querySelector("#folder-contents");
+            renderBookmark(jsonBookmark,tagCanvas) ;
+        } ;
+
         function displayFolderContents(folder) {
             const folderContents = document.getElementById('folder-contents');
             const currentFolder = document.getElementById('current-folder');
@@ -457,12 +472,28 @@
             currentFolder.textContent = folder.name;
             // 清空内容区域
             folderContents.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" id="idBTNPlusBookmark" width="24" height="24" viewBox="0 0 32 32"><path fill="#000000" d="M24 16v10.752l-7.096-3.59l-.904-.457l-.9.456L8 26.748V4h10V2H8a2 2 0 0 0-2 2v26l10-5.054L26 30V16Z"/><path fill="#000000" d="M26 6V2h-2v4h-4v2h4v4h2V8h4V6h-4z"/></svg>
                 <div id="idBookmarkList"></div>
             `;
             let bookmarksInFolder = fetchFolderBookmarks(folder) ;
             console.log(bookmarksInFolder) ;
             bookmarksInFolder.forEach(bookmark=>{
                 renderBookmark(bookmark,folderContents) ;
+            }) ;
+
+            
+            folderContents.querySelector("#idBTNPlusBookmark").addEventListener('click',(event)=>{
+                const bookmarkSchema = [
+                    { "name": "title", "type": "string", "placeholder": "书签标题" },
+                    { "name": "url", "type": "string", "placeholder": "https://..." }
+                ];
+                const bookmarkCallbacks = {
+                    onConfirm: callbackPlusBookmark,
+                    onCancel: () => {
+                        console.log("用户取消了操作。");
+                    }
+                };
+                createFormModal('新建书签', bookmarkSchema, bookmarkCallbacks);
             }) ;
         }
 
