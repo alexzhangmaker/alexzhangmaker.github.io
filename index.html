@@ -1,212 +1,990 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>outpost.Bookmarks</title>
-<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentry.Anywhere</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .tree-node {
+            transition: all 0.2s ease;
+        }
+        .tree-node.dragging {
+            opacity: 0.6;
+            background-color: #f3f4f6;
+        }
+        .tree-node.drag-over {
+            background-color: #e5e7eb;
+        }
+        .tree-children {
+            margin-left: 1.5rem;
+            border-left: 1px dashed #d1d5db;
+        }
+        .node-content {
+            cursor: pointer;
+            user-select: none;
+        }
+        .resize-handle {
+            width: 5px;
+            background: transparent;
+            cursor: col-resize;
+            transition: background 0.2s;
+        }
+        .resize-handle:hover, .resize-handle.active {
+            background: #3b82f6;
+        }
+        .sidebar {
+            min-width: 200px;
+            max-width: 80%;
+        }
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .node-actions {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .tree-node:hover .node-actions {
+            opacity: 1;
+        }
+        .file-item {
+            transition: all 0.2s;
+        }
+        .file-item:hover {
+            background-color: #f3f4f6;
+        }
+    </style>
+    <style>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        .noShow{
+            display: none !important;
+        }
+        .dailyTool{
+            display: flex;
+            flex-direction: row;
+        }
 
-<link rel="stylesheet" href="./css/googleResource.css">
-<link rel="stylesheet" href="./css/larkRoot.css">
-<link rel="stylesheet" href="./css/larkResource.css">
-<link rel="stylesheet" href="./css/larkFW.css">
-<link rel="stylesheet" href="./css/larkCanvas.css">
-<link rel="stylesheet" href="./css/larkUtility.css">
-<link rel="stylesheet" href="./css/larkDialog.css">
-<link rel="stylesheet" href="./css/contextMenu.css">
+        .dailyTool :hover{
+            cursor: pointer;
+        }
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-</style>
+        .dailyToolAction {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
 
-<script src="./js/larkDialogs.js"></script>
-<script src="./jsResource/localforage.js"></script>
+        .dailyTool:hover .dailyToolAction {
+            opacity: 1;
+        }
+        
+    </style>
+    <style>
+        .bookmarkItem{
+            display: flex;
+            flex-direction: row;
+            justify-content:flex-start;
+            align-items: center;
+            gap: 10px;
 
+            width:100% ;
+        }
+        .bookmarkItem :hover{
+            cursor: pointer;
+            color: #3b82f6;
+        }
 
+        .bookmarkAction {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
 
+        .bookmarkItem:hover .bookmarkAction {
+            opacity: 1;
+        }
+        
+        .btnOutpost:hover{
+            cursor: pointer;
+        }
+    </style>
 </head>
-<body>
-    
-    <div class="larkRoot flexBox_h asap-condensed-regular">
-        <div class="leftPanel">
-            <div class="headerToolBar">
-                <div>
-                    <i class="bi-person-circle larkBTN" id="idBTNPersonal"></i>
-                    <span>alexszhang</span>
-                </div>
-                <div>
-                    
-                    <i class="bi-cloud-check larkBTN noShow" id="idBTNCheckInChanges"></i>
-                </div>
-            </div>
-            <div class="PanelNavigator">
-                <div class="PanelNaviSection mustHave"></div>
-                <div class="PanelNaviSection Folders larkDroppable"></div>
-            </div>
+<body class="bg-gray-100 h-screen flex flex-col">
+    <!-- 顶部工具栏 -->
+    <header class="bg-white shadow-sm py-3 px-6 flex items-center justify-between">
+        <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNHome" width="24" height="24" viewBox="0 0 1024 1025"><path fill="#000000" d="M1004.5 556.5Q985 576 957.5 576T911 557l-15-15v419q0 26-18.5 45t-45.5 19H192q-27 0-45.5-19T128 961V542l-15 15q-19 19-46.5 19t-47-19.5t-19.5-47T19 463L463 19Q479 3 501.5.5T543 10q8 0 18 9l444 444q19 19 19 46.5t-19.5 47zM768 414L512 158L256 414v483h512V414z"/></svg>        </div>
+        <div class="flex space-x-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNDisplayDailyTools" width="24" height="24" viewBox="0 0 24 24"><path fill="#000000" d="M18.29 5.706a1.405 1.405 0 0 0-1.987 0L4.716 17.296l1.324-2.65l-2.65-2.649l3.312-3.311l2.65 2.65l1.986-1.988l-3.642-3.642a1.405 1.405 0 0 0-1.987 0L.411 11.004a1.404 1.404 0 0 0 0 1.987l4.305 4.304l.993.993a1.405 1.405 0 0 0 1.987 0L19.285 6.7l-.993-.994Zm-.332 3.647l2.65 2.65l-4.306 4.305a1.404 1.404 0 1 0 1.986 1.986l5.299-5.298a1.404 1.404 0 0 0 0-1.987l-4.305-4.304z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNFreshData" width="24" height="24" viewBox="0 0 14 14"><path fill="#000000" fill-rule="evenodd" d="M.127 1.85c0-.111.055-.283.294-.506c.241-.225.623-.456 1.148-.663C2.614.27 4.1 0 5.775 0c1.673 0 3.16.269 4.205.681c.525.207.907.438 1.148.663c.24.223.294.395.294.506c0 .111-.055.283-.294.506c-.24.225-.623.456-1.148.663c-1.045.412-2.532.68-4.205.68c-1.674 0-3.161-.268-4.206-.68C1.044 2.812.662 2.58.42 2.356C.18 2.133.126 1.961.126 1.85ZM11.55 3.61a5.75 5.75 0 0 1-1.11.57c-1.225.484-2.874.769-4.664.769c-1.79 0-3.44-.285-4.665-.769A5.747 5.747 0 0 1 0 3.611v2.585c.04.093.118.207.266.342c.248.226.643.458 1.183.666c1.076.414 2.605.683 4.326.683c.451 0 .89-.018 1.31-.053a1.87 1.87 0 0 1 .984-.156c.056-.208.152-.41.294-.598a1.91 1.91 0 0 1 .962-.655c.543-.17 1.117-.126 1.413-.09c.215.026.425.067.628.122a.89.89 0 0 0 .183-.262V3.611ZM1 8.371c1.181.454 2.75.733 4.461.764a1.875 1.875 0 0 0 .356 2.48c.04.214.096.424.166.628l-.208.002C2.585 12.245 0 11.135 0 9.77V7.888c.298.182.636.343 1 .482Zm12.403 2.377l.058.008a.625.625 0 0 1 .29 1.117l-.84.636a.625.625 0 0 1-.876-.122l-.635-.84a.625.625 0 0 1 .585-.997l.16.023a1.955 1.955 0 0 0-2.187-1.757a.625.625 0 0 1-.697-.543V8.27c-.03-.252.05-.42.192-.53a.622.622 0 0 1 .352-.165a3.19 3.19 0 0 1 .782 0a3.205 3.205 0 0 1 2.816 3.172ZM7.484 9.043a.625.625 0 0 1 .876.121l.635.841a.625.625 0 0 1-.584.996l-.161-.022a1.955 1.955 0 0 0 2.187 1.757a.625.625 0 1 1 .153 1.24a3.207 3.207 0 0 1-3.599-3.172l-.057-.008a.625.625 0 0 1-.29-1.118z" clip-rule="evenodd"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNSaveChange" width="24" height="24" viewBox="0 0 24 24"><path fill="#000000" d="M12 4a5 5 0 0 0-5 5v2H6c-.78 0-1.805.302-2.62.964C2.598 12.6 2 13.572 2 15c0 1.414.615 2.388 1.42 3.032c.836.67 1.866.968 2.58.968c.973 0 2.239-.015 3.263-.521c.485-.24.9-.585 1.203-1.097c.306-.517.534-1.27.534-2.382v-1.086l-1.5 1.5L8.086 14L12 10.086L15.914 14L14.5 15.414l-1.5-1.5V15c0 1.387-.286 2.51-.812 3.4a4.783 4.783 0 0 1-2.04 1.872C8.674 21 6.979 21 6.056 21H6c-1.168 0-2.638-.452-3.83-1.407C.943 18.613 0 17.086 0 15c0-2.072.903-3.6 2.12-4.589A6.447 6.447 0 0 1 5 9.093V9a7 7 0 0 1 14 0v.093a6.447 6.447 0 0 1 2.88 1.318C23.099 11.401 24 12.928 24 15c0 2.076-.907 3.614-2.205 4.607C20.529 20.575 18.93 21 17.5 21h-4v-2h4c1.07 0 2.221-.325 3.08-.982C21.407 17.386 22 16.424 22 15c0-1.428-.598-2.4-1.38-3.036C19.804 11.302 18.78 11 18 11h-1V9a5 5 0 0 0-5-5Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNSetting" width="24" height="24" viewBox="0 0 48 48"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M41.5 10h-6m-8-4v8m0-4h-22m8 14h-8m16-4v8m22-4h-22m20 14h-6m-8-4v8m0-4h-22"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNSignIn" width="24" height="24" viewBox="0 0 24 24"><path fill="#000000" d="M8 15h8v-.55q0-1.125-1.1-1.788T12 12q-1.8 0-2.9.663T8 14.45V15Zm4-4q.825 0 1.413-.588T14 9q0-.825-.588-1.413T12 7q-.825 0-1.413.588T10 9q0 .825.588 1.413T12 11ZM8 21v-2H4q-.825 0-1.413-.588T2 17V5q0-.825.588-1.413T4 3h16q.825 0 1.413.588T22 5v12q0 .825-.588 1.413T20 19h-4v2H8Zm-4-4h16V5H4v12Zm0 0V5v12Z"/></svg>        </div>
+    </header>
 
-            <div class="bottomToolBar">
-                <div>
-                    <i class="bi-box-arrow-left"></i>
-                    <span>logout</span>
-                </div>
-                <div>
-                    <ion-icon style="font-size: 24px;" name="aperture"></ion-icon>
-                    <i class="bi-gear-wide-connected larkBTN" id="idBTNSetting"></i>
+    <div class="flex flex-1 overflow-hidden">
+        <!-- 左侧导航栏 -->
+        <aside class="sidebar bg-white shadow-md p-4 overflow-y-auto relative" id="sidebar">
+            <div class="mb-4">
+                <h2 class="text-lg font-semibold text-gray-700">目录导航</h2>
+                <div class="relative mt-2">
+                    <input type="text" placeholder="搜索目录..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
                 </div>
             </div>
-        </div>
-
-        <div class="rightPanel">
-            <div class="headerToolBar">
-                <div>
-                    <i class="bi-list larkBTN" id="idBTNToggleLeftPannel"></i>
-                    <i class="bi-house larkBTN" id="idBTNHomeScreen"></i>
-                </div>
-                <div>
-                    <i class="bi-plus larkBTN" id="idBTNPlusApp"></i>
-                </div>
-            </div>
-            <div class="mainCanvas"></div>
-
-            <div class="messageBoard">
-                <span>some message here</span>
-            </div>
-
-            <div class="bottomToolBar">
-            </div>
-        </div>
-    </div>
-    
-    <div>
-        <style>
-            .larkDlg{
-                width:100% ;
-                height:100% ;
-                padding-left: 10px;
-                padding-right: 10px;                    
-                display: flex;
-                flex-direction: column;
-            }
-
-            .larkDlgHeader{
-                display: flex;
-                flex-direction: row;
-                height:48px ;
-                align-items: center;
-                justify-content: flex-start;
-                
-
-                flex-grow: 0;
-                flex-shrink: 0;
-            }
-            .larkDlgTitle{
-                font-size: 1.5em;
-                font-weight: 600;
-
-                flex-grow: 1;
-            }
-
-            .larkDlgHeaderBar{
-                flex-grow: 0;
-
-            }
-
-            .larkDlgBody{
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-            }
-
-
-            .larkDlgFooter{
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: flex-end;
-                gap:20px;
-
-                height:48px ;
-
-                flex-grow: 0;
-                flex-shrink: 0;
-            }
-
-            .larkDlgFooter button{
-                height:1.5em ;
-                background-color: white;
-            }
-        </style>
-        <dialog id="idDlgWorkbench">
             
-            <div class="larkDlg">
-                <div class="larkDlgHeader">
-                    <div class="larkDlgTitle">outpost Setting</div>
-                    <div class="larkDlgHeaderBar">
-                        <i class="bi-x-square larkBTN"></i>
+            <div class="mt-6">
+                <h3 class="text-md font-medium text-gray-600 mb-2 flex items-center justify-between noShow">
+                    <span>每日工具</span>
+                    <div style="display:flex;flex-direction: row;">
+                        <i class="fas fa-info-circle text-blue-400 cursor-pointer mr-2" title="拖拽节点可以重新排序"></i>
+                        <i class="fas fa-plus-circle text-green-500 cursor-pointer" id="add-DailyTool-btn" title="添加新节点"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16"><path fill="#000000" fill-rule="evenodd" d="M3.646 10.146a.5.5 0 0 1 .708 0L8 13.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zm0-4.292a.5.5 0 0 0 .708 0L8 2.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708zM1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8z"/></svg>
+                        <span><svg xmlns="http://www.w3.org/2000/svg" id="idBTNDisplayDailyTools" width="18" height="18" viewBox="0 0 16 16"><path fill="#000000" d="M1 0L0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675l-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617l.968.968l-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96l2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46L4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0Zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708ZM3 11l.471.242l.529.026l.287.445l.445.287l.026.529L5 13l-.242.471l-.026.529l-.445.287l-.287.445l-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471l.026-.529l.445-.287l.287-.445l.529-.026L3 11Z"/></svg></span>
+                    </div>
+                </h3>
+                <div id="idDailyToolbox" class="mt-2 noShow"><!-- 目录树将通过JS动态生成 --></div>
+                <h3 class="text-md font-medium text-gray-600 mb-2 flex items-center justify-between">
+                    <span>目录结构</span>
+                    <div>
+                        <i class="fas fa-info-circle text-blue-400 cursor-pointer mr-2" title="拖拽节点可以重新排序"></i>
+                        <i class="fas fa-plus-circle text-green-500 cursor-pointer" id="add-node-btn" title="添加新节点"></i>
+                    </div>
+                </h3>
+                <div id="directory-tree" class="mt-2"><!-- 目录树将通过JS动态生成 --></div>
+            </div>
+            
+            <!-- 调整宽度的拖拽手柄 -->
+            <div class="resize-handle absolute top-0 right-0 h-full" id="resize-handle"></div>
+        </aside>
+
+        <!-- 右侧内容展示区 -->
+        <main class="flex-1 bg-gray-50 p-6 overflow-y-auto" id="main-content">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800" id="current-folder">内容展示区域</h2>
+                        <span class="ml-2 text-sm text-gray-500" id="items-count"></span>
+                    </div>
+                    
+                    <!-- 文件列表区域 -->
+                    <div id="folder-contents">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-blue-50 p-5 rounded-lg">
+                                <h3 class="text-lg font-semibold text-blue-700 mb-3">目录树功能</h3>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li>从Firebase获取目录数据</li>
+                                    <li>树形结构展示</li>
+                                    <li>拖拽排序兄弟节点</li>
+                                    <li>展开/折叠子节点</li>
+                                    <li>拖拽右侧边界调整导航区宽度</li>
+                                    <li>添加新节点功能</li>
+                                    <li>删除节点功能</li>
+                                    <li>点击文件夹查看内容</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-green-50 p-5 rounded-lg">
+                                <h3 class="text-lg font-semibold text-green-700 mb-3">操作指南</h3>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li>点击节点可以展开或折叠</li>
+                                    <li>拖拽节点到其他位置可以重新排序</li>
+                                    <li>使用顶部按钮刷新或保存数据</li>
+                                    <li>在搜索框输入内容过滤目录</li>
+                                    <li>拖拽左侧导航区右边界调整宽度</li>
+                                    <li>点击+图标添加新节点</li>
+                                    <li>点击X图标删除节点</li>
+                                    <li>点击文件夹查看内容</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="larkDlgBody">
-                    <!-----
-                    <input type="text" id="idBMTitle" name="lname" style="width:100%;height:1.2em;">
-                    <input type="text" id="idBMURI" name="lname" style="width:100%;height:1.2em;">
-                    <input type="text" id="idBMDescription" name="lname" style="width:100%;height:1.2em;">
-                    -->
-                    <label for="idURLServer">url:</label>
-                    <input type="text" id="idURLServer" name="idURLServer"><br><br>
-
-                </div>
-                <div class="larkDlgFooter">
-                    <button id="idBTNCloseDlg"><i class="bi-x larkBTN"></i>close</button>
-                    <button id="idBTNDlgCheck"><i class="bi-check2-square larkBTN"></i>check</button>
-                </div>
             </div>
-        </dialog>
-    
+        </main>
     </div>
-    <div id="idDlgContainer"></div>
 
-<script src="./js/api/apiDataService.js"></script>
-<script src="./js/larkNavigator.js"></script>
-<script src="./js/larkCanvas.js"></script>
-<script src="./js/larkDialogs.js"></script>
-<script src="./js/exLogDeal.js"></script>
+    <!-- 添加节点的模态框 -->
+    <div class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden" id="add-node-modal">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">添加新节点</h3>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="node-name">
+                    节点名称
+                </label>
+                <input type="text" id="node-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded" id="cancel-add">
+                    取消
+                </button>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" id="confirm-add">
+                    确认添加
+                </button>
+            </div>
+        </div>
+    </div>
 
-<script>
-document.getElementById('idBTNDlgCheck').addEventListener('click',(event)=>{
-    let tagURLAddre = document.querySelector('#idURLServer') ;
-    let cURLAddr = tagURLAddre.value ;
-    localforage.setItem('outPost', cURLAddr).then(function (value) {
-        // Do other things once the value has been saved.
-        console.log(value);
-        document.querySelector('#idDlgWorkbench').close() ;
-    }).catch(function(err) {
-        // This code runs if there were any errors
-        document.querySelector('#idDlgWorkbench').close() ;
-        console.log(err);
-    });
-}) ;
+    <!-- 添加节点的模态框 -->
+    <div class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden" id="add-DailyTool-modal">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">添加新节点</h3>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="node-name">
+                    节点名称
+                </label>
+                <input type="text" id="node-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded" id="cancel-add">
+                    取消
+                </button>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" id="confirm-add">
+                    确认添加
+                </button>
+            </div>
+        </div>
+    </div>
 
-//idBTNHomeScreen
-document.querySelector("#idBTNHomeScreen").addEventListener('click',async (event)=>{
-    gwRenderCanvas('.mainCanvas') ;
-}) ;
+    <!-- 删除确认模态框 -->
+    <div class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden" id="delete-node-modal">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">确认删除</h3>
+            <p class="text-gray-600 mb-6" id="delete-confirm-msg">确定要删除这个节点吗？此操作不可撤销。</p>
+            <div class="flex justify-end space-x-3">
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded" id="cancel-delete">
+                    取消
+                </button>
+                <button class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" id="confirm-delete">
+                    确认删除
+                </button>
+            </div>
+        </div>
+    </div>
 
-document.addEventListener('DOMContentLoaded',async (event)=>{
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 
-    const jsonUserGateway = await _apiLoadData() ;
-    setWorkingNavigator(jsonUserGateway) ;
-    gwRenderNavigator('.PanelNavigator') ;
-    gwRenderCanvas('.mainCanvas') ;
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="./Lab/DataAPI.js"></script>
+    <script src="./js/list.min.js"></script>
+    <script src="./js/modalFactoryV2.js"></script>
+    <script>
 
-}) ;
+
+        // 当前选中的节点
+        let selectedNode = null;
+        let nodeToDelete = null;
+
+        function renderDailyToolbox(dailyTools,parentElement){
+            for(let i=0;i<dailyTools.length;i++){
+                let toolNode = document.createElement('div') ;
+                toolNode.className = 'dailyTool';
+                toolNode.dataset.id = dailyTools[i].id;
+                toolNode.dataset.url = dailyTools[i].data.url;
+                toolNode.innerHTML=`
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 6h11M3.8 5.8l.8.8l2-2m-2.8 7.2l.8.8l2-2m-2.8 7.2l.8.8l2-2M9 12h11M9 18h11"/></svg>                    
+                    <span class="text-gray-700 flex-grow">${dailyTools[i].title}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="dailyToolAction" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 9l-1.995 11.346A2 2 0 0 1 16.035 22h-8.07a2 2 0 0 1-1.97-1.654L4 9m17-3h-5.625M3 6h5.625m0 0V4a2 2 0 0 1 2-2h2.75a2 2 0 0 1 2 2v2m-6.75 0h6.75"/></svg>
+                ` ;
+                parentElement.appendChild(toolNode) ;
+
+                toolNode.addEventListener('click',(event)=>{
+                    window.open(toolNode.dataset.url,"_blank") ;
+                }) ;
+            }
+        }
+
+        // 目录树渲染功能
+        function renderTree(data, parentElement, level = 0) {
+            data.forEach(item => {
+                const hasChildren = item.children && item.children.length > 0;
+                
+                const nodeElement = document.createElement('div');
+                nodeElement.className = 'tree-node';
+                nodeElement.dataset.id = item.id;
+                nodeElement.draggable = true;
+                
+                // 所有节点都显示为文件夹图标
+                nodeElement.innerHTML = `
+                    <div class="node-content py-2 px-3 rounded-lg flex items-center hover:bg-gray-100 group">
+                        <span class="toggle-icon mr-2 text-gray-500 ${hasChildren ? '' : 'invisible'}">
+                            <i class="fas fa-caret-right"></i>
+                        </span>
+                        <i class="fas fa-folder text-yellow-500 mr-2"></i>
+                        <span class="text-gray-700 flex-grow">${item.name}</span>
+                        <div class="node-actions flex">
+                            <i class="fas fa-times text-red-400 hover:text-red-600 ml-2 delete-node" title="删除节点"></i>
+                        </div>
+                    </div>
+                    ${hasChildren ? `<div class="tree-children ${level > 0 ? 'pl-4' : ''}"></div>` : ''}
+                `;
+
+                
+                parentElement.appendChild(nodeElement);
+                
+                // 添加展开/折叠功能
+                const toggleIcon = nodeElement.querySelector('.toggle-icon');
+                const childrenContainer = nodeElement.querySelector('.tree-children');
+                
+                if (hasChildren && childrenContainer) {
+                    let expanded = false;
+                    
+                    toggleIcon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        expanded = !expanded;
+                        
+                        if (expanded) {
+                            childrenContainer.style.display = 'block';
+                            toggleIcon.innerHTML = '<i class="fas fa-caret-down"></i>';
+                            renderTree(item.children, childrenContainer, level + 1);
+                        } else {
+                            childrenContainer.style.display = 'none';
+                            toggleIcon.innerHTML = '<i class="fas fa-caret-right"></i>';
+                            childrenContainer.innerHTML = '';
+                        }
+                    });
+                }
+                
+                // 添加点击事件
+                const nodeContent = nodeElement.querySelector('.node-content');
+                nodeContent.addEventListener('click', () => {
+                    document.querySelectorAll('.node-content').forEach(el => {
+                        el.classList.remove('bg-blue-100', 'font-semibold');
+                    });
+                    nodeContent.classList.add('bg-blue-100', 'font-semibold');
+                    
+                    // 更新当前选中的节点
+                    selectedNode = item;
+                    
+                    // 显示文件夹内容
+                    displayFolderContents(item);
+                });
+                
+                // 添加删除节点事件
+                const deleteBtn = nodeElement.querySelector('.delete-node');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    nodeToDelete = item;
+                    showDeleteModal();
+                });
+                
+                // 添加拖拽事件
+                nodeElement.addEventListener('dragstart', handleDragStart);
+                nodeElement.addEventListener('dragover', handleDragOver);
+                nodeElement.addEventListener('dragenter', handleDragEnter);
+                nodeElement.addEventListener('dragleave', handleDragLeave);
+                nodeElement.addEventListener('drop', handleDrop);
+                nodeElement.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        // 显示文件夹内容
+        function displayFoldersInFolder(folder) {
+            const folderContents = document.getElementById('folder-contents');
+            const currentFolder = document.getElementById('current-folder');
+            
+            // 更新标题
+            currentFolder.textContent = folder.name;
+            
+            // 清空内容区域
+            folderContents.innerHTML = '';
+            
+            // 检查文件夹是否为空
+            if (!folder.children || folder.children.length === 0) {
+                folderContents.innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-folder-open text-5xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500 text-lg">此文件夹为空</p>
+                    </div>
+                `;
+                document.getElementById('items-count').textContent = '(0 个项目)';
+                return;
+            }
+            
+            // 显示项目数量
+            const itemsCount = folder.children.length;
+            document.getElementById('items-count').textContent = `(${itemsCount} 个项目)`;
+            
+            // 创建文件列表容器
+            const fileList = document.createElement('div');
+            fileList.className = 'bg-gray-50 rounded-lg p-4';
+            
+            // 添加标题
+            const title = document.createElement('h3');
+            title.className = 'text-lg font-semibold text-gray-700 mb-4';
+            title.textContent = '内容';
+            fileList.appendChild(title);
+            
+            // 添加文件和文件夹项目
+            folder.children.forEach(item => {
+                const isFolder = item.type === 'folder';
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = 'file-item flex items-center py-3 px-4 border-b border-gray-200 last:border-b-0';
+                
+                itemElement.innerHTML = `
+                    <i class="fas ${isFolder ? 'fa-folder text-yellow-500' : 'fa-file text-blue-400'} mr-3"></i>
+                    <span class="text-gray-700 flex-grow">${item.name}</span>
+                    <span class="text-xs text-gray-500">${isFolder ? '文件夹' : '文件'}</span>
+                `;
+                
+                // 添加点击事件（如果是文件夹）
+                if (isFolder) {
+                    itemElement.style.cursor = 'pointer';
+                    itemElement.addEventListener('click', () => {
+                        // 在目录树中找到并高亮对应的节点
+                        highlightTreeNode(item.id);
+                        // 显示文件夹内容
+                        displayFolderContents(item);
+                    });
+                }
+                
+                fileList.appendChild(itemElement);
+            });
+            
+            folderContents.appendChild(fileList);
+        }
+
+        const callbackPlusBookmark = (formData)=>{
+            let jsonBookmark = {
+                id:crypto.randomUUID(),
+                type:"Gateway.Bookmark",
+                title:formData.title,
+                url:formData.url,
+                userID:'alexszhang'
+            } ;
+            plusBookmark2Folder(jsonBookmark,selectedNode) ;
+            //_renderDailyTool(jsonTool,tagToolsContainer) ;
+            //displayFolderContents(selectedNode) ;
+            let tagCanvas = document.querySelector("#folder-contents");
+            renderBookmark(jsonBookmark,tagCanvas) ;
+        } ;
+
+        function displayFolderContents(folder) {
+            const folderContents = document.getElementById('folder-contents');
+            const currentFolder = document.getElementById('current-folder');
+
+            //let tagBookmarks = document.
+            console.log(folder) ;
+            // 更新标题
+            currentFolder.textContent = folder.name;
+            // 清空内容区域
+            folderContents.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" id="idBTNPlusBookmark" width="24" height="24" viewBox="0 0 32 32"><path fill="#000000" d="M24 16v10.752l-7.096-3.59l-.904-.457l-.9.456L8 26.748V4h10V2H8a2 2 0 0 0-2 2v26l10-5.054L26 30V16Z"/><path fill="#000000" d="M26 6V2h-2v4h-4v2h4v4h2V8h4V6h-4z"/></svg>
+                <div id="idBookmarkList"></div>
+            `;
+            let bookmarksInFolder = fetchFolderBookmarks(folder) ;
+            console.log(bookmarksInFolder) ;
+            bookmarksInFolder.forEach(bookmark=>{
+                renderBookmark(bookmark,folderContents) ;
+            }) ;
+
+            
+            folderContents.querySelector("#idBTNPlusBookmark").addEventListener('click',(event)=>{
+                const bookmarkSchema = [
+                    { "name": "title", "type": "string", "placeholder": "书签标题" },
+                    { "name": "url", "type": "string", "placeholder": "https://..." }
+                ];
+                const bookmarkCallbacks = {
+                    onConfirm: callbackPlusBookmark,
+                    onCancel: () => {
+                        console.log("用户取消了操作。");
+                    }
+                };
+                createFormModal('新建书签', bookmarkSchema, bookmarkCallbacks);
+            }) ;
+        }
+
+        function renderBookmark(bookmark,tagContainer){
+            let tagBookmark = document.createElement('div') ;
+            tagBookmark.classList.add("bookmarkItem")
+            tagBookmark.dataset.dataID = bookmark.id ;
+            tagContainer.appendChild(tagBookmark) ;
+            tagBookmark.innerHTML=`
+                <svg xmlns="http://www.w3.org/2000/svg" class="bookmarkAction" width="18" height="18" viewBox="0 0 16 16"><path fill="#000000" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1l-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg>
+                <a href="${bookmark.url}" target="_blank">${bookmark.title}</a>
+            ` ;
+            tagBookmark.querySelector('.bookmarkAction').addEventListener('click',async (event)=>{
+                await removeBookmark(tagBookmark.dataset.dataID) ;
+                tagBookmark.remove() ;
+
+            }) ;
+
+        }
+
+        // 高亮目录树中的节点
+        function highlightTreeNode(nodeId) {
+            // 清除所有高亮
+            document.querySelectorAll('.node-content').forEach(el => {
+                el.classList.remove('bg-blue-100', 'font-semibold');
+            });
+            
+            // 找到对应节点并高亮
+            const nodeElement = document.querySelector(`.tree-node[data-id="${nodeId}"]`);
+            if (nodeElement) {
+                const nodeContent = nodeElement.querySelector('.node-content');
+                nodeContent.classList.add('bg-blue-100', 'font-semibold');
+                
+                // 确保节点可见（展开父节点）
+                let parent = nodeElement.parentElement;
+                while (parent && parent.classList.contains('tree-children')) {
+                    const parentNode = parent.previousElementSibling;
+                    if (parentNode) {
+                        const toggleIcon = parentNode.querySelector('.toggle-icon');
+                        if (toggleIcon && !toggleIcon.classList.contains('invisible')) {
+                            const childrenContainer = parentNode.nextElementSibling;
+                            if (childrenContainer.style.display === 'none') {
+                                toggleIcon.click();
+                            }
+                        }
+                    }
+                    parent = parent.parentElement;
+                }
+                
+                // 滚动到节点位置
+                nodeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // 显示添加节点模态框
+        function showAddModal() {
+            /*
+            if (!selectedNode) {
+                alert('请先选择一个节点作为父节点');
+                return;
+            }
+            */
+            document.getElementById('add-node-modal').classList.remove('hidden');
+            document.getElementById('node-name').value = '';
+            document.getElementById('node-name').focus();
+        }
+
+        // 隐藏添加节点模态框
+        function hideAddModal() {
+            document.getElementById('add-node-modal').classList.add('hidden');
+        }
+
+        // 显示删除确认模态框
+        function showDeleteModal() {
+            if (!nodeToDelete) return;
+            
+            const hasChildren = nodeToDelete.children && nodeToDelete.children.length > 0;
+            
+            if (hasChildren) {
+                document.getElementById('delete-confirm-msg').textContent = 
+                    '该节点包含子节点，无法删除。请先删除所有子节点。';
+                document.getElementById('confirm-delete').disabled = true;
+                document.getElementById('confirm-delete').classList.add('opacity-50');
+            } else {
+                document.getElementById('delete-confirm-msg').textContent = 
+                    '确定要删除这个节点吗？此操作不可撤销。';
+                document.getElementById('confirm-delete').disabled = false;
+                document.getElementById('confirm-delete').classList.remove('opacity-50');
+            }
+            
+            document.getElementById('delete-node-modal').classList.remove('hidden');
+        }
+
+        // 隐藏删除确认模态框
+        function hideDeleteModal() {
+            document.getElementById('delete-node-modal').classList.add('hidden');
+            nodeToDelete = null;
+        }
+
+        // 添加新节点
+        function addNewNode() {
+            const nodeName = document.getElementById('node-name').value.trim();
+            if (!nodeName) {
+                alert('请输入节点名称');
+                return;
+            }
+            
+            let jsonFolder={
+                id:crypto.randomUUID(),
+                name:nodeName,
+                type:'folder',
+                children: []
+            } ;
+            if (!selectedNode) {
+                plusFolderatRoot(jsonFolder);
+            }else{
+                // 生成唯一ID
+                plusFolder2Folder(jsonFolder,selectedNode) ;
+            }
+            
+            // 重新渲染目录树
+            const treeContainer = document.getElementById('directory-tree');
+            treeContainer.innerHTML = '';
+            renderTree(gFolderTree, treeContainer);
+            
+            // 隐藏模态框
+            hideAddModal();
+            
+            // 更新内容显示
+            displayFolderContents(selectedNode);
+        }
+
+        // 删除节点
+        function deleteNode() {
+            if (!nodeToDelete) return;
+            
+            // 检查是否有子节点
+            const hasChildren = nodeToDelete.children && nodeToDelete.children.length > 0;
+            if (hasChildren) {
+                alert('无法删除包含子节点的节点');
+                hideDeleteModal();
+                return;
+            }
+            removeFolderFromForest(nodeToDelete.id);
+            
+            // 重新渲染目录树
+            const treeContainer = document.getElementById('directory-tree');
+            treeContainer.innerHTML = '';
+            renderTree(gFolderTree, treeContainer);
+            
+            // 隐藏模态框
+            hideDeleteModal();
+            
+            // 清除当前选中节点
+            selectedNode = null;
+            
+            // 重置内容显示
+            document.getElementById('current-folder').textContent = '内容展示区域';
+            document.getElementById('items-count').textContent = '';
+            document.getElementById('folder-contents').innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-blue-50 p-5 rounded-lg">
+                        <h3 class="text-lg font-semibold text-blue-700 mb-3">目录树功能</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2">
+                            <li>从Firebase获取目录数据</li>
+                            <li>树形结构展示</li>
+                            <li>拖拽排序兄弟节点</li>
+                            <li>展开/折叠子节点</li>
+                            <li>拖拽右侧边界调整导航区宽度</li>
+                            <li>添加新节点功能</li>
+                            <li>删除节点功能</li>
+                            <li>点击文件夹查看内容</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-green-50 p-5 rounded-lg">
+                        <h3 class="text-lg font-semibold text-green-700 mb-3">操作指南</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2">
+                            <li>点击节点可以展开或折叠</li>
+                            <li>拖拽节点到其他位置可以重新排序</li>
+                            <li>使用顶部按钮刷新或保存数据</li>
+                            <li>在搜索框输入内容过滤目录</li>
+                            <li>拖拽左侧导航区右边界调整宽度</li>
+                            <li>点击+图标添加新节点</li>
+                            <li>点击X图标删除节点</li>
+                            <li>点击文件夹查看内容</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
 
 
-</script>
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
+        // 拖拽相关变量
+        let draggedItem = null;
+
+        // 拖拽事件处理函数
+        function handleDragStart(e) {
+            draggedItem = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.dataset.id);
+            this.classList.add('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDragEnter(e) {
+            this.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            if (draggedItem !== this) {
+                // 检查是否是兄弟节点（简单实现，实际应用中需要更复杂的验证）
+                const parent = this.parentElement;
+                if (parent === draggedItem.parentElement) {
+                    // 获取所有兄弟节点
+                    const siblings = Array.from(parent.children);
+                    const thisIndex = siblings.indexOf(this);
+                    const draggedIndex = siblings.indexOf(draggedItem);
+                    
+                    if (draggedIndex < thisIndex) {
+                        parent.insertBefore(draggedItem, this.nextSibling);
+                    } else {
+                        parent.insertBefore(draggedItem, this);
+                    }
+                }
+            }
+            
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.tree-node').forEach(node => {
+                node.classList.remove('drag-over');
+            });
+        }
+
+        // 调整侧边栏宽度功能
+        function initResizeHandler() {
+            const resizeHandle = document.getElementById('resize-handle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            
+            let isResizing = false;
+            
+            resizeHandle.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                resizeHandle.classList.add('active');
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                
+                const containerRect = sidebar.parentElement.getBoundingClientRect();
+                const widthPercentage = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+                
+                // 设置最小和最大宽度限制
+                const newWidth = Math.max(20, Math.min(80, widthPercentage));
+                
+                sidebar.style.width = `${newWidth}%`;
+                mainContent.style.width = `${100 - newWidth}%`;
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    resizeHandle.classList.remove('active');
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                }
+            });
+        }
+
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', async () => {
+            const treeContainer = document.getElementById('directory-tree');
+            //loadAppData() ;
+            await asyncLoadAppData() ;
+            console.log("====>>>=======") ;
+            console.log(gFolderTree);
+            // 渲染目录树
+            renderDailyToolbox(gDialyTools,document.getElementById('idDailyToolbox')) ;
+            renderTree(gFolderTree, treeContainer);
+            
+            // 初始化调整宽度功能
+            initResizeHandler();
+            
+            
+            // 添加搜索功能
+            const searchInput = document.querySelector('input[type="text"]');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                
+                document.querySelectorAll('.node-content').forEach(node => {
+                    const nodeText = node.textContent.toLowerCase();
+                    const treeNode = node.closest('.tree-node');
+                    
+                    if (nodeText.includes(searchTerm)) {
+                        treeNode.style.display = 'block';
+                        // 展开父节点
+                        let parent = treeNode.parentElement;
+                        while (parent && parent.classList.contains('tree-children')) {
+                            const parentNode = parent.previousElementSibling;
+                            if (parentNode) {
+                                const toggleIcon = parentNode.querySelector('.toggle-icon');
+                                if (toggleIcon && !toggleIcon.classList.contains('invisible')) {
+                                    const childrenContainer = parentNode.nextElementSibling;
+                                    if (childrenContainer.style.display === 'none') {
+                                        toggleIcon.click();
+                                    }
+                                }
+                            }
+                            parent = parent.parentElement;
+                        }
+                    } else {
+                        treeNode.style.display = 'none';
+                    }
+                });
+            });
+            
+            // 添加节点按钮事件
+            document.getElementById('add-node-btn').addEventListener('click', showAddModal);
+            
+            // 模态框按钮事件
+            document.getElementById('cancel-add').addEventListener('click', hideAddModal);
+            document.getElementById('confirm-add').addEventListener('click', addNewNode);
+            document.getElementById('cancel-delete').addEventListener('click', hideDeleteModal);
+            document.getElementById('confirm-delete').addEventListener('click', deleteNode);
+            
+            // 按ESC键关闭模态框
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    hideAddModal();
+                    hideDeleteModal();
+                }
+            });
+
+            displayDailyTools() ;
+
+            tippy('#idBTNDisplayDailyTools', {content: '每日工具!'});
+            tippy('#idBTNSaveChange', {content: '保存数据!'});
+            tippy('#idBTNFreshData', {content: '下载数据!'});
+            tippy('#idBTNSetting', {content: '系统设置!'});
+
+        });
+    </script>
+    <script>
+        const btnSaveChange = document.getElementById('idBTNSaveChange') ;
+        btnSaveChange.addEventListener('click',async (event)=>{
+            await asyncSaveAppData() ;
+        }) ;
+
+        // 添加刷新按钮事件
+        document.querySelector('#idBTNFreshData').addEventListener('click', () => {
+                const treeContainer = document.getElementById('directory-tree');
+                treeContainer.innerHTML = '';
+                renderTree(gFolderTree, treeContainer);
+                
+                // 重置内容显示
+                document.getElementById('current-folder').textContent = '内容展示区域';
+                document.getElementById('items-count').textContent = '';
+                document.getElementById('folder-contents').innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-5 rounded-lg">
+                            <h3 class="text-lg font-semibold text-blue-700 mb-3">目录树功能</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                <li>从Firebase获取目录数据</li>
+                                <li>树形结构展示</li>
+                                <li>拖拽排序兄弟节点</li>
+                                <li>展开/折叠子节点</li>
+                                <li>拖拽右侧边界调整导航区宽度</li>
+                                <li>添加新节点功能</li>
+                                <li>删除节点功能</li>
+                                <li>点击文件夹查看内容</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-green-50 p-5 rounded-lg">
+                            <h3 class="text-lg font-semibold text-green-700 mb-3">操作指南</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                <li>点击节点可以展开或折叠</li>
+                                <li>拖拽节点到其他位置可以重新排序</li>
+                                <li>使用顶部按钮刷新或保存数据</li>
+                                <li>在搜索框输入内容过滤目录</li>
+                                <li>拖拽左侧导航区右边界调整宽度</li>
+                                <li>点击+图标添加新节点</li>
+                                <li>点击X图标删除节点</li>
+                                <li>点击文件夹查看内容</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            });
+
+            function displayDailyTools(){
+                const folderContents = document.getElementById('folder-contents');
+                const currentFolder = document.getElementById('current-folder');
+
+                //let tagBookmarks = document.
+                //console.log(folder) ;
+                // 更新标题
+                currentFolder.textContent = "daily Toolbox";
+                folderContents.innerHTML=`
+                    <div class="canvasDailyToolbar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="canvasToolbarBTN" width="18" height="18" viewBox="0 0 16 16" fill="#000000"><g fill="#000000"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/><path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4zM8 8a.5.5 0 0 1 .5.5V10H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V11H6a.5.5 0 0 1 0-1h1.5V8.5A.5.5 0 0 1 8 8z"/></g></svg>
+                    </div>
+
+                    <div class="canvasDailyTools"></div>
+                `;
+
+                function _renderDailyTool(jsonTool,tagContainer){
+                    let tagTool = document.createElement('div') ;
+                    tagContainer.appendChild(tagTool) ;
+                    tagTool.classList.add("dailyTool");
+                    tagTool.dataset.toolID = jsonTool.id ;
+                    tagTool.dataset.url = jsonTool.data.url ;
+                    tagTool.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="dailyToolAction" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 9l-1.995 11.346A2 2 0 0 1 16.035 22h-8.07a2 2 0 0 1-1.97-1.654L4 9m17-3h-5.625M3 6h5.625m0 0V4a2 2 0 0 1 2-2h2.75a2 2 0 0 1 2 2v2m-6.75 0h6.75"/></svg>
+                        <a href="${tagTool.dataset.url}" target="_blank">${jsonTool.title}</a>
+                    ` ;
+                    tagTool.querySelector('.dailyToolAction').addEventListener('click',(event)=>{
+                        removeDailyTool(tagTool.dataset.toolID) ;
+                        tagTool.remove() ;
+
+                    }) ;
+                }
+                let tagToolsContainer = folderContents.querySelector('.canvasDailyTools') ;
+                console.log(gDialyTools) ;
+                for(let i=0;i<gDialyTools.length;i++){
+                    _renderDailyTool(gDialyTools[i],tagToolsContainer) ;
+
+                }
+
+                const callbackPlusTool = (formDataTool)=>{
+                    let tagToolsContainer = folderContents.querySelector('.canvasDailyTools') ;
+                    let jsonTool = {
+                        id:crypto.randomUUID(),
+                        type:"Gateway.Bookmark",
+                        title:formDataTool.title,
+                        data:{
+                            url:formDataTool.url
+                        }
+                    } ;
+                    plusDailyTool(jsonTool) ;
+                    _renderDailyTool(jsonTool,tagToolsContainer) ;
+                } ;
+
+                folderContents.querySelector(".canvasToolbarBTN").addEventListener('click',(event)=>{
+                    let jsonTool = {
+                        id:'dsdfsdf',
+                        type:"Gateway.Bookmark",
+                        title:'demo',
+                        data:{
+                            url:'https://gemini.google.com/app/b350b4901b28dfe1?pli=1'
+                        }
+                    } ;
+
+                    const bookmarkSchema = [
+                        { "name": "title", "type": "string", "placeholder": "书签标题" },
+                        { "name": "url", "type": "string", "placeholder": "https://..." }
+                    ];
+                    const bookmarkCallbacks = {
+                        onConfirm: callbackPlusTool,
+                        onCancel: () => {
+                            console.log("用户取消了操作。");
+                        }
+                    };
+                    createFormModal('新建书签', bookmarkSchema, bookmarkCallbacks);
+
+                }) ;
+            }
+            document.querySelector("#idBTNDisplayDailyTools").addEventListener('click',(event)=>{
+                displayDailyTools() ;
+            }) ;
+    </script>
 </body>
 </html>
