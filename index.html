@@ -6,10 +6,12 @@
     <title>Sentry.Anywhere</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="/images/OutpostFavICON.png">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 
-    OutpostFavICON.png
     <style>
+        body{
+            overflow-y: hidden;
+        }
         .tree-node {
             transition: all 0.2s ease;
         }
@@ -113,7 +115,7 @@
 </head>
 <body class="bg-gray-100 h-screen flex flex-col">
     <!-- 顶部工具栏 -->
-    <header class="bg-white shadow-sm py-3 px-6 flex items-center justify-between">
+    <header class="bg-white shadow-sm py-2 px-6 flex items-center justify-between">
         <div class="flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNHome" width="24" height="24" viewBox="0 0 1024 1025"><path fill="#000000" d="M1004.5 556.5Q985 576 957.5 576T911 557l-15-15v419q0 26-18.5 45t-45.5 19H192q-27 0-45.5-19T128 961V542l-15 15q-19 19-46.5 19t-47-19.5t-19.5-47T19 463L463 19Q479 3 501.5.5T543 10q8 0 18 9l444 444q19 19 19 46.5t-19.5 47zM768 414L512 158L256 414v483h512V414z"/></svg>        </div>
         <div class="flex space-x-4">
@@ -126,34 +128,14 @@
 
     <div class="flex flex-1 overflow-hidden">
         <!-- 左侧导航栏 -->
-        <aside class="sidebar bg-white shadow-md p-4 overflow-y-auto relative" id="sidebar">
-            <div class="mb-4">
-                <h2 class="text-lg font-semibold text-gray-700">目录导航</h2>
-                <div class="relative mt-2">
-                    <input type="text" placeholder="搜索目录..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-                </div>
-            </div>
-            
-            <div class="mt-6">
-                <h3 class="text-md font-medium text-gray-600 mb-2 flex items-center justify-between noShow">
-                    <span>每日工具</span>
-                    <div style="display:flex;flex-direction: row;">
-                        <i class="fas fa-info-circle text-blue-400 cursor-pointer mr-2" title="拖拽节点可以重新排序"></i>
-                        <i class="fas fa-plus-circle text-green-500 cursor-pointer" id="add-DailyTool-btn" title="添加新节点"></i>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16"><path fill="#000000" fill-rule="evenodd" d="M3.646 10.146a.5.5 0 0 1 .708 0L8 13.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zm0-4.292a.5.5 0 0 0 .708 0L8 2.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708zM1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8z"/></svg>
-                        <span><svg xmlns="http://www.w3.org/2000/svg" id="idBTNDisplayDailyTools" width="18" height="18" viewBox="0 0 16 16"><path fill="#000000" d="M1 0L0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675l-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617l.968.968l-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96l2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46L4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0Zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708ZM3 11l.471.242l.529.026l.287.445l.445.287l.026.529L5 13l-.242.471l-.026.529l-.445.287l-.287.445l-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471l.026-.529l.445-.287l.287-.445l.529-.026L3 11Z"/></svg></span>
-                    </div>
+        <aside class="sidebar bg-white shadow-md px-2 py-2 overflow-y-auto relative" id="sidebar">            
+            <div style="height:100%;overflow-y: hidden; display: flex;flex-direction: column;">
+                <h3 class="text-md font-medium text-gray-600 flex items-center justify-between" style="height:30px;">
+                    <input type="text" placeholder="搜索目录..." class="w-full px-2 border rounded-lg focus:outline-none  focus:ring-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" id="idBTNSearchCategory" width="20" height="20" viewBox="0 0 26 26"><path fill="#000000" d="M10 .188A9.812 9.812 0 0 0 .187 10A9.812 9.812 0 0 0 10 19.813c2.29 0 4.393-.811 6.063-2.125l.875.875a1.845 1.845 0 0 0 .343 2.156l4.594 4.625c.713.714 1.88.714 2.594 0l.875-.875a1.84 1.84 0 0 0 0-2.594l-4.625-4.594a1.824 1.824 0 0 0-2.157-.312l-.875-.875A9.812 9.812 0 0 0 10 .188zM10 2a8 8 0 1 1 0 16a8 8 0 0 1 0-16zM4.937 7.469a5.446 5.446 0 0 0-.812 2.875a5.46 5.46 0 0 0 5.469 5.469a5.516 5.516 0 0 0 3.156-1a7.166 7.166 0 0 1-.75.03a7.045 7.045 0 0 1-7.063-7.062c0-.104-.005-.208 0-.312z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" id="add-node-btn" width="20" height="20" viewBox="0 0 24 24"><mask id="lineMdFolderPlus0"><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="64" stroke-dashoffset="64" d="M12 7h8c0.55 0 1 0.45 1 1v10c0 0.55 -0.45 1 -1 1h-16c-0.55 0 -1 -0.45 -1 -1v-11Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0"/></path><path d="M12 7h-9v0c0 0 0.45 0 1 0h6z" opacity="0"><animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s" values="M12 7h-9v0c0 0 0.45 0 1 0h6z;M12 7h-9v-1c0 -0.55 0.45 -1 1 -1h6z"/><set fill="freeze" attributeName="opacity" begin="0.6s" to="1"/></path><path fill="#000" fill-opacity="0" stroke="none" d="M19 13c3.31 0 6 2.69 6 6c0 3.31 -2.69 6 -6 6c-3.31 0 -6 -2.69 -6 -6c0 -3.31 2.69 -6 6 -6Z"><set fill="freeze" attributeName="fill-opacity" begin="0.8s" to="1"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M16 19h6"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.8s" dur="0.2s" values="8;0"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M19 16v6"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1s" dur="0.2s" values="8;0"/></path></g></mask><rect width="24" height="24" fill="currentColor" mask="url(#lineMdFolderPlus0)"/></svg>
                 </h3>
-                <div id="idDailyToolbox" class="mt-2 noShow"><!-- 目录树将通过JS动态生成 --></div>
-                <h3 class="text-md font-medium text-gray-600 mb-2 flex items-center justify-between">
-                    <span>目录结构</span>
-                    <div>
-                        <i class="fas fa-info-circle text-blue-400 cursor-pointer mr-2" title="拖拽节点可以重新排序"></i>
-                        <i class="fas fa-plus-circle text-green-500 cursor-pointer" id="add-node-btn" title="添加新节点"></i>
-                    </div>
-                </h3>
-                <div id="directory-tree" class="mt-2"><!-- 目录树将通过JS动态生成 --></div>
+                <div id="directory-tree" class="mt-2" style="overflow-y: auto; flex-grow: 1;"><!-- 目录树将通过JS动态生成 --></div>
             </div>
             
             <!-- 调整宽度的拖拽手柄 -->
@@ -165,42 +147,18 @@
             <div class="max-w-4xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm p-6">
                     <div class="flex items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-800" id="current-folder">内容展示区域</h2>
-                        <span class="ml-2 text-sm text-gray-500" id="items-count"></span>
+                        <h2 class="text-2xl font-bold text-gray-800" id="idCurrentFolderTitle">daily Toolbox</h2>
+                        <span class="ml-2 text-sm text-gray-500" id="items-count">5</span>
+                        <div class="canvasDailyToolbar">
+                            <svg xmlns="http://www.w3.org/2000/svg" id="idBTNPlusBookmark" width="24" height="24" viewBox="0 0 32 32"><path fill="#000000" d="M24 16v10.752l-7.096-3.59l-.904-.457l-.9.456L8 26.748V4h10V2H8a2 2 0 0 0-2 2v26l10-5.054L26 30V16Z"/><path fill="#000000" d="M26 6V2h-2v4h-4v2h4v4h2V8h4V6h-4z"/></svg>
+                           
+                            <svg xmlns="http://www.w3.org/2000/svg" id="idBTNPlusDailyTool" class="canvasToolbarBTN" width="18" height="18" viewBox="0 0 16 16" fill="#000000"><g fill="#000000"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/><path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4zM8 8a.5.5 0 0 1 .5.5V10H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V11H6a.5.5 0 0 1 0-1h1.5V8.5A.5.5 0 0 1 8 8z"/></g></svg>
+                            
+                        </div>
                     </div>
                     
                     <!-- 文件列表区域 -->
-                    <div id="folder-contents">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-blue-50 p-5 rounded-lg">
-                                <h3 class="text-lg font-semibold text-blue-700 mb-3">目录树功能</h3>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>从Firebase获取目录数据</li>
-                                    <li>树形结构展示</li>
-                                    <li>拖拽排序兄弟节点</li>
-                                    <li>展开/折叠子节点</li>
-                                    <li>拖拽右侧边界调整导航区宽度</li>
-                                    <li>添加新节点功能</li>
-                                    <li>删除节点功能</li>
-                                    <li>点击文件夹查看内容</li>
-                                </ul>
-                            </div>
-                            
-                            <div class="bg-green-50 p-5 rounded-lg">
-                                <h3 class="text-lg font-semibold text-green-700 mb-3">操作指南</h3>
-                                <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>点击节点可以展开或折叠</li>
-                                    <li>拖拽节点到其他位置可以重新排序</li>
-                                    <li>使用顶部按钮刷新或保存数据</li>
-                                    <li>在搜索框输入内容过滤目录</li>
-                                    <li>拖拽左侧导航区右边界调整宽度</li>
-                                    <li>点击+图标添加新节点</li>
-                                    <li>点击X图标删除节点</li>
-                                    <li>点击文件夹查看内容</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="idFolderContents"></div>
                 </div>
             </div>
         </main>
@@ -311,12 +269,12 @@
                 
                 // 所有节点都显示为文件夹图标
                 nodeElement.innerHTML = `
-                    <div class="node-content py-2 px-3 rounded-lg flex items-center hover:bg-gray-100 group">
+                    <div class="node-content px-2 rounded-lg flex items-center hover:bg-gray-100 group">
                         <span class="toggle-icon mr-2 text-gray-500 ${hasChildren ? '' : 'invisible'}">
                             <i class="fas fa-caret-right"></i>
                         </span>
                         <i class="fas fa-folder text-yellow-500 mr-2"></i>
-                        <span class="text-gray-700 flex-grow">${item.name}</span>
+                        <span class="text-gray-700 flex-grow" style="font-size:18px;">${item.name}</span>
                         <div class="node-actions flex">
                             <i class="fas fa-times text-red-400 hover:text-red-600 ml-2 delete-node" title="删除节点"></i>
                         </div>
@@ -363,6 +321,12 @@
                     
                     // 显示文件夹内容
                     displayFolderContents(item);
+
+                    let tagCurrentFolder = document.querySelector(".selectedFolder") ;
+                    if(tagCurrentFolder == nodeElement) return ;
+
+                    if(tagCurrentFolder!=null)tagCurrentFolder.classList.remove("selectedFolder") ;
+                    nodeElement.classList.add('selectedFolder') ;
                 });
                 
                 // 添加删除节点事件
@@ -385,8 +349,8 @@
 
         // 显示文件夹内容
         function displayFoldersInFolder(folder) {
-            const folderContents = document.getElementById('folder-contents');
-            const currentFolder = document.getElementById('current-folder');
+            const folderContents = document.getElementById('idFolderContents');
+            const currentFolder = document.getElementById('idCurrentFolderTitle');
             
             // 更新标题
             currentFolder.textContent = folder.name;
@@ -461,21 +425,23 @@
             plusBookmark2Folder(jsonBookmark,selectedNode) ;
             //_renderDailyTool(jsonTool,tagToolsContainer) ;
             //displayFolderContents(selectedNode) ;
-            let tagCanvas = document.querySelector("#folder-contents");
+            let tagCanvas = document.querySelector("#idFolderContents");
             renderBookmark(jsonBookmark,tagCanvas) ;
         } ;
 
         function displayFolderContents(folder) {
-            const folderContents = document.getElementById('folder-contents');
-            const currentFolder = document.getElementById('current-folder');
-
+            const folderContents = document.getElementById('idFolderContents');
+            const currentFolder = document.getElementById('idCurrentFolderTitle');
+            let tagBTNPlusBookmark = document.getElementById("idBTNPlusBookmark") ;
+            tagBTNPlusBookmark.classList.remove('noShow') ;
+            let tagBTNPlusDailyTool = document.getElementById("idBTNPlusDailyTool") ;
+            tagBTNPlusDailyTool.classList.add('noShow') ;
             //let tagBookmarks = document.
             console.log(folder) ;
             // 更新标题
             currentFolder.textContent = folder.name;
             // 清空内容区域
             folderContents.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" id="idBTNPlusBookmark" width="24" height="24" viewBox="0 0 32 32"><path fill="#000000" d="M24 16v10.752l-7.096-3.59l-.904-.457l-.9.456L8 26.748V4h10V2H8a2 2 0 0 0-2 2v26l10-5.054L26 30V16Z"/><path fill="#000000" d="M26 6V2h-2v4h-4v2h4v4h2V8h4V6h-4z"/></svg>
                 <div id="idBookmarkList"></div>
             `;
             let bookmarksInFolder = fetchFolderBookmarks(folder) ;
@@ -485,7 +451,7 @@
             }) ;
 
             
-            folderContents.querySelector("#idBTNPlusBookmark").addEventListener('click',(event)=>{
+            document.querySelector("#idBTNPlusBookmark").addEventListener('click',(event)=>{
                 const bookmarkSchema = [
                     { "name": "title", "type": "string", "placeholder": "书签标题" },
                     { "name": "url", "type": "string", "placeholder": "https://..." }
@@ -653,43 +619,12 @@
             // 清除当前选中节点
             selectedNode = null;
             
+            
             // 重置内容显示
-            document.getElementById('current-folder').textContent = '内容展示区域';
+            document.getElementById('idCurrentFolderTitle').textContent = '内容展示区域';
             document.getElementById('items-count').textContent = '';
-            document.getElementById('folder-contents').innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-blue-50 p-5 rounded-lg">
-                        <h3 class="text-lg font-semibold text-blue-700 mb-3">目录树功能</h3>
-                        <ul class="list-disc list-inside text-gray-600 space-y-2">
-                            <li>从Firebase获取目录数据</li>
-                            <li>树形结构展示</li>
-                            <li>拖拽排序兄弟节点</li>
-                            <li>展开/折叠子节点</li>
-                            <li>拖拽右侧边界调整导航区宽度</li>
-                            <li>添加新节点功能</li>
-                            <li>删除节点功能</li>
-                            <li>点击文件夹查看内容</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="bg-green-50 p-5 rounded-lg">
-                        <h3 class="text-lg font-semibold text-green-700 mb-3">操作指南</h3>
-                        <ul class="list-disc list-inside text-gray-600 space-y-2">
-                            <li>点击节点可以展开或折叠</li>
-                            <li>拖拽节点到其他位置可以重新排序</li>
-                            <li>使用顶部按钮刷新或保存数据</li>
-                            <li>在搜索框输入内容过滤目录</li>
-                            <li>拖拽左侧导航区右边界调整宽度</li>
-                            <li>点击+图标添加新节点</li>
-                            <li>点击X图标删除节点</li>
-                            <li>点击文件夹查看内容</li>
-                        </ul>
-                    </div>
-                </div>
-            `;
+            document.getElementById('idFolderContents').innerHTML = "" ;
         }
-
-
 
         // 拖拽相关变量
         let draggedItem = null;
@@ -795,7 +730,7 @@
             console.log("====>>>=======") ;
             console.log(gFolderTree);
             // 渲染目录树
-            renderDailyToolbox(gDialyTools,document.getElementById('idDailyToolbox')) ;
+            //renderDailyToolbox(gDialyTools,document.getElementById('idDailyToolbox')) ;
             renderTree(gFolderTree, treeContainer);
             
             // 初始化调整宽度功能
@@ -873,56 +808,31 @@
                 renderTree(gFolderTree, treeContainer);
                 
                 // 重置内容显示
-                document.getElementById('current-folder').textContent = '内容展示区域';
+                document.getElementById('idCurrentFolderTitle').textContent = '内容展示区域';
                 document.getElementById('items-count').textContent = '';
-                document.getElementById('folder-contents').innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-blue-50 p-5 rounded-lg">
-                            <h3 class="text-lg font-semibold text-blue-700 mb-3">目录树功能</h3>
-                            <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                <li>从Firebase获取目录数据</li>
-                                <li>树形结构展示</li>
-                                <li>拖拽排序兄弟节点</li>
-                                <li>展开/折叠子节点</li>
-                                <li>拖拽右侧边界调整导航区宽度</li>
-                                <li>添加新节点功能</li>
-                                <li>删除节点功能</li>
-                                <li>点击文件夹查看内容</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="bg-green-50 p-5 rounded-lg">
-                            <h3 class="text-lg font-semibold text-green-700 mb-3">操作指南</h3>
-                            <ul class="list-disc list-inside text-gray-600 space-y-2">
-                                <li>点击节点可以展开或折叠</li>
-                                <li>拖拽节点到其他位置可以重新排序</li>
-                                <li>使用顶部按钮刷新或保存数据</li>
-                                <li>在搜索框输入内容过滤目录</li>
-                                <li>拖拽左侧导航区右边界调整宽度</li>
-                                <li>点击+图标添加新节点</li>
-                                <li>点击X图标删除节点</li>
-                                <li>点击文件夹查看内容</li>
-                            </ul>
-                        </div>
-                    </div>
-                `;
+                document.getElementById('idFolderContents').innerHTML = ``;
             });
 
             function displayDailyTools(){
-                const folderContents = document.getElementById('folder-contents');
-                const currentFolder = document.getElementById('current-folder');
 
-                //let tagBookmarks = document.
-                //console.log(folder) ;
+                let tagCurrentFolder = document.querySelector(".selectedFolder") ;
+                if(tagCurrentFolder!=null){
+                    tagCurrentFolder.classList.remove("selectedFolder") ;
+                    tagCurrentFolder.querySelector(".font-semibold").classList.remove("font-semibold") ;
+                    //font-semibold
+                    selectedNode = null;
+                }
+
+                const folderContents = document.getElementById('idFolderContents');
+                const currentFolder = document.getElementById('idCurrentFolderTitle');
+                let tagBTNPlusBookmark = document.getElementById("idBTNPlusBookmark") ;
+                tagBTNPlusBookmark.classList.add('noShow') ;
+                let tagBTNPlusDailyTool = document.getElementById("idBTNPlusDailyTool") ;
+                tagBTNPlusDailyTool.classList.remove('noShow') ;
+                //idBTNPlusBookmark
                 // 更新标题
                 currentFolder.textContent = "daily Toolbox";
-                folderContents.innerHTML=`
-                    <div class="canvasDailyToolbar">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="canvasToolbarBTN" width="18" height="18" viewBox="0 0 16 16" fill="#000000"><g fill="#000000"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/><path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4zM8 8a.5.5 0 0 1 .5.5V10H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V11H6a.5.5 0 0 1 0-1h1.5V8.5A.5.5 0 0 1 8 8z"/></g></svg>
-                    </div>
-
-                    <div class="canvasDailyTools"></div>
-                `;
+                folderContents.innerHTML=`<div class="canvasDailyTools"></div>`;
 
                 function _renderDailyTool(jsonTool,tagContainer){
                     let tagTool = document.createElement('div') ;
@@ -961,9 +871,9 @@
                     _renderDailyTool(jsonTool,tagToolsContainer) ;
                 } ;
 
-                folderContents.querySelector(".canvasToolbarBTN").addEventListener('click',(event)=>{
+                document.querySelector("#idBTNPlusDailyTool").addEventListener('click',(event)=>{
                     let jsonTool = {
-                        id:'dsdfsdf',
+                        id:crypto.randomUUID(),
                         type:"Gateway.Bookmark",
                         title:'demo',
                         data:{
@@ -981,7 +891,7 @@
                             console.log("用户取消了操作。");
                         }
                     };
-                    createFormModal('新建书签', bookmarkSchema, bookmarkCallbacks);
+                    createFormModal('新建每日工具', bookmarkSchema, bookmarkCallbacks);
 
                 }) ;
             }
