@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>书签管理应用</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: var(--shadow);
+            padding: 20px 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--gray-light);
+            margin-bottom: 20px;
+        }
+        
+        .logo i {
+            font-size: 24px;
+            color: var(--primary);
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray);
+            padding: 0 20px 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(67, 97, 238, 0.05);
+            border-left-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0 20px;
+            gap: 8px;
+        }
+        
+        .tag {
+            background-color: var(--gray-light);
+            color: var(--gray);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .tag:hover {
+            background-color: var(--primary-light);
+            color: white;
+        }
+        
+        /* 主内容区样式 */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-bar {
+            display: flex;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            width: 400px;
+        }
+        
+        .search-bar input {
+            flex: 1;
+            border: none;
+            padding: 12px 15px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-bar button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .search-bar button:hover {
+            background: var(--secondary);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+        
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        /* 书签网格样式 */
+        .bookmarks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .bookmark-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .bookmark-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .bookmark-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .bookmark-favicon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .bookmark-info {
+            flex: 1;
+        }
+        
+        .bookmark-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+        
+        .bookmark-url {
+            font-size: 14px;
+            color: var(--gray);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .bookmark-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .bookmark-actions button {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+        
+        .bookmark-actions button:hover {
+            background: var(--gray-light);
+            color: var(--dark);
+        }
+        
+        .bookmark-description {
+            padding: 15px;
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+        
+        .bookmark-footer {
+            padding: 10px 15px;
+            background: var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .bookmark-tags span {
+            background: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-right: 5px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .bookmarks-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 10px 0;
+            }
+            
+            .nav-items {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 10px;
+            }
+            
+            .nav-item {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            
+            .nav-item:hover, .nav-item.active {
+                border-left-color: transparent;
+                border-bottom-color: var(--primary);
+            }
+            
+            .search-bar {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+        
+        /* 添加书签模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-bookmark"></i>
+                <h1>书签管理</h1>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">主要</div>
+                <div class="nav-items">
+                    <a href="#" class="nav-item active">
+                        <i class="fas fa-home"></i>
+                        <span>所有书签</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-star"></i>
+                        <span>已加星标</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-history"></i>
+                        <span>最近添加</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-trash"></i>
+                        <span>回收站</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">分类</div>
+                <div class="nav-items">
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-folder" style="color: #4cc9f0;"></i>
+                        <span>工作</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-folder" style="color: #f72585;"></i>
+                        <span>个人</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-folder" style="color: #7209b7;"></i>
+                        <span>学习</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-folder" style="color: #f8961e;"></i>
+                        <span>娱乐</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-folder" style="color: #43aa8b;"></i>
+                        <span>研究</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">标签</div>
+                <div class="tags">
+                    <span class="tag">前端开发</span>
+                    <span class="tag">设计资源</span>
+                    <span class="tag">工具</span>
+                    <span class="tag">教程</span>
+                    <span class="tag">新闻</span>
+                    <span class="tag">博客</span>
+                    <span class="tag">文档</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <div class="header">
+                <div class="search-bar">
+                    <input type="text" placeholder="搜索书签...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>导入</span>
+                    </button>
+                    <button class="btn btn-primary" id="add-bookmark-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>添加书签</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="bookmarks-grid">
+                <!-- 书签卡片 1 -->
+                <div class="bookmark-card">
+                    <div class="bookmark-header">
+                        <div class="bookmark-favicon">MD</div>
+                        <div class="bookmark-info">
+                            <div class="bookmark-title">MDN Web Docs</div>
+                            <div class="bookmark-url">https://developer.mozilla.org</div>
+                        </div>
+                        <div class="bookmark-actions">
+                            <button><i class="fas fa-star"></i></button>
+                            <button><i class="fas fa-edit"></i></button>
+                            <button><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="bookmark-description">
+                        Mozilla Developer Network 提供有关开放网络技术的信息，包括 HTML、CSS 和 API。
+                    </div>
+                    <div class="bookmark-footer">
+                        <div class="bookmark-date">2023-10-15</div>
+                        <div class="bookmark-tags">
+                            <span>前端开发</span>
+                            <span>文档</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 书签卡片 2 -->
+                <div class="bookmark-card">
+                    <div class="bookmark-header">
+                        <div class="bookmark-favicon" style="background-color: #ff6b6b;">GH</div>
+                        <div class="bookmark-info">
+                            <div class="bookmark-title">GitHub</div>
+                            <div class="bookmark-url">https://github.com</div>
+                        </div>
+                        <div class="bookmark-actions">
+                            <button><i class="fas fa-star"></i></button>
+                            <button><i class="fas fa-edit"></i></button>
+                            <button><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="bookmark-description">
+                        全球最大的代码托管平台，用于版本控制和协作开发。
+                    </div>
+                    <div class="bookmark-footer">
+                        <div class="bookmark-date">2023-09-22</div>
+                        <div class="bookmark-tags">
+                            <span>开发</span>
+                            <span>工具</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 书签卡片 3 -->
+                <div class="bookmark-card">
+                    <div class="bookmark-header">
+                        <div class="bookmark-favicon" style="background-color: #ffd166;">FD</div>
+                        <div class="bookmark-info">
+                            <div class="bookmark-title">Figma Design</div>
+                            <div class="bookmark-url">https://figma.com</div>
+                        </div>
+                        <div class="bookmark-actions">
+                            <button><i class="fas fa-star"></i></button>
+                            <button><i class="fas fa-edit"></i></button>
+                            <button><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="bookmark-description">
+                        基于浏览器的界面设计工具，支持团队协作和原型设计。
+                    </div>
+                    <div class="bookmark-footer">
+                        <div class="bookmark-date">2023-11-05</div>
+                        <div class="bookmark-tags">
+                            <span>设计</span>
+                            <span>工具</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 书签卡片 4 -->
+                <div class="bookmark-card">
+                    <div class="bookmark-header">
+                        <div class="bookmark-favicon" style="background-color: #06d6a0;">CS</div>
+                        <div class="bookmark-info">
+                            <div class="bookmark-title">CSS-Tricks</div>
+                            <div class="bookmark-url">https://css-tricks.com</div>
+                        </div>
+                        <div class="bookmark-actions">
+                            <button><i class="fas fa-star"></i></button>
+                            <button><i class="fas fa-edit"></i></button>
+                            <button><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="bookmark-description">
+                        关于网页设计和前端开发的博客，提供 CSS 技巧和教程。
+                    </div>
+                    <div class="bookmark-footer">
+                        <div class="bookmark-date">2023-08-30</div>
+                        <div class="bookmark-tags">
+                            <span>前端开发</span>
+                            <span>教程</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 书签卡片 5 -->
+                <div class="bookmark-card">
+                    <div class="bookmark-header">
+                        <div class="bookmark-favicon" style="background-color: #118ab2;">SM</div>
+                        <div class="bookmark-info">
+                            <div class="bookmark-title">Smashing Magazine</div>
+                            <div class="bookmark-url">https://smashingmagazine.com</div>
+                        </div>
+                        <div class="bookmark-actions">
+                            <button><i class="fas fa-star"></i></button>
+                            <button><i class="fas fa-edit"></i></button>
+                            <button><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="bookmark-description">
+                        为网页设计师和开发者提供专业资源的在线杂志。
+                    </div>
+                    <div class="bookmark-footer">
+                        <div class="bookmark-date">2023-07-18</div>
+                        <div class="bookmark-tags">
+                            <span>设计</span>
+                            <span>博客</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 书签卡片 6 -->
+                <div class="bookmark-card">
+                    <div class="bookmark-header">
+                        <div class="bookmark-favicon" style="background-color: #ef476f;">CD</div>
+                        <div class="bookmark-info">
+                            <div class="bookmark-title">Codepen</div>
+                            <div class="bookmark-url">https://codepen.io</div>
+                        </div>
+                        <div class="bookmark-actions">
+                            <button><i class="fas fa-star"></i></button>
+                            <button><i class="fas fa-edit"></i></button>
+                            <button><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="bookmark-description">
+                        在线代码编辑器，用于前端代码片段的编写、测试和分享。
+                    </div>
+                    <div class="bookmark-footer">
+                        <div class="bookmark-date">2023-10-02</div>
+                        <div class="bookmark-tags">
+                            <span>前端开发</span>
+                            <span>工具</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 添加书签模态框 -->
+    <div class="modal" id="add-bookmark-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>添加新书签</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="bookmark-title">标题</label>
+                    <input type="text" id="bookmark-title" class="form-control" placeholder="输入书签标题">
+                </div>
+                <div class="form-group">
+                    <label for="bookmark-url">URL</label>
+                    <input type="text" id="bookmark-url" class="form-control" placeholder="https://example.com">
+                </div>
+                <div class="form-group">
+                    <label for="bookmark-description">描述（可选）</label>
+                    <textarea id="bookmark-description" class="form-control" rows="3" placeholder="添加书签描述"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="bookmark-tags">标签（用逗号分隔）</label>
+                    <input type="text" id="bookmark-tags" class="form-control" placeholder="前端, 开发, 教程">
+                </div>
+                <div class="form-group">
+                    <label for="bookmark-folder">分类</label>
+                    <select id="bookmark-folder" class="form-control">
+                        <option value="">选择分类</option>
+                        <option value="work">工作</option>
+                        <option value="personal">个人</option>
+                        <option value="study">学习</option>
+                        <option value="entertainment">娱乐</option>
+                        <option value="research">研究</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">取消</button>
+                <button class="btn btn-primary">保存书签</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 模态框控制逻辑
+        const addBookmarkBtn = document.getElementById('add-bookmark-btn');
+        const modal = document.getElementById('add-bookmark-modal');
+        const closeModalBtns = document.querySelectorAll('.close-modal');
+        
+        addBookmarkBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+        
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+        });
+        
+        // 点击模态框外部关闭
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // 书签卡片悬停效果
+        const bookmarkCards = document.querySelectorAll('.bookmark-card');
+        bookmarkCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // 导航项点击效果
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                navItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

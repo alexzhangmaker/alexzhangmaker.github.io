@@ -106,7 +106,7 @@
             align-items: center;
             gap: 10px;
 
-            /*width:100% ;*/
+            width:100% ;
         }
         .bookmarkItem :hover{
             cursor: pointer;
@@ -124,141 +124,6 @@
         
         .btnOutpost:hover{
             cursor: pointer;
-        }
-    </style>
-    <style>
-        /* 紧凑书签网格样式 */
-        .bookmarks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 15px;
-        }
-        
-        .bookmark-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            transition: var(--transition);
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            height: 150px;
-
-            transform: translateY(0px);
-        }
-        
-        .bookmark-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .bookmark-header {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            width:100% ;
-        }
-        
-        .bookmark-favicon {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            background: var(--primary-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color:blueviolet;
-            font-weight: bold;
-            margin-right: 10px;
-            flex-shrink: 0;
-            font-size: 14px;
-        }
-        
-        .bookmark-info {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .bookmark-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-            line-height: 1.3;
-            font-size: 14px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 10em;
-
-            /*
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            */
-        }
-        
-        .bookmark-url {
-            font-size: 10px;
-            color: var(--gray);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-
-            max-width: 15em;
-        }
-        
-        .bookmark-actions {
-            display: flex;
-            gap: 5px;
-            margin-left: 5px;
-
-            align-items:center
-        }
-        
-        .bookmark-actions button {
-            background: none;
-            border: none;
-            color: var(--gray);
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 3px;
-            transition: var(--transition);
-            font-size: 12px;
-        }
-        
-        .bookmark-actions button:hover {
-            background: var(--gray-light);
-            color: var(--dark);
-        }
-        
-        .bookmark-description {
-            font-size: 12px;
-            color: var(--gray);
-            line-height: 1.4;
-            margin-bottom: 8px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            flex: 1;
-        }
-        
-        .bookmark-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px;
-            color: var(--gray);
-
-            width:100%;
-        }
-        
-        .bookmark-tags span {
-            background: var(--gray-light);
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-right: 4px;
         }
     </style>
 </head>
@@ -293,8 +158,8 @@
 
         <!-- 右侧内容展示区 -->
         <main class="flex-1 bg-gray-50 p-6 overflow-y-auto" id="main-content">
-            <div class="mx-auto">
-                <div class="rounded-xl shadow-sm p-6" style="background-color: #f5f7fb;">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-xl shadow-sm p-6">
                     <div class="flex items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-800" id="idCurrentFolderTitle">daily Toolbox</h2>
                         <span class="ml-2 text-sm text-gray-500" id="items-count">5</span>
@@ -307,7 +172,7 @@
                     </div>
                     
                     <!-- 文件列表区域 -->
-                    <div id="idFolderContents" class="bookmarks-grid grid-view"></div>
+                    <div id="idFolderContents"></div>
                 </div>
             </div>
         </main>
@@ -380,73 +245,6 @@
     <script src="./Lab/DataAPI.js"></script>
     <script src="./js/list.min.js"></script>
     <script src="./js/modalFactoryV2.js"></script>
-    <script>
-        function formatDateYYYYMMDD(date) {
-            let cDate = new Date(date) ;
-            const year = cDate.getFullYear();
-            const month = String(cDate.getMonth() + 1).padStart(2, '0');
-            const day = String(cDate.getDate()).padStart(2, '0');
-            return `${year}${month}${day}`;
-        }
-
-        // 颜色方案
-        const colorSchemes = {
-            vibrant: [
-                "#FF6B6B", "#4ECDC4", "#FFD166", "#06D6A0", 
-                "#118AB2", "#EF476F", "#7209B7", "#3A86FF"
-            ],
-            pastel: [
-                "#FFADAD", "#9BF6FF", "#CAFFBF", "#FDFFB6",
-                "#A0C4FF", "#BDB2FF", "#FFC6FF", "#FFFFFC"
-            ],
-            monochromatic: [
-                "#4361EE", "#4895EF", "#4CC9F0", "#3F37C9",
-                "#3A0CA3", "#480CA8", "#560BAD", "#7209B7"
-            ]
-        };
-
-        // 生成随机颜色
-        function getRandomColor(scheme) {
-            if (scheme === "random") {
-                // 生成完全随机颜色
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-            } else {
-                // 从预定义方案中选择颜色
-                const colors = colorSchemes[scheme];
-                return colors[Math.floor(Math.random() * colors.length)];
-            }
-        }
-
-        // 从URL提取域名并生成图标文本
-        function getIconText(url, mode) {
-            try {
-                const domain = new URL(url).hostname.replace('www.', '');
-                const parts = domain.split('.');
-                const mainDomain = parts[0];
-                
-                switch(mode) {
-                    case "first-letter":
-                        return mainDomain.charAt(0).toUpperCase();
-                    case "first-two":
-                        return mainDomain.substring(0, 2).toUpperCase();
-                    case "domain":
-                        // 取域名前两个字母或整个短域名
-                        return mainDomain.length <= 3 ? 
-                            mainDomain.toUpperCase() : 
-                            mainDomain.substring(0, 2).toUpperCase();
-                    default:
-                        return mainDomain.charAt(0).toUpperCase();
-                }
-            } catch (e) {
-                return "?";
-            }
-        }
-    </script>
     <script>
 
 
@@ -658,9 +456,7 @@
             currentFolder.textContent = folder.name;
             // 清空内容区域
             folderContents.innerHTML = `
-                <!---
                 <div id="idBookmarkList"></div>
-                -->
             `;
             let bookmarksInFolder = fetchFolderBookmarks(folder) ;
             console.log(bookmarksInFolder) ;
@@ -685,64 +481,8 @@
         }
 
         function renderBookmark(bookmark,tagContainer){
-            const color = getRandomColor("vibrant");
-            const iconText = getIconText(bookmark.url, "first-two");
-
             let tagBookmark = document.createElement('div') ;
             tagBookmark.classList.add("bookmarkItem")
-            tagBookmark.dataset.dataID = bookmark.id ;
-            tagContainer.appendChild(tagBookmark) ;
-
-
-            let stringBookmarks = '' ;
-            if(bookmark.hasOwnProperty("tags")){
-                for(let i=0;i<bookmark.tags.length;i++){
-                    stringBookmarks = stringBookmarks + `<span>${bookmark.tags[i]}</span>`
-                }
-            }else{
-                stringBookmarks = `<span>没有标签</span>` ;
-            }
-
-            tagBookmark.innerHTML = `
-                    <div class="bookmark-header">
-                        <div class="bookmark-favicon" style="background-color: ${color};">${iconText}</div>
-                        <div class="bookmark-info">
-                            <div class="bookmark-title">${bookmark.title}</div>
-                            <div class="bookmark-url">${bookmark.url.replace(/^https?:\/\//, '')}</div>
-                        </div>
-                        <div class="bookmark-actions">
-                            <button><i class="fas fa-star"></i></button>
-                            <button><i class="fas fa-ellipsis-v"></i></button>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="bmActionRemove" width="14" height="14" viewBox="0 0 16 16"><path fill="#000000" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1l-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg>
-
-                        </div>
-                    </div>
-                    <div class="bookmark-description">${bookmark.hasOwnProperty("memo")?bookmark.memo:"memo"}</div>
-                    <div class="bookmark-footer">
-                        <div class="bookmark-date">${bookmark.hasOwnProperty("date")?formatDateYYYYMMDD(bookmark.date):"date TBD"}</div>
-                        <div class="bookmark-tags">
-                            ${stringBookmarks}
-                        </div>
-                    </div>
-                `;
-            tagBookmark.classList.add('bookmark-card') ;
-            tagContainer.appendChild(tagBookmark) ;
-            
-            tagBookmark.querySelector('.bmActionRemove').addEventListener('click',async (event)=>{
-                event.stopPropagation() ;
-                event.preventDefault() ;
-                await removeBookmark(tagBookmark.dataset.dataID) ;
-                tagBookmark.remove() ;
-            }) ;
-            tagBookmark.addEventListener('click',(event)=>{
-                window.open(bookmark.url,"_blank") ;
-
-            }) ;
-        }
-
-        function renderBookmarkV0(bookmark,tagContainer){
-            let tagBookmark = document.createElement('div') ;
-            //tagBookmark.classList.add("bookmarkItem")
             tagBookmark.dataset.dataID = bookmark.id ;
             tagContainer.appendChild(tagBookmark) ;
             tagBookmark.innerHTML=`
@@ -1106,64 +846,9 @@
                 //idBTNPlusBookmark
                 // 更新标题
                 currentFolder.textContent = "daily Toolbox";
-                folderContents.innerHTML=``;
-
-
+                folderContents.innerHTML=`<div class="canvasDailyTools"></div>`;
 
                 function _renderDailyTool(jsonTool,tagContainer){
-                    let tagTool = document.createElement('div') ;
-                    //tagTool.classList.add("dailyTool");
-                    tagTool.classList.add('bookmark-card') ;
-                    tagTool.dataset.toolID = jsonTool.id ;
-                    tagTool.dataset.url = jsonTool.data.url ;
-                    tagContainer.appendChild(tagTool) ;
-
-
-                    let stringBookmarks = '' ;
-                    if(jsonTool.hasOwnProperty("tags")){
-                        for(let i=0;i<jsonTool.tags.length;i++){
-                            stringBookmarks = stringBookmarks + `<span>${bookmark.tags[i]}</span>`
-                        }
-                    }else{
-                        stringBookmarks = `<span>没有标签</span>` ;
-                    }
-                    const iconText = getIconText(jsonTool.url, "first-two");
-
-
-                    tagTool.innerHTML = `
-                            <div class="bookmark-header">
-                                <div class="bookmark-favicon">${iconText}</div>
-                                <div class="bookmark-info">
-                                    <div class="bookmark-title">${jsonTool.title}</div>
-                                    <div class="bookmark-url">${jsonTool.data.url}</div>
-                                </div>
-                                <div class="bookmark-actions">
-                                    <button><i class="fas fa-star"></i></button>
-                                    <button><i class="fas fa-ellipsis-v"></i></button>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="bmActionRemove" width="14" height="14" viewBox="0 0 16 16"><path fill="#000000" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1l-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg>
-
-                                </div>
-                            </div>
-                            <div class="bookmark-description">${jsonTool.hasOwnProperty("memo")?jsonTool.memo:"memo"}</div>
-                            <div class="bookmark-footer">
-                                <div class="bookmark-date">${jsonTool.hasOwnProperty("date")?formatDateYYYYMMDD(jsonTool.date):"date TBD"}</div>
-                                <div class="bookmark-tags">
-                                    ${stringBookmarks}
-                                </div>
-                            </div>
-                    `;
-                    
-                    tagTool.querySelector('.bmActionRemove').addEventListener('click',async (event)=>{
-                        event.stopPropagation() ;
-                        event.preventDefault() ;
-                        removeDailyTool(tagTool.dataset.toolID) ;
-                        tagTool.remove() ;
-                    }) ;
-                    tagTool.addEventListener('click',(event)=>{
-                        window.open(bookmark.url,"_blank") ;
-                    }) ;
-                }
-                function _renderDailyToolV0(jsonTool,tagContainer){
                     let tagTool = document.createElement('div') ;
                     tagContainer.appendChild(tagTool) ;
                     tagTool.classList.add("dailyTool");
@@ -1179,15 +864,15 @@
 
                     }) ;
                 }
-                //let tagToolsContainer = folderContents.querySelector('.canvasDailyTools') ;
+                let tagToolsContainer = folderContents.querySelector('.canvasDailyTools') ;
                 console.log(gDialyTools) ;
                 for(let i=0;i<gDialyTools.length;i++){
-                    _renderDailyTool(gDialyTools[i],folderContents) ;
+                    _renderDailyTool(gDialyTools[i],tagToolsContainer) ;
 
                 }
 
                 const callbackPlusTool = (formDataTool)=>{
-                    let tagToolsContainer = document.querySelector('#idFolderContents') ;
+                    let tagToolsContainer = folderContents.querySelector('.canvasDailyTools') ;
                     let jsonTool = {
                         id:crypto.randomUUID(),
                         type:"Gateway.Bookmark",
@@ -1230,4 +915,3 @@
     </script>
 </body>
 </html>
-
