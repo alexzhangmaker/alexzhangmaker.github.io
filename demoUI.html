@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>目录树UI组件</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tippy.js -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <style>
+        /* 自定义样式 */
+        .tree-node {
+            transition: all 0.2s ease;
+        }
+        .tree-node:hover {
+            background-color: #f3f4f6;
+        }
+        .tree-node.selected {
+            background-color: #dbeafe;
+        }
+        .context-menu {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+        }
+        .context-menu.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">目录树UI组件</h1>
+        
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">目录树展示</h2>
+            <div id="treeContainer" class="border border-gray-200 rounded-lg p-4 min-h-64"></div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">操作日志</h2>
+            <div id="logContainer" class="bg-gray-50 p-4 rounded border border-gray-200 h-40 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script>
+        // 目录树工厂函数
+        function createDirectoryTree(treeData, callbacks, container) {
+            // 默认回调函数
+            const defaultCallbacks = {
+                onClick: (node) => console.log('点击节点:', node),
+                onDelete: (node) => console.log('删除节点:', node),
+                onCreate: (parentNode, name) => console.log('创建节点:', name, '在', parentNode),
+                onRename: (node, newName) => console.log('重命名节点:', node, '为', newName)
+            };
+            
+            // 合并回调函数
+            callbacks = { ...defaultCallbacks, ...callbacks };
+            
+            // 当前选中的节点
+            let selectedNode = null;
+            
+            // 渲染目录树
+            function renderTree(nodes, parentElement, level = 0) {
+                nodes.forEach(node => {
+                    const nodeElement = createNodeElement(node, level);
+                    parentElement.appendChild(nodeElement);
+                    
+                    // 如果有子节点，递归渲染
+                    if (node.children && node.children.length > 0) {
+                        const childrenContainer = document.createElement('div');
+                        childrenContainer.className = 'children-container ml-6';
+                        childrenContainer.style.display = node.expanded ? 'block' : 'none';
+                        
+                        renderTree(node.children, childrenContainer, level + 1);
+                        nodeElement.appendChild(childrenContainer);
+                    }
+                });
+            }
+            
+            // 创建节点元素
+            function createNodeElement(node, level) {
+                const nodeElement = document.createElement('div');
+                nodeElement.className = 'tree-node py-1 px-2 rounded flex items-center cursor-pointer';
+                nodeElement.dataset.nodeId = node.id;
+                
+                // 添加缩进
+                nodeElement.style.paddingLeft = `${level * 1.5}rem`;
+                
+                // 文件夹/文件图标
+                const iconSvg = node.type === 'folder' ? 
+                    `<svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                    </svg>` :
+                    `<svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>`;
+                
+                // 展开/折叠图标（仅文件夹有）
+                const expandIcon = node.type === 'folder' ? 
+                    `<svg class="w-3 h-3 mr-1 transform ${node.expanded ? 'rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>` : 
+                    `<span class="w-3 h-3 mr-1"></span>`;
+                
+                // 节点名称
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'node-name flex-1 truncate';
+                nameSpan.textContent = node.name;
+                
+                // 操作按钮
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'node-actions ml-2 flex space-x-1 opacity-0 transition-opacity';
+                
+                // 重命名按钮
+                const renameBtn = document.createElement('button');
+                renameBtn.className = 'p-1 rounded hover:bg-gray-200';
+                renameBtn.innerHTML = `<svg class="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>`;
+                renameBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    startRename(node, nameSpan);
+                });
+                
+                // 删除按钮
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'p-1 rounded hover:bg-gray-200';
+                deleteBtn.innerHTML = `<svg class="w-3 h-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>`;
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    callbacks.onDelete(node);
+                    logAction(`删除: ${node.name}`);
+                });
+                
+                // 新建按钮（仅文件夹有）
+                if (node.type === 'folder') {
+                    const createBtn = document.createElement('button');
+                    createBtn.className = 'p-1 rounded hover:bg-gray-200';
+                    createBtn.innerHTML = `<svg class="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>`;
+                    createBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        createNewItem(node);
+                    });
+                    actionsDiv.appendChild(createBtn);
+                }
+                
+                actionsDiv.appendChild(renameBtn);
+                actionsDiv.appendChild(deleteBtn);
+                
+                // 组装节点元素
+                nodeElement.innerHTML = expandIcon + iconSvg;
+                nodeElement.appendChild(nameSpan);
+                nodeElement.appendChild(actionsDiv);
+                
+                // 添加点击事件
+                nodeElement.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+                        // 切换选中状态
+                        document.querySelectorAll('.tree-node.selected').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        nodeElement.classList.add('selected');
+                        selectedNode = node;
+                        
+                        // 如果是文件夹，切换展开状态
+                        if (node.type === 'folder') {
+                            node.expanded = !node.expanded;
+                            const expandIcon = nodeElement.querySelector('svg:first-child');
+                            const childrenContainer = nodeElement.querySelector('.children-container');
+                            
+                            if (expandIcon && childrenContainer) {
+                                expandIcon.classList.toggle('rotate-90');
+                                childrenContainer.style.display = node.expanded ? 'block' : 'none';
+                            }
+                        }
+                        
+                        callbacks.onClick(node);
+                        logAction(`点击: ${node.name}`);
+                    }
+                });
+                
+                // 鼠标悬停显示操作按钮
+                nodeElement.addEventListener('mouseenter', () => {
+                    actionsDiv.classList.remove('opacity-0');
+                });
+                
+                nodeElement.addEventListener('mouseleave', () => {
+                    actionsDiv.classList.add('opacity-0');
+                });
+                
+                // 添加Tippy提示
+                tippy(nodeElement, {
+                    content: `${node.type === 'folder' ? '文件夹' : '文件'}: ${node.name}`,
+                    delay: [300, 0],
+                });
+                
+                return nodeElement;
+            }
+            
+            // 开始重命名
+            function startRename(node, nameElement) {
+                const oldName = nameElement.textContent;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = oldName;
+                input.className = 'border border-blue-300 rounded px-1 py-0.5 text-sm w-full';
+                
+                nameElement.parentNode.replaceChild(input, nameElement);
+                input.focus();
+                input.select();
+                
+                const finishRename = () => {
+                    const newName = input.value.trim();
+                    if (newName && newName !== oldName) {
+                        callbacks.onRename(node, newName);
+                        logAction(`重命名: ${oldName} -> ${newName}`);
+                    }
+                    
+                    nameElement.textContent = newName || oldName;
+                    input.parentNode.replaceChild(nameElement, input);
+                };
+                
+                input.addEventListener('blur', finishRename);
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        finishRename();
+                    } else if (e.key === 'Escape') {
+                        nameElement.textContent = oldName;
+                        input.parentNode.replaceChild(nameElement, input);
+                    }
+                });
+            }
+            
+            // 创建新项目
+            function createNewItem(parentNode) {
+                const newItem = {
+                    id: Date.now().toString(),
+                    name: '新建项目',
+                    type: 'file',
+                    parentId: parentNode.id
+                };
+                
+                // 在实际应用中，这里应该调用API创建新项目
+                callbacks.onCreate(parentNode, newItem.name);
+                logAction(`创建: ${newItem.name} 在 ${parentNode.name} 中`);
+                
+                // 重新渲染目录树以显示新项目
+                if (!parentNode.children) parentNode.children = [];
+                parentNode.children.push(newItem);
+                parentNode.expanded = true; // 确保父文件夹展开
+                
+                // 重新渲染整个目录树
+                container.innerHTML = '';
+                renderTree(treeData, container);
+            }
+            
+            // 日志记录函数
+            function logAction(message) {
+                const logContainer = document.getElementById('logContainer');
+                const logEntry = document.createElement('div');
+                logEntry.className = 'text-sm text-gray-600 py-1 border-b border-gray-200 last:border-b-0';
+                logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                logContainer.appendChild(logEntry);
+                logContainer.scrollTop = logContainer.scrollHeight;
+            }
+            
+            // 初始化目录树
+            container.innerHTML = '';
+            renderTree(treeData, container);
+            
+            // 返回公共API
+            return {
+                // 更新目录树数据
+                updateTree: (newTreeData) => {
+                    treeData = newTreeData;
+                    container.innerHTML = '';
+                    renderTree(treeData, container);
+                },
+                
+                // 获取当前选中的节点
+                getSelectedNode: () => selectedNode,
+                
+                // 展开/折叠所有节点
+                toggleAll: (expand) => {
+                    function setExpanded(nodes, expanded) {
+                        nodes.forEach(node => {
+                            if (node.type === 'folder') {
+                                node.expanded = expanded;
+                                if (node.children) {
+                                    setExpanded(node.children, expanded);
+                                }
+                            }
+                        });
+                    }
+                    
+                    setExpanded(treeData, expand);
+                    container.innerHTML = '';
+                    renderTree(treeData, container);
+                }
+            };
+        }
+        
+        // 示例目录树数据
+        const sampleTreeData = [
+            {
+                id: '1',
+                name: '项目文档',
+                type: 'folder',
+                expanded: true,
+                children: [
+                    {
+                        id: '2',
+                        name: '需求分析',
+                        type: 'folder',
+                        expanded: false,
+                        children: [
+                            { id: '3', name: '用户需求.md', type: 'file' },
+                            { id: '4', name: '功能规格.md', type: 'file' }
+                        ]
+                    },
+                    {
+                        id: '5',
+                        name: '设计文档',
+                        type: 'folder',
+                        expanded: true,
+                        children: [
+                            { id: '6', name: '系统架构图.png', type: 'file' },
+                            { id: '7', name: '数据库设计.md', type: 'file' }
+                        ]
+                    },
+                    { id: '8', name: '项目计划.xlsx', type: 'file' }
+                ]
+            },
+            {
+                id: '9',
+                name: '开发代码',
+                type: 'folder',
+                expanded: false,
+                children: [
+                    { id: '10', name: '前端代码', type: 'folder', expanded: false },
+                    { id: '11', name: '后端代码', type: 'folder', expanded: false }
+                ]
+            },
+            { id: '12', name: 'README.md', type: 'file' }
+        ];
+        
+        // 回调函数
+        const callbacks = {
+            onClick: (node) => {
+                console.log('节点被点击:', node);
+            },
+            onDelete: (node) => {
+                console.log('节点被删除:', node);
+            },
+            onCreate: (parentNode, name) => {
+                console.log('创建新项目:', name, '在', parentNode.name, '中');
+            },
+            onRename: (node, newName) => {
+                console.log('节点重命名:', node.name, '->', newName);
+            }
+        };
+        
+        // 初始化目录树
+        const container = document.getElementById('treeContainer');
+        const directoryTree = createDirectoryTree(sampleTreeData, callbacks, container);
+        
+        // 添加控制按钮
+        const controlDiv = document.createElement('div');
+        controlDiv.className = 'flex space-x-2 mb-4';
+        
+        const expandAllBtn = document.createElement('button');
+        expandAllBtn.className = 'bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm';
+        expandAllBtn.textContent = '展开全部';
+        expandAllBtn.addEventListener('click', () => directoryTree.toggleAll(true));
+        
+        const collapseAllBtn = document.createElement('button');
+        collapseAllBtn.className = 'bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm';
+        collapseAllBtn.textContent = '折叠全部';
+        collapseAllBtn.addEventListener('click', () => directoryTree.toggleAll(false));
+        
+        controlDiv.appendChild(expandAllBtn);
+        controlDiv.appendChild(collapseAllBtn);
+        container.parentNode.insertBefore(controlDiv, container);
+    </script>
+</body>
+</html>

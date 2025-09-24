@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>目录树组件示例</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+</head>
+<body class="p-6 bg-gray-50">
+  <h1 class="text-xl font-bold mb-4">📁 当前文件夹高亮示例</h1>
+  <div id="tree-container" class="w-[260px] border p-2 bg-white rounded shadow" style="width: 200px;">
+</div>
+
+<script>
+function createDirectoryTree(treeData, callbacks, container, indentSize = 12) {
+    container.innerHTML = '';
+    let currentActiveLabel = null;
+
+    const icons = {
+        folderClosed: `<svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7h5l2 2h11v10H3V7z"/></svg>`,
+        folderOpen: `<svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7h5l2 2h11v10H3V7z"/><path d="M3 17h18"/></svg>`,
+        file: `<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16v16H4V4z"/></svg>`
+    };
+
+    function renderNode(node, parentEl, depth = 0) {
+        const wrapper = document.createElement('div');
+        wrapper.style.marginLeft = `${depth * indentSize}px`;
+
+        const nodeEl = document.createElement('div');
+        nodeEl.className = 'flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded';
+
+        const iconWrapper = document.createElement('span');
+        iconWrapper.innerHTML = node.type === 'folder' ? icons.folderClosed : icons.file;
+        iconWrapper.className = 'icon-toggle';
+
+        const label = document.createElement('span');
+        label.textContent = node.name;
+        label.className = 'truncate block text-gray-800';
+        label.style.maxWidth = 'calc(100% - 2rem)';
+
+        // 点击标题：触发回调 + 设置当前文件夹
+        label.onclick = () => {
+            callbacks.onClick?.(node);
+
+            if (currentActiveLabel) {
+                currentActiveLabel.classList.remove('bg-blue-100', 'font-semibold', 'text-blue-700');
+            }
+            label.classList.add('bg-blue-100', 'font-semibold', 'text-blue-700');
+            currentActiveLabel = label;
+        };
+
+        tippy(label, {
+            content: node.name,
+            placement: 'right',
+            delay: [300, 0],
+        });
+
+        nodeEl.appendChild(iconWrapper);
+        nodeEl.appendChild(label);
+        wrapper.appendChild(nodeEl);
+
+        let childrenEl;
+        if (node.children && node.children.length > 0) {
+            childrenEl = document.createElement('div');
+            childrenEl.className = 'space-y-1 hidden';
+            node.children.forEach(child => renderNode(child, childrenEl, depth + 1));
+            wrapper.appendChild(childrenEl);
+
+            iconWrapper.onclick = () => {
+                const isOpen = childrenEl.classList.toggle('hidden') === false;
+                iconWrapper.innerHTML = isOpen ? icons.folderOpen : icons.folderClosed;
+            };
+        }
+
+        parentEl.appendChild(wrapper);
+    }
+
+    treeData.forEach(node => renderNode(node, container));
+}
+</script>
+<script>
+    
+const treeData = [
+{
+    id: "78f079e5-93fe-4f0b-a401-f273df42bb72",
+    name: "我的项目",
+    type: "folder",
+    children: [
+      {
+        id: "4fe1f56f-c971-4e11-be14-fbb2b21a8194",
+        name: "Refer:Bookmarks",
+        type: "folder",
+        children: [
+            {
+                id: "4fe1f56f-c971-4e11-be14-fbb2b21a8194",
+                name: "Refer:Bookmarksdsds",
+                type: "folder"
+            }
+        ]
+      },{
+        id: "7d97c392-3f76-4df5-8c46-797f587ec993",
+        name: "AI Playground",
+        type: "folder"
+    }
+    ]
+  },
+  {
+    id: "7d97c392-3f76-4df5-8c46-797f587ec993",
+    name: "AI Playground",
+    type: "folder"
+  },
+  {
+    id: "78f079e5-93fe-4f0b-a401-f273df42bb72",
+    name: "我的项目",
+    type: "folder",
+    children: [
+      {
+        id: "4fe1f56f-c971-4e11-be14-fbb2b21a8194",
+        name: "Refer:Bookmarks",
+        type: "folder",
+        children: [
+            {
+                id: "4fe1f56f-c971-4e11-be14-fbb2b21a8194",
+                name: "Refer:Bookmarksdsds",
+                type: "folder"
+            }
+        ]
+      },{
+        id: "7d97c392-3f76-4df5-8c46-797f587ec993",
+        name: "AI Playground",
+        type: "folder"
+    }
+    ]
+  }
+];
+
+    const callbacks = {
+      onClick: node => console.log(`当前文件夹: ${node.name}`)
+    };
+
+    const container = document.getElementById('tree-container');
+    createDirectoryTree(treeData, callbacks, container, 8); // 缩进 8px
+  </script>
+</body>
+</html>
