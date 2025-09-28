@@ -448,30 +448,10 @@
         }
     </script>
     <script>
-
-
         // 当前选中的节点
         let selectedNode = null;
         let nodeToDelete = null;
 
-        function renderDailyToolbox(dailyTools,parentElement){
-            for(let i=0;i<dailyTools.length;i++){
-                let toolNode = document.createElement('div') ;
-                toolNode.className = 'dailyTool';
-                toolNode.dataset.id = dailyTools[i].id;
-                toolNode.dataset.url = dailyTools[i].data.url;
-                toolNode.innerHTML=`
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 6h11M3.8 5.8l.8.8l2-2m-2.8 7.2l.8.8l2-2m-2.8 7.2l.8.8l2-2M9 12h11M9 18h11"/></svg>                    
-                    <span class="text-gray-700 flex-grow">${dailyTools[i].title}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="dailyToolAction" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 9l-1.995 11.346A2 2 0 0 1 16.035 22h-8.07a2 2 0 0 1-1.97-1.654L4 9m17-3h-5.625M3 6h5.625m0 0V4a2 2 0 0 1 2-2h2.75a2 2 0 0 1 2 2v2m-6.75 0h6.75"/></svg>
-                ` ;
-                parentElement.appendChild(toolNode) ;
-
-                toolNode.addEventListener('click',(event)=>{
-                    window.open(toolNode.dataset.url,"_blank") ;
-                }) ;
-            }
-        }
 
         // 目录树渲染功能
         function renderTree(data, parentElement, level = 0) {
@@ -740,23 +720,6 @@
             }) ;
         }
 
-        function renderBookmarkV0(bookmark,tagContainer){
-            let tagBookmark = document.createElement('div') ;
-            //tagBookmark.classList.add("bookmarkItem")
-            tagBookmark.dataset.dataID = bookmark.id ;
-            tagContainer.appendChild(tagBookmark) ;
-            tagBookmark.innerHTML=`
-                <svg xmlns="http://www.w3.org/2000/svg" class="bookmarkAction" width="18" height="18" viewBox="0 0 16 16"><path fill="#000000" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1l-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg>
-                <a href="${bookmark.url}" target="_blank">${bookmark.title}</a>
-            ` ;
-            tagBookmark.querySelector('.bookmarkAction').addEventListener('click',async (event)=>{
-                await removeBookmark(tagBookmark.dataset.dataID) ;
-                tagBookmark.remove() ;
-
-            }) ;
-
-        }
-
         // 高亮目录树中的节点
         function highlightTreeNode(nodeId) {
             // 清除所有高亮
@@ -999,23 +962,17 @@
         // 初始化应用
         document.addEventListener('DOMContentLoaded', async () => {
             const treeContainer = document.getElementById('directory-tree');
-            //loadAppData() ;
             await asyncLoadAppData() ;
-            console.log("====>>>=======") ;
-            console.log(gFolderTree);
             // 渲染目录树
-            //renderDailyToolbox(gDialyTools,document.getElementById('idDailyToolbox')) ;
             renderTree(gFolderTree, treeContainer);
             
             // 初始化调整宽度功能
             initResizeHandler();
             
-            
             // 添加搜索功能
             const searchInput = document.querySelector('input[type="text"]');
             searchInput.addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
-                
                 document.querySelectorAll('.node-content').forEach(node => {
                     const nodeText = node.textContent.toLowerCase();
                     const treeNode = node.closest('.tree-node');
@@ -1070,163 +1027,155 @@
         });
     </script>
     <script>
-        const btnSaveChange = document.getElementById('idBTNSaveChange') ;
-        btnSaveChange.addEventListener('click',async (event)=>{
+        //const btnSaveChange = document.getElementById('idBTNSaveChange') ;
+        document.getElementById('idBTNSaveChange').addEventListener('click',async (event)=>{
             await asyncSaveAppData() ;
+        }) ;
+
+        //idBTNSetting
+        document.getElementById('idBTNSetting').addEventListener('click',async (event)=>{
+            //await asyncSaveAppData() ;
+            const bookmarkSchema = [
+                { "name": "defaultFolder", "type": "string", "placeholder": "默认文件夹ID..." }
+            ];
+            const bookmarkCallbacks = {
+                onConfirm: (formdata)=>{
+                    let defaultFolderID = formdata.defaultFolder ;
+                    console.log(defaultFolderID) ;
+                },
+                onCancel: () => {console.log("用户取消了操作。");}
+            };
+            createFormModal('新建每日工具', bookmarkSchema, bookmarkCallbacks);
         }) ;
 
         // 添加刷新按钮事件
         document.querySelector('#idBTNFreshData').addEventListener('click', () => {
-                const treeContainer = document.getElementById('directory-tree');
-                treeContainer.innerHTML = '';
-                renderTree(gFolderTree, treeContainer);
-                
-                // 重置内容显示
-                document.getElementById('idCurrentFolderTitle').textContent = '内容展示区域';
-                document.getElementById('items-count').textContent = '';
-                document.getElementById('idFolderContents').innerHTML = ``;
-            });
+            const treeContainer = document.getElementById('directory-tree');
+            treeContainer.innerHTML = '';
+            renderTree(gFolderTree, treeContainer);
+            
+            // 重置内容显示
+            document.getElementById('idCurrentFolderTitle').textContent = '内容展示区域';
+            document.getElementById('items-count').textContent = '';
+            document.getElementById('idFolderContents').innerHTML = ``;
+        });
 
-            function displayDailyTools(){
+        document.querySelector("#idBTNDisplayDailyTools").addEventListener('click',(event)=>{
+            displayDailyTools() ;
+        }) ;
+    </script>
+    <script>
+        function _renderDailyTool(jsonTool,tagContainer){
+            let tagTool = document.createElement('div') ;
+            tagTool.classList.add('bookmark-card') ;
+            tagTool.dataset.toolID = jsonTool.id ;
+            tagTool.dataset.url = jsonTool.data.url ;
+            tagContainer.appendChild(tagTool) ;
 
-                let tagCurrentFolder = document.querySelector(".selectedFolder") ;
-                if(tagCurrentFolder!=null){
-                    tagCurrentFolder.classList.remove("selectedFolder") ;
-                    tagCurrentFolder.querySelector(".font-semibold").classList.remove("font-semibold") ;
-                    //font-semibold
-                    selectedNode = null;
+            let stringBookmarks = '' ;
+            if(jsonTool.hasOwnProperty("tags")){
+                for(let i=0;i<jsonTool.tags.length;i++){
+                    stringBookmarks = stringBookmarks + `<span>${jsonTool.tags[i]}</span>`
                 }
+            }else{
+                stringBookmarks = `<span>没有标签</span>` ;
+            }
+            const iconText = getIconText(jsonTool.url, "first-two");
 
-                const folderContents = document.getElementById('idFolderContents');
-                const currentFolder = document.getElementById('idCurrentFolderTitle');
-                let tagBTNPlusBookmark = document.getElementById("idBTNPlusBookmark") ;
-                tagBTNPlusBookmark.classList.add('noShow') ;
-                let tagBTNPlusDailyTool = document.getElementById("idBTNPlusDailyTool") ;
-                tagBTNPlusDailyTool.classList.remove('noShow') ;
-                //idBTNPlusBookmark
-                // 更新标题
-                currentFolder.textContent = "daily Toolbox";
-                folderContents.innerHTML=``;
+            tagTool.innerHTML = `
+                    <div class="bookmark-header">
+                        <div class="bookmark-favicon">${iconText}</div>
+                        <div class="bookmark-info">
+                            <div class="bookmark-title">${jsonTool.title}</div>
+                            <div class="bookmark-url">${jsonTool.data.url}</div>
+                        </div>
+                        <div class="bookmark-actions">
+                            <button><i class="fas fa-star"></i></button>
+                            <button><i class="fas fa-ellipsis-v"></i></button>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bmActionRemove" width="14" height="14" viewBox="0 0 16 16"><path fill="#000000" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1l-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg>
 
+                        </div>
+                    </div>
+                    <div class="bookmark-description">${jsonTool.hasOwnProperty("memo")?jsonTool.memo:"memo"}</div>
+                    <div class="bookmark-footer">
+                        <div class="bookmark-date">${jsonTool.hasOwnProperty("date")?formatDateYYYYMMDD(jsonTool.date):"date TBD"}</div>
+                        <div class="bookmark-tags">
+                            ${stringBookmarks}
+                        </div>
+                    </div>
+            `;
+            
+            tagTool.querySelector('.bmActionRemove').addEventListener('click',async (event)=>{
+                event.stopPropagation() ;
+                event.preventDefault() ;
+                removeDailyTool(tagTool.dataset.toolID) ;
+                tagTool.remove() ;
+            }) ;
+            tagTool.addEventListener('click',(event)=>{
+                window.open(jsonTool.data.url,"_blank") ;
+            }) ;
+        }
 
+        function displayDailyTools(){
+            let tagCurrentFolder = document.querySelector(".selectedFolder") ;
+            if(tagCurrentFolder!=null){
+                tagCurrentFolder.classList.remove("selectedFolder") ;
+                tagCurrentFolder.querySelector(".font-semibold").classList.remove("font-semibold") ;
+                //font-semibold
+                selectedNode = null;
+            }
 
-                function _renderDailyTool(jsonTool,tagContainer){
-                    let tagTool = document.createElement('div') ;
-                    //tagTool.classList.add("dailyTool");
-                    tagTool.classList.add('bookmark-card') ;
-                    tagTool.dataset.toolID = jsonTool.id ;
-                    tagTool.dataset.url = jsonTool.data.url ;
-                    tagContainer.appendChild(tagTool) ;
+            const folderContents = document.getElementById('idFolderContents');
+            const currentFolder = document.getElementById('idCurrentFolderTitle');
+            let tagBTNPlusBookmark = document.getElementById("idBTNPlusBookmark") ;
+            tagBTNPlusBookmark.classList.add('noShow') ;
+            let tagBTNPlusDailyTool = document.getElementById("idBTNPlusDailyTool") ;
+            tagBTNPlusDailyTool.classList.remove('noShow') ;
 
+            // 更新标题
+            currentFolder.textContent = "daily Toolbox";
+            folderContents.innerHTML=``;
 
-                    let stringBookmarks = '' ;
-                    if(jsonTool.hasOwnProperty("tags")){
-                        for(let i=0;i<jsonTool.tags.length;i++){
-                            stringBookmarks = stringBookmarks + `<span>${bookmark.tags[i]}</span>`
-                        }
-                    }else{
-                        stringBookmarks = `<span>没有标签</span>` ;
+            //function previous be here
+            //end of function
+
+            for(let i=0;i<gDialyTools.length;i++){
+                _renderDailyTool(gDialyTools[i],folderContents) ;
+            }
+
+            const callbackPlusTool = (formDataTool)=>{
+                let tagToolsContainer = document.querySelector('#idFolderContents') ;
+                let jsonTool = {
+                    id:crypto.randomUUID(),
+                    type:"Gateway.Bookmark",
+                    title:formDataTool.title,
+                    data:{
+                        url:formDataTool.url
                     }
-                    const iconText = getIconText(jsonTool.url, "first-two");
+                } ;
+                plusDailyTool(jsonTool) ;
+                _renderDailyTool(jsonTool,tagToolsContainer) ;
+            } ;
 
-
-                    tagTool.innerHTML = `
-                            <div class="bookmark-header">
-                                <div class="bookmark-favicon">${iconText}</div>
-                                <div class="bookmark-info">
-                                    <div class="bookmark-title">${jsonTool.title}</div>
-                                    <div class="bookmark-url">${jsonTool.data.url}</div>
-                                </div>
-                                <div class="bookmark-actions">
-                                    <button><i class="fas fa-star"></i></button>
-                                    <button><i class="fas fa-ellipsis-v"></i></button>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="bmActionRemove" width="14" height="14" viewBox="0 0 16 16"><path fill="#000000" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1l-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg>
-
-                                </div>
-                            </div>
-                            <div class="bookmark-description">${jsonTool.hasOwnProperty("memo")?jsonTool.memo:"memo"}</div>
-                            <div class="bookmark-footer">
-                                <div class="bookmark-date">${jsonTool.hasOwnProperty("date")?formatDateYYYYMMDD(jsonTool.date):"date TBD"}</div>
-                                <div class="bookmark-tags">
-                                    ${stringBookmarks}
-                                </div>
-                            </div>
-                    `;
-                    
-                    tagTool.querySelector('.bmActionRemove').addEventListener('click',async (event)=>{
-                        event.stopPropagation() ;
-                        event.preventDefault() ;
-                        removeDailyTool(tagTool.dataset.toolID) ;
-                        tagTool.remove() ;
-                    }) ;
-                    tagTool.addEventListener('click',(event)=>{
-                        window.open(jsonTool.data.url,"_blank") ;
-                    }) ;
-                }
-                function _renderDailyToolV0(jsonTool,tagContainer){
-                    let tagTool = document.createElement('div') ;
-                    tagContainer.appendChild(tagTool) ;
-                    tagTool.classList.add("dailyTool");
-                    tagTool.dataset.toolID = jsonTool.id ;
-                    tagTool.dataset.url = jsonTool.data.url ;
-                    tagTool.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="dailyToolAction" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 9l-1.995 11.346A2 2 0 0 1 16.035 22h-8.07a2 2 0 0 1-1.97-1.654L4 9m17-3h-5.625M3 6h5.625m0 0V4a2 2 0 0 1 2-2h2.75a2 2 0 0 1 2 2v2m-6.75 0h6.75"/></svg>
-                        <a href="${tagTool.dataset.url}" target="_blank">${jsonTool.title}</a>
-                    ` ;
-                    tagTool.querySelector('.dailyToolAction').addEventListener('click',(event)=>{
-                        removeDailyTool(tagTool.dataset.toolID) ;
-                        tagTool.remove() ;
-
-                    }) ;
-                }
-                //let tagToolsContainer = folderContents.querySelector('.canvasDailyTools') ;
-                console.log(gDialyTools) ;
-                for(let i=0;i<gDialyTools.length;i++){
-                    _renderDailyTool(gDialyTools[i],folderContents) ;
-
-                }
-
-                const callbackPlusTool = (formDataTool)=>{
-                    let tagToolsContainer = document.querySelector('#idFolderContents') ;
-                    let jsonTool = {
-                        id:crypto.randomUUID(),
-                        type:"Gateway.Bookmark",
-                        title:formDataTool.title,
-                        data:{
-                            url:formDataTool.url
-                        }
-                    } ;
-                    plusDailyTool(jsonTool) ;
-                    _renderDailyTool(jsonTool,tagToolsContainer) ;
+            document.querySelector("#idBTNPlusDailyTool").addEventListener('click',(event)=>{
+                let jsonTool = {
+                    id:crypto.randomUUID(),
+                    type:"Gateway.Bookmark",
+                    title:'TBD',
+                    data:{url:''}
                 } ;
 
-                document.querySelector("#idBTNPlusDailyTool").addEventListener('click',(event)=>{
-                    let jsonTool = {
-                        id:crypto.randomUUID(),
-                        type:"Gateway.Bookmark",
-                        title:'demo',
-                        data:{
-                            url:'https://gemini.google.com/app/b350b4901b28dfe1?pli=1'
-                        }
-                    } ;
-
-                    const bookmarkSchema = [
-                        { "name": "title", "type": "string", "placeholder": "书签标题" },
-                        { "name": "url", "type": "string", "placeholder": "https://..." }
-                    ];
-                    const bookmarkCallbacks = {
-                        onConfirm: callbackPlusTool,
-                        onCancel: () => {
-                            console.log("用户取消了操作。");
-                        }
-                    };
-                    createFormModal('新建每日工具', bookmarkSchema, bookmarkCallbacks);
-
-                }) ;
-            }
-            document.querySelector("#idBTNDisplayDailyTools").addEventListener('click',(event)=>{
-                displayDailyTools() ;
+                const bookmarkSchema = [
+                    { "name": "title", "type": "string", "placeholder": "书签标题" },
+                    { "name": "url", "type": "string", "placeholder": "https://..." }
+                ];
+                const bookmarkCallbacks = {
+                    onConfirm: callbackPlusTool,
+                    onCancel: () => {console.log("用户取消了操作。");}
+                };
+                createFormModal('新建每日工具', bookmarkSchema, bookmarkCallbacks);
             }) ;
+        }
     </script>
 </body>
 </html>
