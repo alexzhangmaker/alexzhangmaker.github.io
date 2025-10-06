@@ -8,12 +8,29 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+        </style>
+    <style>
+        body{
+            font-size: 14px;
+            font-family: "Lato", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
         .fade-in {
             animation: fadeIn 0.3s ease-in;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <style>
+        .outpostCard{
+            font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
         }
     </style>
 </head>
@@ -58,7 +75,7 @@
         </div>
 
         <!-- Todo列表容器 -->
-        <div id="todoList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div id="todoList" class="flex flex-col gap-4">
             <!-- Todo卡片将动态渲染在这里 -->
         </div>
 
@@ -421,12 +438,12 @@ class TodoManager {
     }
 
     // 渲染单个todo卡片
-    renderTodoCard(todo) {
+    renderTodoCardV0(todo) {
         const priorityColors = {
             low: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
             medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
             high: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-        };
+        }; 
 
         const statusColors = {
             active: 'border-l-blue-500',
@@ -526,6 +543,92 @@ class TodoManager {
                 </div>
             </div>
         `;
+    }
+
+    renderTodoCard(todo) {
+        
+        const statusIcons = {
+            active: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 32 32"><g fill="none"><path fill="url(#f2964id0)" d="M29.757 15.875c0 7.732-6.268 14-14 14s-14-6.268-14-14s6.268-14 14-14s14 6.268 14 14Z"/><path fill="url(#f2964id4)" d="M29.757 15.875c0 7.732-6.268 14-14 14s-14-6.268-14-14s6.268-14 14-14s14 6.268 14 14Z"/><path fill="url(#f2964id1)" d="M29.757 15.875c0 7.732-6.268 14-14 14s-14-6.268-14-14s6.268-14 14-14s14 6.268 14 14Z"/><path fill="url(#f2964id2)" d="M29.757 15.875c0 7.732-6.268 14-14 14s-14-6.268-14-14s6.268-14 14-14s14 6.268 14 14Z"/><path fill="url(#f2964id3)" d="M29.757 15.875c0 7.732-6.268 14-14 14s-14-6.268-14-14s6.268-14 14-14s14 6.268 14 14Z"/><defs><radialGradient id="f2964id0" cx="0" cy="0" r="1" gradientTransform="rotate(130.168 9.965 9.872) scale(27.8086)" gradientUnits="userSpaceOnUse"><stop offset=".232" stop-color="#F3BB4B"/><stop offset=".959" stop-color="#C79738"/></radialGradient><radialGradient id="f2964id1" cx="0" cy="0" r="1" gradientTransform="rotate(136.38 10.092 10.202) scale(14.6767 15.816)" gradientUnits="userSpaceOnUse"><stop offset=".179" stop-color="#FFE764"/><stop offset="1" stop-color="#F8CA4D" stop-opacity="0"/></radialGradient><radialGradient id="f2964id2" cx="0" cy="0" r="1" gradientTransform="matrix(-19.25 0 0 -20 20.249 15.875)" gradientUnits="userSpaceOnUse"><stop offset=".62" stop-color="#C69B40" stop-opacity="0"/><stop offset=".951" stop-color="#E8C290"/></radialGradient><radialGradient id="f2964id3" cx="0" cy="0" r="1" gradientTransform="matrix(0 21 -23.3208 0 15.757 8.875)" gradientUnits="userSpaceOnUse"><stop offset=".792" stop-color="#E5A152" stop-opacity="0"/><stop offset="1" stop-color="#D17887"/></radialGradient><linearGradient id="f2964id4" x1="15.757" x2="15.757" y1="1.875" y2="8.375" gradientUnits="userSpaceOnUse"><stop stop-color="#E1B45D"/><stop offset="1" stop-color="#E1B45D" stop-opacity="0"/></linearGradient></defs></g></svg>`,
+            archived: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#8a6859"/></svg>`,
+            deleted: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path fill="#000000" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2ZM7.19 13.35H5.27l.52-2.41h1.84c1.2 0 1.48.58 1.48 1.05c0 .65-.43 1.36-1.92 1.36Zm.66-3.64H5.94l.52-2.41H8.3c1.19 0 1.47.59 1.47 1c0 .7-.42 1.41-1.92 1.41Zm3.75 7.43H9.68l.53-2.42h1.84c1.19 0 1.47.59 1.47 1.06c0 .65-.42 1.36-1.92 1.36Zm.71-3.79H10.4l.52-2.41h1.84c1.19 0 1.47.58 1.47 1.05c0 .65-.42 1.36-1.92 1.36ZM13 9.71h-1.94l.52-2.41h1.84c1.2 0 1.48.59 1.48 1c0 .7-.43 1.41-1.9 1.41Zm3.74 5.61h-1.93l.52-2.42h1.84c1.19 0 1.48.59 1.48 1.06c0 .65-.43 1.36-1.93 1.36Zm.72-3.44h-1.94L16 9.46h1.84c1.2 0 1.48.59 1.48 1c.04.71-.39 1.42-1.88 1.42Z"/></svg>`
+        };
+
+        //low medium high
+        const priortyIcons = {
+            high: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 48 48"><path fill="#6dd627" d="M25.64 12.68A1.32 1.32 0 0 1 24.22 14c-1.17 0-1.3-1.28-1.3-1.28a15 15 0 0 1 1.36-7.47c2.24-4.76 5.26-5.47 6.79-1.39s-1.05.81-3.4 3.39a9.13 9.13 0 0 0-2.03 5.43Z"/><path fill="#9ceb60" d="M25.48 7.57c1.82-3.83 4.16-5 5.79-3.14l-.2-.57C29.54-.22 26.52.49 24.28 5.21a15 15 0 0 0-1.36 7.47S23 13.86 24.08 14a15.32 15.32 0 0 1 1.4-6.43Z"/><path fill="#45413c" d="M4.32 44.96a19.68 2.04 0 1 0 39.36 0a19.68 2.04 0 1 0-39.36 0Z" opacity=".15"/><path fill="none" stroke="#45413c" stroke-linecap="round" stroke-linejoin="round" d="M25.64 12.68A1.32 1.32 0 0 1 24.22 14c-1.17 0-1.3-1.28-1.3-1.28a15 15 0 0 1 1.36-7.47c2.24-4.76 5.26-5.47 6.79-1.39s-1.05.81-3.4 3.39a9.13 9.13 0 0 0-2.03 5.43Z"/><path fill="#ff6242" d="M36.65 10.58a11.26 11.26 0 0 0-9.82 1.23a5 5 0 0 1-5.66 0a11.26 11.26 0 0 0-9.82-1.23C5.06 12.42 2.17 21.5 4.91 30.85S15 46.29 21.26 44.44a7.48 7.48 0 0 0 1.44-.58a2.73 2.73 0 0 1 2.6 0a7.48 7.48 0 0 0 1.44.58C33 46.29 40.35 40.2 43.09 30.85s-.15-18.43-6.44-20.27Z"/><path fill="#ff866e" d="M11.35 15a12.28 12.28 0 0 1 9.82 1.11a5.48 5.48 0 0 0 5.66 0A12.28 12.28 0 0 1 36.65 15c4.28 1.13 7 5.3 7.41 10.5c.52-7.24-2.34-13.43-7.41-14.91a11.26 11.26 0 0 0-9.82 1.23a5 5 0 0 1-5.66 0a11.26 11.26 0 0 0-9.82-1.23c-5.07 1.48-7.93 7.67-7.41 14.91c.43-5.21 3.13-9.38 7.41-10.5Z"/><path fill="none" stroke="#45413c" stroke-linecap="round" stroke-linejoin="round" d="M36.65 10.58a11.26 11.26 0 0 0-9.82 1.23a5 5 0 0 1-5.66 0a11.26 11.26 0 0 0-9.82-1.23C5.06 12.42 2.17 21.5 4.91 30.85S15 46.29 21.26 44.44a7.48 7.48 0 0 0 1.44-.58a2.73 2.73 0 0 1 2.6 0a7.48 7.48 0 0 0 1.44.58C33 46.29 40.35 40.2 43.09 30.85s-.15-18.43-6.44-20.27Z"/><path fill="#6dd627" d="M22.91 12.56s1.48-5.73-3.39-8.14c-2.74-1.36-6.32-.1-7.63.45a.65.65 0 0 0-.39.77c.38 1.58 1.83 6 6 6.24c5.2.3 5.41.68 5.41.68Z"/><path fill="#9ceb60" d="M12.11 7.48c1.45-.58 4.8-1.65 7.41-.36A6.23 6.23 0 0 1 23 12c.23-1.51.43-5.61-3.5-7.56c-2.74-1.36-6.32-.1-7.63.45a.65.65 0 0 0-.39.77a11.41 11.41 0 0 0 .63 1.82Z"/><path fill="none" stroke="#45413c" stroke-linecap="round" stroke-linejoin="round" d="M22.91 12.56s1.48-5.73-3.39-8.14c-2.74-1.36-6.32-.1-7.63.45a.65.65 0 0 0-.39.77c.38 1.58 1.83 6 6 6.24c5.2.3 5.41.68 5.41.68Z"/><path fill="#6dd627" stroke="#45413c" stroke-linecap="round" stroke-linejoin="round" d="M22.91 12.56a9.84 9.84 0 0 0-4.75-5.43"/></svg>`,
+            medium: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#8a6859"/></svg>`,
+            low: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 128 128"><path fill="#6EA517" d="M78.7 52.85L60.22 36.83l6.86-5.1s19.91-11.15 38.9 2.29c18.66 13.2 16.9 52.45 2.46 70.4s-24.47 19.01-29.92 18.83c-5.46-.18-6.34-2.82-11.62-2.29c-5.28.53-7.04 3.52-16.72 2.82c-8.78-.64-16.02-4.05-19.54-7.92c-3.33-3.68 48.06-63.01 48.06-63.01z"/><path fill="#87C244" d="M100.21 34.4s-7.93 3.42-15.85 4.04c-7.93.62-22.07-.47-22.07-.47s-1.55-8.24-2.02-8.24s-21.28-7.24-36.52 4.2C7.69 45.98 6.11 69.38 8.67 80.55c5.89 25.67 24.78 37.76 24.78 37.76s16.87 1.87 38.01-7.45s39.44-25.64 39.01-47.55C110 39.99 100.21 34.4 100.21 34.4z"/><path fill="#E5DD9F" d="M37.7 38.9c-2.71-3.13-10.15-2.43-15.93 5.84c-6.02 8.6-6.29 24.36-1.33 24.79c4.07.35 5.11-6.54 7.61-11.42c4.7-9.16 15.85-12.04 9.65-19.21z"/><path fill="#59702C" d="M44.25 35.36c-1.19 2.48 2.73 8.58 17.37 9.03c15.4.47 20.45-8.11 18.69-10.11c-1.76-2-7.52 1.29-18.45 1.18s-15.58-4.31-17.61-.1z"/><path fill="#513532" d="M51.86 18.64c-1.18-.24-5.99-1.06-6.47-2.94c-.22-.89.94-3.76 4-5.88s6.11-2.7 6.82-1.06c.71 1.65.47 2.7.47 3.06c0 .35 2.42 3.18 4.11 6.82c2.35 5.05 3.64 9.99 3.41 15.05c-.17 3.66-.24 8.82-2.35 8.46c-2.2-.37-1.74-5.53-2.82-9.17c-2.58-8.69-6.46-14.19-7.17-14.34z"/><path fill="#2F7C31" d="M82.59 24.36c.24-.35 24.57-15.63 24.68-16.57S94.7 4.61 86.71 7.55s-16.27 7.67-20.22 15.87c-3.17 6.58-3.17 11.05-2.35 12.11c.39.5 18.45-11.17 18.45-11.17z"/><path fill="#4C8C19" d="M79.89 23.42c10.74-6.86 27.39-15.63 27.39-15.63s.5 1.31-2.7 6.82c-4.23 7.29-14.11 16.69-24.1 19.63c-10.84 3.19-16.34 1.29-16.34 1.29s7.29-6.7 15.75-12.11z"/></svg>`
+        };
+
+        let priortyIcon = priortyIcons[todo.priority] ;
+
+        
+        let htmlTODO=`
+            <div class="outpostCard bg-white dark:bg-zinc-800 shadow-lg rounded-xl overflow-hidden flex p-8">
+               <div class="grid grid-cols-[auto_1fr_auto] items-start w-full gap-6">
+                  <div class="flex items-start">
+                     <img alt="Assignee Avatar" class="w-12 h-12 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC804gkKXN3ZKxUoSXplIbeKq8WNYK2clirp3t0OrKVlp-DDSGlm3abkkk2tn1EsKTJOdBlcxlrYHxAgbjQgs5Ity0OR8XImFwyj_u_BGzWSCBrWnN8EfXNRnLDurup9XGMc3Tea0kBlQKLTYxpuvGWMzEQNmZYuSB83PmIWBVsMWUu6GRAVPcJ4uxqHBIPnr15pxCWQ6RYJH0Z7PSvRwqAoc-27oHbHsFZnm1hVy6fTJo_lhaevkOsClCnt8T61jQHpACt8XET3g4"/>
+                  </div>
+                  <div class="flex flex-col items-start gap-4">
+                     <p class="text-gray-900 dark:text-white font-medium" style="font-size: 2em; line-height: 1.2" >
+                        ${todo.title}
+                     </p>
+                     <div class="flex items-center gap-6 text-gray-500 dark:text-gray-400 text-sm" >
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 36 36"><path fill="#E0E7EC" d="M36 32a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V9a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v23z"/><path fill="#66757F" d="M23.657 19.12H17.87c-1.22 0-1.673-.791-1.673-1.56c0-.791.429-1.56 1.673-1.56h8.184c1.154 0 1.628 1.04 1.628 1.628c0 .452-.249.927-.52 1.492l-5.607 11.395c-.633 1.266-.882 1.717-1.899 1.717c-1.244 0-1.877-.949-1.877-1.605c0-.271.068-.474.226-.791l5.652-10.716zM10.889 19h-.5c-1.085 0-1.538-.731-1.538-1.5c0-.792.565-1.5 1.538-1.5h2.015c.972 0 1.515.701 1.515 1.605V30.47c0 1.13-.558 1.763-1.53 1.763s-1.5-.633-1.5-1.763V19z"/><path fill="#DD2F45" d="M34 0h-3.277c.172.295.277.634.277 1a2 2 0 0 1-4 0c0-.366.105-.705.277-1H8.723C8.895.295 9 .634 9 1a2 2 0 0 1-4 0c0-.366.105-.705.277-1H2a2 2 0 0 0-2 2v11h36V2a2 2 0 0 0-2-2z"/><path fill="#F5F8FA" d="M13.182 4.604c0-.5.32-.78.75-.78c.429 0 .749.28.749.78v5.017h1.779c.51 0 .73.38.72.72a.7.7 0 0 1-.72.659h-2.498c-.49 0-.78-.319-.78-.819V4.604zm-6.91 0c0-.5.32-.78.75-.78s.75.28.75.78v3.488c0 .92.589 1.649 1.539 1.649c.909 0 1.529-.769 1.529-1.649V4.604c0-.5.319-.78.749-.78s.75.28.75.78v3.568c0 1.679-1.38 2.949-3.028 2.949c-1.669 0-3.039-1.25-3.039-2.949V4.604zM5.49 9.001c0 1.679-1.069 2.119-1.979 2.119c-.689 0-1.839-.27-1.839-1.14c0-.269.23-.609.56-.609c.4 0 .75.37 1.199.37c.56 0 .56-.52.56-.84V4.604c0-.5.32-.78.749-.78c.431 0 .75.28.75.78v4.397z"/><path fill="#F4ABBA" d="M32 10a1 1 0 1 0 2 0a1 1 0 0 0-2 0m0-3a1 1 0 1 0 2 0a1 1 0 0 0-2 0m-3 3a1 1 0 1 0 2 0a1 1 0 0 0-2 0m0-3a1 1 0 1 0 2 0a1 1 0 0 0-2 0m-3 3a1 1 0 1 0 2 0a1 1 0 0 0-2 0m0-3a1 1 0 1 0 2 0a1 1 0 0 0-2 0m-3 0a1 1 0 1 0 2 0a1 1 0 0 0-2 0m0 3a1 1 0 1 0 2 0a1 1 0 0 0-2 0"/></svg>                           
+                            ${todo.startDate} ${todo.startDate !== todo.endDate ? `- ${todo.endDate}` : ''}
+                        </div>
+                        <div class="flex items-center gap-2">
+                           ${priortyIcon}
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${todo.tags && todo.tags.length > 0 ? `
+                                <div class="flex flex-wrap gap-1 items-center">
+                                    ${todo.tags.map(tag => `
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs rounded-full">
+                                            ${this.escapeHtml(tag)}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                     </div>
+                  </div>
+                  <div class="flex flex-col items-center gap-1">
+                    ${todo.status === 'active' ? `
+                            <!----
+                            <button onclick="app.editTodo('${todo.id}')" 
+                                    class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded transition-colors">
+                                编辑
+                            </button>
+                            <button onclick="app.archiveTodo('${todo.id}')" 
+                                    class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white text-sm rounded transition-colors">
+                                归档
+                            </button>
+                            --->
+                            <button onclick="app.editTodo('${todo.id}')" class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32"><path fill="#000000" d="M25 4.031c-.766 0-1.516.297-2.094.875L13 14.781l-.219.219l-.062.313l-.688 3.5l-.312 1.468l1.469-.312l3.5-.688l.312-.062l.219-.219l9.875-9.906A2.968 2.968 0 0 0 25 4.03zm0 1.938c.234 0 .465.12.688.343c.445.446.445.93 0 1.375L16 17.376l-1.719.344l.344-1.719l9.688-9.688c.222-.222.453-.343.687-.343zM4 8v20h20V14.812l-2 2V26H6V10h9.188l2-2z"/></svg>
+                            </button>
+                            <button onclick="app.archiveTodo('${todo.id}')" class="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"/></svg>                     
+                            </button>
+                    ` : ''}
+
+                        
+                        <button onclick="app.softDeleteTodo('${todo.id}')" class="text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-500 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 512 512"><path fill="#000000" d="M96 472a23.82 23.82 0 0 0 23.579 24h272.842A23.82 23.82 0 0 0 416 472V152H96Zm32-288h256v280H128Z"/><path fill="#000000" d="M168 216h32v200h-32zm72 0h32v200h-32zm72 0h32v200h-32zm16-128V40c0-13.458-9.488-24-21.6-24H205.6C193.488 16 184 26.542 184 40v48H64v32h384V88ZM216 48h80v40h-80Z"/></svg>                     
+                        </button>
+                        <!---
+                        <button onclick="app.softDeleteTodo('${todo.id}')" 
+                                class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded transition-colors">
+                            ${todo.status === 'deleted' ? '彻底删除' : '删除'}
+                        </button>
+                        --->
+                  </div>
+               </div>
+            </div>
+        ` ;
+        return htmlTODO;
     }
 
     // 渲染所有todos
@@ -784,8 +887,8 @@ const app = {
         // 每行卡片数量
         if (uiSettings.cardsPerRow) {
             const todoList = document.getElementById('todoList');
-            const gridClass = this.getGridClass(uiSettings.cardsPerRow);
-            todoList.className = `grid gap-4 ${gridClass}`;
+            //const gridClass = this.getGridClass(uiSettings.cardsPerRow);
+            //todoList.className = `grid gap-4 ${gridClass}`;
         }
     },
 

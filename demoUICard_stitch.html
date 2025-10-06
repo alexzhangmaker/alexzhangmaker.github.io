@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8"/>
+      <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+      <title>Stitch Design</title>
+      <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+      <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+      <link href="https://fonts.googleapis.com" rel="preconnect"/>
+      <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+      <script id="tailwind-config">
+         tailwind.config = {
+             darkMode: "class",
+             theme: {
+                 extend: {
+                     colors: {
+                         "primary": "#137fec",
+                         "background-light": "#f6f7f8",
+                         "background-dark": "#101922",
+                     },
+                     fontFamily: {
+                         "display": ["Inter"]
+                     },
+                     borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                 },
+             },
+         }
+      </script>
+      <style>
+         .group:hover .group-hover\:flex {
+         display: flex;
+         }
+      </style>
+   </head>
+   <body class="bg-background-light dark:bg-background-dark font-display">
+      <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+         <header class="flex items-center justify-between whitespace-nowrap border-b border-black/10 dark:border-white/10 px-10 py-3">
+            <div class="flex items-center gap-4 text-slate-800 dark:text-white">
+               <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path>
+               </svg>
+               <h2 class="text-lg font-bold">TaskMaster</h2>
+            </div>
+            <div class="hidden md:flex items-center gap-9 text-slate-800 dark:text-white/80">
+               <a class="text-sm font-medium hover:text-primary dark:hover:text-white" href="#">Home</a>
+               <a class="text-sm font-medium hover:text-primary dark:hover:text-white" href="#">Projects</a>
+               <a class="text-sm font-medium hover:text-primary dark:hover:text-white" href="#">Team</a>
+            </div>
+            <div class="flex items-center gap-4">
+               <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-200/50 dark:bg-slate-700/50 text-slate-600 dark:text-white/80 hover:bg-slate-200 dark:hover:bg-slate-700">
+               <span class="material-symbols-outlined">notifications</span>
+               </button>
+               <div class="h-10 w-10 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCoM-wv7zK-teWa43axwtTb9mMV3DMMEoHrewMmKKLqhvAPXhogUEyTtvof0bKqACKLI2f-dUHd5s6X9krGxr4XLetHmm93_Bnx_L_eH5m5MrjdNnU-LjGDiin-JfZffwLZuq2BdaR9ssEQZa8uF052malxhJR3JRylzSZkze2aK6-v0IdpqQa9rBa8O-oZN85iP3TzUUXOe3LcrWrJfvK9G6BLYFXN1pHuDNexUpoBJVKlkufZRW-mUcCVdSCx5HbNDvXg3NsAjss");'></div>
+            </div>
+         </header>
+         <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-4xl">
+               <div class="mb-8 flex items-center justify-between">
+                  <h1 class="text-3xl font-bold text-slate-900 dark:text-white">My Tasks</h1>
+                  <button class="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white shadow-md hover:bg-primary/90">
+                  <span class="material-symbols-outlined">add</span>
+                  New Task
+                  </button>
+               </div>
+               <div class="space-y-4">
+                  <div class="group relative cursor-pointer rounded-lg bg-white dark:bg-background-dark/50 p-4 shadow-sm transition-shadow hover:shadow-lg dark:border dark:border-white/10">
+                     <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined mt-1.5 text-slate-400 dark:text-slate-500">drag_indicator</span>
+                        <div class="flex-1">
+                           <div class="flex items-center justify-between">
+                              <p class="text-base font-bold text-slate-800 dark:text-white">Grocery Shopping</p>
+                              <div class="flex items-center gap-2">
+                                 <div class="h-6 w-6 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAkunazu1-G3Dq4Qko4YiXmyym58xRbu-4Ce7j-8435khLqahuE1Ygk-bv3bx-tUKETD8H-H4d2jPZUecSThOOORhuYz6qlyafKVEGG5041Pdd_L5qvEs0K0YgSVupVrLu7WPukOljJG9vdcQRt7oiOcF7zY1VVAA0K9Tk3mjxD85PECNEqzSbyEIJMtABcY2RVhq-wTRZEVRUw_jFuSfPmBuIawDRU47-eMjwAWTp1Wk_mr-XQRLY3DkSTToFg3jm8KBBV4I44uN8");'></div>
+                                 <span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300">In Progress</span>
+                              </div>
+                           </div>
+                           <p class="mt-1 text-sm text-slate-500 dark:text-white/60">Buy groceries for the week, including fruits, vegetables, and dairy products.</p>
+                           <div class="mt-3 flex items-center justify-between text-sm text-slate-500 dark:text-white/60">
+                              <div class="flex items-center gap-2">
+                                 <span class="material-symbols-outlined text-base">calendar_today</span>
+                                 <span>Mar 15 - Mar 18</span>
+                              </div>
+                              <div class="flex gap-2">
+                                 <span class="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">Shopping</span>
+                                 <span class="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800 dark:bg-green-900/50 dark:text-green-300">Home</span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="absolute right-4 top-4 hidden items-center gap-2 group-hover:flex">
+                           <button class="h-8 w-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-white/70">
+                           <span class="material-symbols-outlined text-base">edit</span>
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="group relative cursor-pointer rounded-lg bg-white dark:bg-background-dark/50 p-4 shadow-sm transition-shadow hover:shadow-lg dark:border dark:border-white/10">
+                     <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined mt-1.5 text-slate-400 dark:text-slate-500">drag_indicator</span>
+                        <div class="flex-1">
+                           <div class="flex items-center justify-between">
+                              <p class="text-base font-bold text-slate-800 dark:text-white">Project Presentation</p>
+                              <div class="flex items-center gap-2">
+                                 <div class="h-6 w-6 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAkunazu1-G3Dq4Qko4YiXmyym58xRbu-4Ce7j-8435khLqahuE1Ygk-bv3bx-tUKETD8H-H4d2jPZUecSThOOORhuYz6qlyafKVEGG5041Pdd_L5qvEs0K0YgSVupVrLu7WPukOljJG9vdcQRt7oiOcF7zY1VVAA0K9Tk3mjxD85PECNEqzSbyEIJMtABcY2RVhq-wTRZEVRUw_jFuSfPmBuIawDRU47-eMjwAWTp1Wk_mr-XQRLY3DkSTToFg3jm8KBBV4I44uN8");'></div>
+                                 <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/50 dark:text-green-300">Completed</span>
+                              </div>
+                           </div>
+                           <p class="mt-1 text-sm text-slate-500 dark:text-white/60">Prepare slides and rehearse for the project presentation scheduled for next week.</p>
+                           <div class="mt-3 flex items-center justify-between text-sm text-slate-500 dark:text-white/60">
+                              <div class="flex items-center gap-2">
+                                 <span class="material-symbols-outlined text-base">calendar_today</span>
+                                 <span>Mar 10 - Mar 14</span>
+                              </div>
+                              <div class="flex gap-2">
+                                 <span class="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-800 dark:bg-purple-900/50 dark:text-purple-300">Work</span>
+                                 <span class="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-800 dark:bg-red-900/50 dark:text-red-300">Urgent</span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="absolute right-4 top-4 hidden items-center gap-2 group-hover:flex">
+                           <button class="h-8 w-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-white/70">
+                           <span class="material-symbols-outlined text-base">edit</span>
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="group relative cursor-pointer rounded-lg bg-white dark:bg-background-dark/50 p-4 shadow-sm transition-shadow hover:shadow-lg dark:border dark:border-white/10">
+                     <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined mt-1.5 text-slate-400 dark:text-slate-500">drag_indicator</span>
+                        <div class="flex-1">
+                           <div class="flex items-center justify-between">
+                              <p class="text-base font-bold text-slate-800 dark:text-white">Book Appointment</p>
+                              <div class="flex items-center gap-2">
+                                 <div class="h-6 w-6 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAkunazu1-G3Dq4Qko4YiXmyym58xRbu-4Ce7j-8435khLqahuE1Ygk-bv3bx-tUKETD8H-H4d2jPZUecSThOOORhuYz6qlyafKVEGG5041Pdd_L5qvEs0K0YgSVupVrLu7WPukOljJG9vdcQRt7oiOcF7zY1VVAA0K9Tk3mjxD85PECNEqzSbyEIJMtABcY2RVhq-wTRZEVRUw_jFuSfPmBuIawDRU47-eMjwAWTp1Wk_mr-XQRLY3DkSTToFg3jm8KBBV4I44uN8");'></div>
+                                 <span class="inline-flex items-center rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-medium text-slate-800 dark:bg-slate-700 dark:text-slate-300">To Do</span>
+                              </div>
+                           </div>
+                           <p class="mt-1 text-sm text-slate-500 dark:text-white/60">Schedule an appointment with Dr. Emily Carter for a routine check-up.</p>
+                           <div class="mt-3 flex items-center justify-between text-sm text-slate-500 dark:text-white/60">
+                              <div class="flex items-center gap-2">
+                                 <span class="material-symbols-outlined text-base">calendar_today</span>
+                                 <span>Mar 20 - Mar 20</span>
+                              </div>
+                              <div class="flex gap-2">
+                                 <span class="rounded-full bg-pink-100 px-2 py-0.5 text-xs text-pink-800 dark:bg-pink-900/50 dark:text-pink-300">Health</span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="absolute right-4 top-4 hidden items-center gap-2 group-hover:flex">
+                           <button class="h-8 w-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-white/70">
+                           <span class="material-symbols-outlined text-base">edit</span>
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="group relative cursor-pointer rounded-lg bg-white dark:bg-background-dark/50 p-4 shadow-sm transition-shadow hover:shadow-lg dark:border dark:border-white/10">
+                     <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined mt-1.5 text-slate-400 dark:text-slate-500">drag_indicator</span>
+                        <div class="flex-1">
+                           <div class="flex items-center justify-between">
+                              <p class="text-base font-bold text-slate-800 dark:text-white">Gym Workout</p>
+                              <div class="flex items-center gap-2">
+                                 <div class="h-6 w-6 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAkunazu1-G3Dq4Qko4YiXmyym58xRbu-4Ce7j-8435khLqahuE1Ygk-bv3bx-tUKETD8H-H4d2jPZUecSThOOORhuYz6qlyafKVEGG5041Pdd_L5qvEs0K0YgSVupVrLu7WPukOljJG9vdcQRt7oiOcF7zY1VVAA0K9Tk3mjxD85PECNEqzSbyEIJMtABcY2RVhq-wTRZEVRUw_jFuSfPmBuIawDRU47-eMjwAWTp1Wk_mr-XQRLY3DkSTToFg3jm8KBBV4I44uN8");'></div>
+                                 <span class="inline-flex items-center rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-medium text-slate-800 dark:bg-slate-700 dark:text-slate-300">To Do</span>
+                              </div>
+                           </div>
+                           <p class="mt-1 text-sm text-slate-500 dark:text-white/60">Plan and execute a full-body workout session at the gym.</p>
+                           <div class="mt-3 flex items-center justify-between text-sm text-slate-500 dark:text-white/60">
+                              <div class="flex items-center gap-2">
+                                 <span class="material-symbols-outlined text-base">calendar_today</span>
+                                 <span>Mar 16 - Mar 16</span>
+                              </div>
+                              <div class="flex gap-2">
+                                 <span class="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-800 dark:bg-orange-900/50 dark:text-orange-300">Fitness</span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="absolute right-4 top-4 hidden items-center gap-2 group-hover:flex">
+                           <button class="h-8 w-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-white/70">
+                           <span class="material-symbols-outlined text-base">edit</span>
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </main>
+      </div>
+   </body>
+</html>
