@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态Todo应用</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen transition-colors duration-300">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 头部 -->
+        <header class="mb-8 fade-in">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-3xl font-bold text-gray-800 dark:text-white">动态Todo清单</h1>
+                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                    <span id="currentPath"></span>
+                    <button id="settingsBtn" class="ml-2 px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                        配置
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 搜索和过滤 -->
+            <div class="flex flex-wrap gap-4 mt-4">
+                <input type="text" id="searchInput" placeholder="搜索todo..." 
+                       class="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                
+                <select id="tagFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <option value="">所有标签</option>
+                </select>
+                
+                <select id="statusFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <option value="active">活动状态</option>
+                    <option value="archived">已归档</option>
+                    <option value="all">全部状态</option>
+                </select>
+                
+                <button id="addTodoBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
+                    新建Todo
+                </button>
+            </div>
+        </header>
+
+        <!-- 统计信息 -->
+        <div id="stats" class="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4 fade-in">
+            <!-- 统计卡片将通过JavaScript动态生成 -->
+        </div>
+
+        <!-- Todo列表容器 -->
+        <div id="todoList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Todo卡片将动态渲染在这里 -->
+        </div>
+
+        <!-- 空状态 -->
+        <div id="emptyState" class="hidden text-center py-12 fade-in">
+            <div class="text-gray-400 dark:text-gray-500 mb-4">
+                <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-600 dark:text-gray-400 mb-2">暂无待办事项</h3>
+            <p class="text-gray-500 dark:text-gray-500 mb-4">点击"新建Todo"开始添加你的第一个任务</p>
+            <button id="emptyAddBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
+                创建第一个Todo
+            </button>
+        </div>
+    </div>
+
+    <!-- 编辑/新建Todo的对话框 -->
+    <div id="todoDialog" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4 fade-in">
+            <h2 id="dialogTitle" class="text-xl font-bold mb-4 text-gray-800 dark:text-white">新建Todo</h2>
+            <form id="todoForm" class="space-y-4">
+                <input type="hidden" id="todoId">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">标题 *</label>
+                    <input type="text" id="title" required
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">标签 (逗号分隔)</label>
+                    <input type="text" id="tags"
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                           placeholder="工作, 紧急, 个人">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">开始日期 *</label>
+                        <input type="date" id="startDate" required
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">结束日期 *</label>
+                        <input type="date" id="endDate" required
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">优先级</label>
+                    <select id="priority" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <option value="low">低</option>
+                        <option value="medium">中</option>
+                        <option value="high">高</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">负责人 *</label>
+                    <input type="text" id="assignee" required
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                </div>
+                
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" id="cancelBtn" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+                        取消
+                    </button>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md transition-colors">
+                        保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 配置对话框 -->
+    <div id="settingsDialog" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl mx-4 fade-in">
+            <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">应用配置</h2>
+            <div class="space-y-6 max-h-96 overflow-y-auto">
+                <!-- 路径配置 -->
+                <div>
+                    <h3 class="text-lg font-medium mb-3 text-gray-800 dark:text-white">数据路径配置</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Todo数据根路径</label>
+                            <input type="text" id="appRootPath" 
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Firebase数据库中的路径，例如: /todos 或 /users/123/todos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 功能开关 -->
+                <div>
+                    <h3 class="text-lg font-medium mb-3 text-gray-800 dark:text-white">功能开关</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" id="featureSearch" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">搜索功能</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" id="featureFiltering" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">标签过滤</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" id="featureArchiving" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">归档功能</span>
+                        </label>
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" id="featureDueDateWarning" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">到期提醒</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- UI配置 -->
+                <div>
+                    <h3 class="text-lg font-medium mb-3 text-gray-800 dark:text-white">界面设置</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">主题</label>
+                            <select id="uiTheme" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                <option value="light">浅色</option>
+                                <option value="dark">深色</option>
+                                <option value="auto">自动</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">每行卡片数量</label>
+                            <select id="uiCardsPerRow" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                <option value="1">1个</option>
+                                <option value="2">2个</option>
+                                <option value="3">3个</option>
+                                <option value="4">4个</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center pt-6 mt-6 border-t border-gray-200 dark:border-gray-600">
+                <button type="button" id="resetSettingsBtn" class="px-4 py-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors">
+                    重置为默认
+                </button>
+                <div class="flex gap-3">
+                    <button type="button" id="settingsCancelBtn" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+                        取消
+                    </button>
+                    <button type="button" id="saveSettingsBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md transition-colors">
+                        保存配置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // Firebase配置 - 请替换为你的实际配置
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6MZ_p5lVuy8TMAqiuV6IRx9fggV44lQs",
+            authDomain: "outpost-8d74e.firebaseapp.com",
+            databaseURL: "https://outpost-8d74e.asia-southeast1.firebasedatabase.app/",
+            projectId: "outpost-8d74e",
+            storageBucket: "outpost-8d74e.firebasestorage.app",
+            messagingSenderId: "724993324937",
+            appId: "1:724993324937:web:ce6c7e6b06489331c79358",
+            measurementId: "G-QPHWRTH6BH"
+        };
+
+// 初始化Firebase
+try {
+    firebase.initializeApp(firebaseConfig);
+    console.log('Firebase初始化成功');
+} catch (error) {
+    console.error('Firebase初始化失败:', error);
+}
+
+const database = firebase.database();
+
+// Firebase工具函数
+const FirebaseService = {
+    // 获取指定路径的todos
+    async getTodos(path = '/todos') {
+        try {
+            const snapshot = await database.ref(path).once('value');
+            const data = snapshot.val() || {};
+            console.log(`从路径 ${path} 获取到 ${Object.keys(data).length} 个todos`);
+            return data;
+        } catch (error) {
+            console.error(`获取todos失败 (路径: ${path}):`, error);
+            return {};
+        }
+    },
+
+    // 添加或更新todo
+    async saveTodo(todoId, todoData, path = '/todos') {
+        try {
+            await database.ref(`${path}/${todoId}`).set(todoData);
+            console.log(`Todo保存成功: ${todoId} (路径: ${path})`);
+            return true;
+        } catch (error) {
+            console.error(`保存todo失败 (路径: ${path}):`, error);
+            return false;
+        }
+    },
+
+    // 删除todo
+    async deleteTodo(todoId, path = '/todos') {
+        try {
+            await database.ref(`${path}/${todoId}`).remove();
+            console.log(`Todo删除成功: ${todoId} (路径: ${path})`);
+            return true;
+        } catch (error) {
+            console.error(`删除todo失败 (路径: ${path}):`, error);
+            return false;
+        }
+    },
+
+    // 监听todos变化
+    onTodosChange(callback, path = '/todos') {
+        database.ref(path).on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            callback(data);
+        });
+        console.log(`开始监听todos变化 (路径: ${path})`);
+    },
+
+    // 停止监听todos变化
+    offTodosChange(path = '/todos') {
+        database.ref(path).off('value');
+        console.log(`停止监听todos变化 (路径: ${path})`);
+    },
+
+    // 获取应用配置数据
+    async getAppSettings(path = '/appSetting/todoSetting') {
+        try {
+            const snapshot = await database.ref(path).once('value');
+            const settings = snapshot.val();
+            
+            if (!settings) {
+                console.warn('未找到应用配置，使用默认配置');
+                return this.getDefaultSettings();
+            }
+            
+            console.log('成功获取应用配置:', settings);
+            return settings;
+        } catch (error) {
+            console.error('获取应用配置失败:', error);
+            console.warn('使用默认配置继续运行');
+            return this.getDefaultSettings();
+        }
+    },
+
+    // 监听应用配置变化
+    onAppSettingsChange(callback, path = '/appSetting/todoSetting') {
+        database.ref(path).on('value', (snapshot) => {
+            const settings = snapshot.val();
+            const finalSettings = settings || this.getDefaultSettings();
+            callback(finalSettings);
+        });
+        console.log(`开始监听应用配置变化 (路径: ${path})`);
+    },
+
+    // 停止监听应用配置变化
+    offAppSettingsChange(path = '/appSetting/todoSetting') {
+        database.ref(path).off('value');
+        console.log(`停止监听应用配置变化 (路径: ${path})`);
+    },
+
+    // 保存应用配置
+    async saveAppSettings(settings, path = '/appSetting/todoSetting') {
+        try {
+            await database.ref(path).set(settings);
+            console.log('应用配置保存成功:', settings);
+            return true;
+        } catch (error) {
+            console.error('保存应用配置失败:', error);
+            return false;
+        }
+    },
+
+    // 默认配置
+    getDefaultSettings() {
+        return {
+            appRootPath: '/todos',
+            features: {
+                search: true,
+                filtering: true,
+                archiving: true,
+                dueDateWarning: true
+            },
+            ui: {
+                theme: 'light',
+                cardsPerRow: 3,
+                showAssignee: true,
+                showTags: true
+            },
+            notifications: {
+                enabled: true,
+                remindBeforeDays: 1
+            }
+        };
+    },
+
+    // 测试数据库连接
+    async testConnection() {
+        try {
+            await database.ref('.info/connected').once('value');
+            console.log('Firebase数据库连接正常');
+            return true;
+        } catch (error) {
+            console.error('Firebase数据库连接失败:', error);
+            return false;
+        }
+    }
+};
+    </script>
+    <script>
+        // Todo工具函数
+class TodoManager {
+    constructor() {
+        this.todos = {};
+        this.currentFilter = '';
+        this.currentSearch = '';
+    }
+
+    // 生成唯一ID (YYYYMMDD-UUID格式)
+    generateTodoId() {
+        const now = new Date();
+        const dateStr = now.toISOString().slice(0,10).replace(/-/g, '');
+        const uuid = 'xxxx-xxxx-4xxx-yxxx-xxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        return `${dateStr}-${uuid}`;
+    }
+
+    // 创建新的todo对象
+    createTodo(data) {
+        const now = new Date().toISOString();
+        return {
+            id: data.id || this.generateTodoId(),
+            title: data.title || '',
+            tags: Array.isArray(data.tags) ? data.tags : (data.tags || '').split(',').map(tag => tag.trim()).filter(tag => tag),
+            startDate: data.startDate || now.split('T')[0],
+            endDate: data.endDate || data.startDate || now.split('T')[0],
+            priority: data.priority || 'medium',
+            assignee: data.assignee || '',
+            completed: data.completed || false,
+            status: data.status || 'active',
+            createdAt: data.createdAt || now,
+            updatedAt: now
+        };
+    }
+
+    // 渲染单个todo卡片
+    renderTodoCard(todo) {
+        const priorityColors = {
+            low: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+            medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+            high: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+        };
+
+        const statusColors = {
+            active: 'border-l-blue-500',
+            archived: 'border-l-gray-400',
+            deleted: 'border-l-red-300'
+        };
+
+        const statusIcons = {
+            active: '🔵',
+            archived: '⚪',
+            deleted: '🔴'
+        };
+
+        const isOverdue = new Date(todo.endDate) < new Date() && !todo.completed && todo.status === 'active';
+        const isToday = todo.endDate === new Date().toISOString().split('T')[0] && !todo.completed;
+        
+        return `
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-4 border-l-4 ${
+                statusColors[todo.status] || 'border-l-blue-500'
+            } ${todo.status !== 'active' ? 'opacity-75' : ''} fade-in hover:shadow-lg transition-shadow">
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-lg ${
+                            todo.completed ? 'line-through text-gray-500 dark:text-gray-400' : 'text-gray-800 dark:text-white'
+                        }">
+                            ${statusIcons[todo.status] || ''} ${this.escapeHtml(todo.title)}
+                        </h3>
+                        ${isOverdue ? `
+                            <p class="text-xs text-red-500 dark:text-red-400 mt-1">⚠️ 已过期</p>
+                        ` : isToday ? `
+                            <p class="text-xs text-orange-500 dark:text-orange-400 mt-1">📅 今天到期</p>
+                        ` : ''}
+                    </div>
+                    <div class="flex flex-col items-end gap-1">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${priorityColors[todo.priority]}">
+                            ${this.getPriorityText(todo.priority)}
+                        </span>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-600 dark:text-gray-300">
+                            ${this.getStatusText(todo.status)}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-1">
+                        <span class="font-medium">负责人:</span> ${this.escapeHtml(todo.assignee)}
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-300">
+                        <span class="font-medium">日期:</span> ${todo.startDate} ${todo.startDate !== todo.endDate ? `- ${todo.endDate}` : ''}
+                    </p>
+                </div>
+                
+                ${todo.tags && todo.tags.length > 0 ? `
+                    <div class="mb-3 flex flex-wrap gap-1">
+                        ${todo.tags.map(tag => `
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs rounded-full">
+                                ${this.escapeHtml(tag)}
+                            </span>
+                        `).join('')}
+                    </div>
+                ` : ''}
+                
+                <div class="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-600">
+                    <div class="flex gap-2">
+                        ${todo.status === 'active' ? `
+                            <button onclick="app.editTodo('${todo.id}')" 
+                                    class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded transition-colors">
+                                编辑
+                            </button>
+                            <button onclick="app.archiveTodo('${todo.id}')" 
+                                    class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white text-sm rounded transition-colors">
+                                归档
+                            </button>
+                        ` : ''}
+                        
+                        ${todo.status === 'archived' ? `
+                            <button onclick="app.restoreTodo('${todo.id}')" 
+                                    class="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded transition-colors">
+                                恢复
+                            </button>
+                        ` : ''}
+                        
+                        <button onclick="app.softDeleteTodo('${todo.id}')" 
+                                class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded transition-colors">
+                            ${todo.status === 'deleted' ? '彻底删除' : '删除'}
+                        </button>
+                    </div>
+                    
+                    ${todo.status === 'active' ? `
+                        <button onclick="app.toggleComplete('${todo.id}')" 
+                                class="px-3 py-1 ${
+                                    todo.completed ? 'bg-gray-500 hover:bg-gray-600' : 'bg-green-500 hover:bg-green-600'
+                                } text-white text-sm rounded transition-colors">
+                            ${todo.completed ? '未完成' : '完成'}
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }
+
+    // 渲染所有todos
+    renderTodos(todos) {
+        this.todos = todos;
+        const filteredTodos = this.filterTodos(todos);
+        const todoList = document.getElementById('todoList');
+        const emptyState = document.getElementById('emptyState');
+        
+        // 更新统计信息
+        this.updateStats(todos, filteredTodos);
+        
+        if (Object.keys(filteredTodos).length === 0) {
+            todoList.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+        } else {
+            todoList.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            
+            todoList.innerHTML = Object.values(filteredTodos)
+                .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+                .map(todo => this.renderTodoCard(todo))
+                .join('');
+        }
+    }
+
+    // 更新统计信息
+    updateStats(allTodos, filteredTodos) {
+        const stats = document.getElementById('stats');
+        const total = Object.keys(allTodos).length;
+        const active = Object.values(allTodos).filter(todo => todo.status === 'active').length;
+        const completed = Object.values(allTodos).filter(todo => todo.completed && todo.status === 'active').length;
+        const archived = Object.values(allTodos).filter(todo => todo.status === 'archived').length;
+        const displayed = Object.keys(filteredTodos).length;
+
+        stats.innerHTML = `
+            <div class="bg-white dark:bg-gray-700 rounded-lg p-4 text-center shadow-sm">
+                <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">${total}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">总计</div>
+            </div>
+            <div class="bg-white dark:bg-gray-700 rounded-lg p-4 text-center shadow-sm">
+                <div class="text-2xl font-bold text-green-600 dark:text-green-400">${active}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">活跃</div>
+            </div>
+            <div class="bg-white dark:bg-gray-700 rounded-lg p-4 text-center shadow-sm">
+                <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">${completed}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">已完成</div>
+            </div>
+            <div class="bg-white dark:bg-gray-700 rounded-lg p-4 text-center shadow-sm">
+                <div class="text-2xl font-bold text-gray-600 dark:text-gray-400">${displayed}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">显示中</div>
+            </div>
+        `;
+    }
+
+    // 过滤todos
+    filterTodos(todos) {
+        const statusFilter = document.getElementById('statusFilter').value;
+        
+        let filtered = { ...todos };
+        
+        // 状态过滤
+        if (statusFilter && statusFilter !== 'all') {
+            filtered = Object.fromEntries(
+                Object.entries(filtered).filter(([id, todo]) => 
+                    todo.status === statusFilter
+                )
+            );
+        } else if (statusFilter === 'all') {
+            // 显示所有状态（除了彻底删除的）
+            filtered = Object.fromEntries(
+                Object.entries(filtered).filter(([id, todo]) => 
+                    todo.status !== 'permanently_deleted'
+                )
+            );
+        } else {
+            // 默认只显示活动状态
+            filtered = Object.fromEntries(
+                Object.entries(filtered).filter(([id, todo]) => 
+                    todo.status === 'active'
+                )
+            );
+        }
+        
+        // 搜索过滤
+        if (this.currentSearch) {
+            const searchLower = this.currentSearch.toLowerCase();
+            filtered = Object.fromEntries(
+                Object.entries(filtered).filter(([id, todo]) => 
+                    todo.title.toLowerCase().includes(searchLower) ||
+                    todo.assignee.toLowerCase().includes(searchLower) ||
+                    (todo.tags && todo.tags.some(tag => tag.toLowerCase().includes(searchLower)))
+                )
+            );
+        }
+        
+        // 标签过滤
+        if (this.currentFilter) {
+            filtered = Object.fromEntries(
+                Object.entries(filtered).filter(([id, todo]) => 
+                    todo.tags && todo.tags.includes(this.currentFilter)
+                )
+            );
+        }
+        
+        return filtered;
+    }
+
+    // 更新标签过滤器选项
+    updateTagFilter(todos) {
+        const tagFilter = document.getElementById('tagFilter');
+        const allTags = new Set();
+        
+        Object.values(todos).forEach(todo => {
+            if (todo.tags) {
+                todo.tags.forEach(tag => allTags.add(tag));
+            }
+        });
+        
+        // 清空现有选项（保留"所有标签"）
+        while (tagFilter.children.length > 1) {
+            tagFilter.removeChild(tagFilter.lastChild);
+        }
+        
+        // 添加标签选项
+        Array.from(allTags).sort().forEach(tag => {
+            const option = document.createElement('option');
+            option.value = tag;
+            option.textContent = tag;
+            tagFilter.appendChild(option);
+        });
+    }
+
+    // 工具函数
+    escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    getPriorityText(priority) {
+        const texts = { low: '低', medium: '中', high: '高' };
+        return texts[priority] || priority;
+    }
+
+    getStatusText(status) {
+        const statusTexts = {
+            active: '活动',
+            archived: '已归档',
+            deleted: '已删除'
+        };
+        return statusTexts[status] || status;
+    }
+
+    // 获取todo统计信息
+    getTodoStats(todos) {
+        const allTodos = Object.values(todos);
+        return {
+            total: allTodos.length,
+            active: allTodos.filter(todo => todo.status === 'active').length,
+            completed: allTodos.filter(todo => todo.completed && todo.status === 'active').length,
+            archived: allTodos.filter(todo => todo.status === 'archived').length,
+            deleted: allTodos.filter(todo => todo.status === 'deleted').length,
+            overdue: allTodos.filter(todo => {
+                return new Date(todo.endDate) < new Date() && 
+                       !todo.completed && 
+                       todo.status === 'active';
+            }).length
+        };
+    }
+}
+    </script>
+    <script>
+        // 主应用
+const app = {
+    todoManager: new TodoManager(),
+    appSettings: {},
+    currentTodoPath: '/todos',
+
+    async init() {
+        console.log('初始化Todo应用...');
+        
+        // 测试数据库连接
+        await FirebaseService.testConnection();
+        
+        // 加载应用配置
+        await this.loadAppSettings();
+        
+        // 绑定事件
+        this.bindEvents();
+        
+        // 加载todos
+        await this.loadTodos();
+        
+        // 监听实时更新
+        this.setupRealtimeListeners();
+        
+        console.log('Todo应用初始化完成');
+    },
+
+    async loadAppSettings() {
+        try {
+            this.appSettings = await FirebaseService.getAppSettings('/appSetting/todoSetting');
+            this.applyAppSettings();
+            console.log('应用配置加载完成:', this.appSettings);
+        } catch (error) {
+            console.error('加载应用配置失败:', error);
+            this.appSettings = FirebaseService.getDefaultSettings();
+            this.applyAppSettings();
+        }
+    },
+
+    applyAppSettings() {
+        const settings = this.appSettings;
+        
+        // 更新当前路径
+        this.currentTodoPath = settings.appRootPath || '/todos';
+        document.getElementById('currentPath').textContent = `路径: ${this.currentTodoPath}`;
+
+        // 功能开关
+        if (settings.features) {
+            this.toggleFeature('searchInput', settings.features.search);
+            this.toggleFeature('tagFilter', settings.features.filtering);
+            this.toggleFeature('statusFilter', settings.features.archiving);
+        }
+
+        // UI配置
+        if (settings.ui) {
+            this.applyUiSettings(settings.ui);
+        }
+    },
+
+    toggleFeature(elementId, isEnabled) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.style.display = isEnabled ? '' : 'none';
+        }
+    },
+
+    applyUiSettings(uiSettings) {
+        // 主题设置
+        if (uiSettings.theme === 'dark' || (uiSettings.theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark');
+            document.body.classList.remove('bg-gray-100');
+            document.body.classList.add('bg-gray-900');
+        } else {
+            document.body.classList.remove('dark');
+            document.body.classList.remove('bg-gray-900');
+            document.body.classList.add('bg-gray-100');
+        }
+
+        // 每行卡片数量
+        if (uiSettings.cardsPerRow) {
+            const todoList = document.getElementById('todoList');
+            const gridClass = this.getGridClass(uiSettings.cardsPerRow);
+            todoList.className = `grid gap-4 ${gridClass}`;
+        }
+    },
+
+    getGridClass(cardsPerRow) {
+        const gridClasses = {
+            1: 'grid-cols-1',
+            2: 'grid-cols-1 md:grid-cols-2',
+            3: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+            4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
+        };
+        return gridClasses[cardsPerRow] || 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
+    },
+
+    getTodoRootPath() {
+        return this.appSettings.appRootPath || '/todos';
+    },
+
+    async loadTodos() {
+        try {
+            const rootPath = this.getTodoRootPath();
+            console.log(`从路径加载todos: ${rootPath}`);
+            
+            const todos = await FirebaseService.getTodos(rootPath);
+            this.todoManager.renderTodos(todos);
+            this.todoManager.updateTagFilter(todos);
+        } catch (error) {
+            console.error('加载todos失败:', error);
+            this.showError('加载todos失败，请检查网络连接');
+        }
+    },
+
+    setupRealtimeListeners() {
+        const rootPath = this.getTodoRootPath();
+        
+        // 监听todos变化
+        FirebaseService.onTodosChange((todos) => {
+            console.log('检测到todos变化，更新界面');
+            this.todoManager.renderTodos(todos);
+            this.todoManager.updateTagFilter(todos);
+        }, rootPath);
+
+        // 监听应用配置变化
+        FirebaseService.onAppSettingsChange((settings) => {
+            console.log('检测到应用配置变化，更新设置');
+            this.appSettings = settings;
+            this.applyAppSettings();
+            
+            // 重新加载todos以确保使用正确的路径
+            this.loadTodos();
+        }, '/appSetting/todoSetting');
+    },
+
+    bindEvents() {
+        // 搜索功能
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            this.todoManager.currentSearch = e.target.value;
+            this.todoManager.renderTodos(this.todoManager.todos);
+        });
+
+        // 标签过滤
+        document.getElementById('tagFilter').addEventListener('change', (e) => {
+            this.todoManager.currentFilter = e.target.value;
+            this.todoManager.renderTodos(this.todoManager.todos);
+        });
+
+        // 状态过滤
+        document.getElementById('statusFilter').addEventListener('change', (e) => {
+            this.todoManager.renderTodos(this.todoManager.todos);
+        });
+
+        // 新建Todo按钮
+        document.getElementById('addTodoBtn').addEventListener('click', () => {
+            this.showDialog();
+        });
+
+        // 空状态新建按钮
+        document.getElementById('emptyAddBtn').addEventListener('click', () => {
+            this.showDialog();
+        });
+
+        // 配置按钮
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            this.showSettingsDialog();
+        });
+
+        // Todo对话框事件
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            this.hideDialog();
+        });
+
+        document.getElementById('todoForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.saveTodo();
+        });
+
+        document.getElementById('todoDialog').addEventListener('click', (e) => {
+            if (e.target.id === 'todoDialog') {
+                this.hideDialog();
+            }
+        });
+
+        // 配置对话框事件
+        document.getElementById('settingsCancelBtn').addEventListener('click', () => {
+            this.hideSettingsDialog();
+        });
+
+        document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+            this.saveAppSettings();
+        });
+
+        document.getElementById('resetSettingsBtn').addEventListener('click', () => {
+            this.resetAppSettings();
+        });
+
+        document.getElementById('settingsDialog').addEventListener('click', (e) => {
+            if (e.target.id === 'settingsDialog') {
+                this.hideSettingsDialog();
+            }
+        });
+
+        // 日期默认值
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('startDate').value = today;
+        document.getElementById('endDate').value = today;
+
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+            if (e.key === 'Escape') {
+                this.hideDialog();
+                this.hideSettingsDialog();
+            }
+        });
+    },
+
+    showDialog(todo = null) {
+        const dialog = document.getElementById('todoDialog');
+        const title = document.getElementById('dialogTitle');
+        const form = document.getElementById('todoForm');
+        
+        if (todo) {
+            title.textContent = '编辑Todo';
+            this.populateForm(todo);
+        } else {
+            title.textContent = '新建Todo';
+            form.reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').value = today;
+            document.getElementById('endDate').value = today;
+        }
+        
+        dialog.classList.remove('hidden');
+        dialog.classList.add('flex');
+        document.getElementById('title').focus();
+    },
+
+    hideDialog() {
+        const dialog = document.getElementById('todoDialog');
+        dialog.classList.add('hidden');
+        dialog.classList.remove('flex');
+    },
+
+    populateForm(todo) {
+        document.getElementById('todoId').value = todo.id;
+        document.getElementById('title').value = todo.title;
+        document.getElementById('tags').value = todo.tags ? todo.tags.join(', ') : '';
+        document.getElementById('startDate').value = todo.startDate;
+        document.getElementById('endDate').value = todo.endDate;
+        document.getElementById('priority').value = todo.priority;
+        document.getElementById('assignee').value = todo.assignee;
+    },
+
+    async saveTodo() {
+        const formData = {
+            id: document.getElementById('todoId').value,
+            title: document.getElementById('title').value.trim(),
+            tags: document.getElementById('tags').value,
+            startDate: document.getElementById('startDate').value,
+            endDate: document.getElementById('endDate').value,
+            priority: document.getElementById('priority').value,
+            assignee: document.getElementById('assignee').value.trim()
+        };
+
+        // 验证必填字段
+        if (!formData.title || !formData.assignee) {
+            this.showError('标题和负责人为必填字段');
+            return;
+        }
+
+        const todo = this.todoManager.createTodo(formData);
+        const rootPath = this.getTodoRootPath();
+        const success = await FirebaseService.saveTodo(todo.id, todo, rootPath);
+        
+        if (success) {
+            this.hideDialog();
+            this.showSuccess('Todo保存成功');
+        } else {
+            this.showError('保存失败，请重试');
+        }
+    },
+
+    showSettingsDialog() {
+        const dialog = document.getElementById('settingsDialog');
+        this.populateSettingsForm();
+        dialog.classList.remove('hidden');
+        dialog.classList.add('flex');
+    },
+
+    hideSettingsDialog() {
+        const dialog = document.getElementById('settingsDialog');
+        dialog.classList.add('hidden');
+        dialog.classList.remove('flex');
+    },
+
+    populateSettingsForm() {
+        const settings = this.appSettings;
+        
+        // 路径配置
+        document.getElementById('appRootPath').value = settings.appRootPath || '/todos';
+        
+        // 功能开关
+        document.getElementById('featureSearch').checked = settings.features?.search !== false;
+        document.getElementById('featureFiltering').checked = settings.features?.filtering !== false;
+        document.getElementById('featureArchiving').checked = settings.features?.archiving !== false;
+        document.getElementById('featureDueDateWarning').checked = settings.features?.dueDateWarning !== false;
+        
+        // UI配置
+        document.getElementById('uiTheme').value = settings.ui?.theme || 'light';
+        document.getElementById('uiCardsPerRow').value = settings.ui?.cardsPerRow || 3;
+    },
+
+    async saveAppSettings() {
+        const newSettings = {
+            appRootPath: document.getElementById('appRootPath').value.trim() || '/todos',
+            features: {
+                search: document.getElementById('featureSearch').checked,
+                filtering: document.getElementById('featureFiltering').checked,
+                archiving: document.getElementById('featureArchiving').checked,
+                dueDateWarning: document.getElementById('featureDueDateWarning').checked
+            },
+            ui: {
+                theme: document.getElementById('uiTheme').value,
+                cardsPerRow: parseInt(document.getElementById('uiCardsPerRow').value)
+            }
+        };
+
+        const success = await FirebaseService.saveAppSettings(newSettings);
+        if (success) {
+            this.appSettings = newSettings;
+            this.applyAppSettings();
+            this.hideSettingsDialog();
+            this.showSuccess('配置保存成功');
+        } else {
+            this.showError('配置保存失败');
+        }
+    },
+
+    async resetAppSettings() {
+        if (confirm('确定要重置为默认配置吗？')) {
+            const defaultSettings = FirebaseService.getDefaultSettings();
+            const success = await FirebaseService.saveAppSettings(defaultSettings);
+            if (success) {
+                this.appSettings = defaultSettings;
+                this.applyAppSettings();
+                this.hideSettingsDialog();
+                this.showSuccess('已重置为默认配置');
+            } else {
+                this.showError('重置配置失败');
+            }
+        }
+    },
+
+    async editTodo(todoId) {
+        const todo = this.todoManager.todos[todoId];
+        if (todo) {
+            this.showDialog(todo);
+        }
+    },
+
+    async archiveTodo(todoId) {
+        if (confirm('确定要归档这个Todo吗？归档后将从活动列表中隐藏。')) {
+            await this.updateTodoStatus(todoId, 'archived');
+        }
+    },
+
+    async restoreTodo(todoId) {
+        await this.updateTodoStatus(todoId, 'active');
+    },
+
+    async softDeleteTodo(todoId) {
+        const todo = this.todoManager.todos[todoId];
+        const message = todo?.status === 'deleted' 
+            ? '确定要彻底删除这个Todo吗？此操作不可恢复。' 
+            : '确定要删除这个Todo吗？';
+        
+        if (confirm(message)) {
+            if (todo?.status === 'deleted') {
+                // 彻底删除
+                const rootPath = this.getTodoRootPath();
+                const success = await FirebaseService.deleteTodo(todoId, rootPath);
+                if (success) {
+                    this.showSuccess('Todo已彻底删除');
+                } else {
+                    this.showError('删除失败');
+                }
+            } else {
+                // 软删除
+                await this.updateTodoStatus(todoId, 'deleted');
+            }
+        }
+    },
+
+    async updateTodoStatus(todoId, newStatus) {
+        const todo = this.todoManager.todos[todoId];
+        if (todo) {
+            const oldStatus = todo.status;
+            todo.status = newStatus;
+            todo.updatedAt = new Date().toISOString();
+            
+            const rootPath = this.getTodoRootPath();
+            const success = await FirebaseService.saveTodo(todoId, todo, rootPath);
+            if (success) {
+                const statusMessages = {
+                    'active': 'Todo已恢复',
+                    'archived': 'Todo已归档',
+                    'deleted': 'Todo已删除'
+                };
+                this.showSuccess(statusMessages[newStatus] || '状态更新成功');
+            } else {
+                this.showError('状态更新失败');
+            }
+            return success;
+        }
+        return false;
+    },
+
+    async toggleComplete(todoId) {
+        const todo = this.todoManager.todos[todoId];
+        if (todo) {
+            todo.completed = !todo.completed;
+            todo.updatedAt = new Date().toISOString();
+            
+            const rootPath = this.getTodoRootPath();
+            const success = await FirebaseService.saveTodo(todoId, todo, rootPath);
+            if (success) {
+                const message = todo.completed ? 'Todo已完成' : 'Todo标记为未完成';
+                this.showSuccess(message);
+            } else {
+                this.showError('操作失败');
+            }
+        }
+    },
+
+    showSuccess(message) {
+        this.showNotification(message, 'green');
+    },
+
+    showError(message) {
+        this.showNotification(message, 'red');
+    },
+
+    showNotification(message, color = 'blue') {
+        const colors = {
+            green: 'bg-green-500',
+            red: 'bg-red-500',
+            blue: 'bg-blue-500'
+        };
+
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 ${colors[color]} text-white px-6 py-3 rounded-lg shadow-lg fade-in z-50`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('opacity-0');
+            notification.classList.add('transition-opacity');
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+};
+
+// 初始化应用
+document.addEventListener('DOMContentLoaded', () => {
+    app.init();
+});
+
+// 导出到全局范围
+window.app = app;
+    </script>
+</body>
+</html>
