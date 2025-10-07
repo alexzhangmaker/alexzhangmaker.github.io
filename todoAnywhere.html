@@ -236,19 +236,19 @@
         </div>
     </div>
 
-    <script>
+<script>
 
-        // Firebase配置 - 请替换为你的实际配置
-        const firebaseConfig = {
-            apiKey: "AIzaSyA6MZ_p5lVuy8TMAqiuV6IRx9fggV44lQs",
-            authDomain: "outpost-8d74e.firebaseapp.com",
-            databaseURL: "https://outpost-8d74e.asia-southeast1.firebasedatabase.app/",
-            projectId: "outpost-8d74e",
-            storageBucket: "outpost-8d74e.firebasestorage.app",
-            messagingSenderId: "724993324937",
-            appId: "1:724993324937:web:ce6c7e6b06489331c79358",
-            measurementId: "G-QPHWRTH6BH"
-        };
+// Firebase配置 - 请替换为你的实际配置
+const firebaseConfig = {
+    apiKey: "AIzaSyA6MZ_p5lVuy8TMAqiuV6IRx9fggV44lQs",
+    authDomain: "outpost-8d74e.firebaseapp.com",
+    databaseURL: "https://outpost-8d74e.asia-southeast1.firebasedatabase.app/",
+    projectId: "outpost-8d74e",
+    storageBucket: "outpost-8d74e.firebasestorage.app",
+    messagingSenderId: "724993324937",
+    appId: "1:724993324937:web:ce6c7e6b06489331c79358",
+    measurementId: "G-QPHWRTH6BH"
+};
 
 // 初始化Firebase
 try {
@@ -397,8 +397,8 @@ const FirebaseService = {
         }
     }
 };
-    </script>
-    <script>
+</script>
+<script>
         // Todo工具函数
 class TodoManager {
     constructor() {
@@ -420,7 +420,7 @@ class TodoManager {
     }
 
     // 创建新的todo对象
-    createTodo(data) {
+    createTodo(data){
         const now = new Date().toISOString();
         return {
             id: data.id || this.generateTodoId(),
@@ -564,7 +564,7 @@ class TodoManager {
 
         
         let htmlTODO=`
-            <div class="outpostCard bg-white dark:bg-zinc-800 shadow-lg rounded-xl overflow-hidden flex p-8">
+            <div class="outpostCard bg-white dark:bg-zinc-800 shadow-lg rounded-xl overflow-hidden flex p-4">
                <div class="grid grid-cols-[auto_1fr_auto] items-start w-full gap-6">
                   <div class="flex items-start">
                      <img alt="Assignee Avatar" class="w-12 h-12 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC804gkKXN3ZKxUoSXplIbeKq8WNYK2clirp3t0OrKVlp-DDSGlm3abkkk2tn1EsKTJOdBlcxlrYHxAgbjQgs5Ity0OR8XImFwyj_u_BGzWSCBrWnN8EfXNRnLDurup9XGMc3Tea0kBlQKLTYxpuvGWMzEQNmZYuSB83PmIWBVsMWUu6GRAVPcJ4uxqHBIPnr15pxCWQ6RYJH0Z7PSvRwqAoc-27oHbHsFZnm1hVy6fTJo_lhaevkOsClCnt8T61jQHpACt8XET3g4"/>
@@ -585,7 +585,12 @@ class TodoManager {
                             ${todo.tags && todo.tags.length > 0 ? `
                                 <div class="flex flex-wrap gap-1 items-center">
                                     ${todo.tags.map(tag => `
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs rounded-full">
+                                        <!---
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs rounded-full" style="width:4em;">
+                                            ${this.escapeHtml(tag)}
+                                        </span>
+                                        -->
+                                        <span class="inline-block w-[5em] truncate" title="${this.escapeHtml(tag)}">
                                             ${this.escapeHtml(tag)}
                                         </span>
                                     `).join('')}
@@ -804,9 +809,9 @@ class TodoManager {
         };
     }
 }
-    </script>
-    <script>
-        // 主应用
+</script>
+<script>
+// 主应用
 const app = {
     todoManager: new TodoManager(),
     appSettings: {},
@@ -833,7 +838,7 @@ const app = {
         console.log('Todo应用初始化完成');
     },
 
-    async loadAppSettings() {
+    async loadAppSettings(){
         try {
             this.appSettings = await FirebaseService.getAppSettings('/appSetting/todoSetting');
             this.applyAppSettings();
@@ -845,7 +850,7 @@ const app = {
         }
     },
 
-    applyAppSettings() {
+    applyAppSettings(){
         const settings = this.appSettings;
         
         // 更新当前路径
