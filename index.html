@@ -1088,6 +1088,7 @@
     </script>
     <script>
         function _renderDailyTool(jsonTool,tagContainer){
+            console.log(jsonTool) ;
             let tagTool = document.createElement('div') ;
             tagTool.classList.add('bookmark-card') ;
             tagTool.dataset.toolID = jsonTool.id ;
@@ -1113,12 +1114,11 @@
                         </div>
                         <div class="bookmark-actions">
                             <button><i class="fas fa-star"></i></button>
-                            <button><i class="fas fa-ellipsis-v"></i></button>
+                            <button class="btnMetaEditor"><i class="fas fa-ellipsis-v"></i></button>
                             <svg xmlns="http://www.w3.org/2000/svg" class="bmActionRemove" width="14" height="14" viewBox="0 0 16 16"><path fill="#000000" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1l-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg>
-
                         </div>
                     </div>
-                    <div class="bookmark-description">${jsonTool.hasOwnProperty("memo")?jsonTool.memo:"memo"}</div>
+                    <div class="bookmark-description">${jsonTool.data.hasOwnProperty("memo")?jsonTool.data.memo:"memo"}</div>
                     <div class="bookmark-footer">
                         <div class="bookmark-date">${jsonTool.hasOwnProperty("date")?formatDateYYYYMMDD(jsonTool.date):"date TBD"}</div>
                         <div class="bookmark-tags">
@@ -1133,6 +1133,51 @@
                 removeDailyTool(tagTool.dataset.toolID) ;
                 tagTool.remove() ;
             }) ;
+            tagTool.querySelector(".btnMetaEditor").addEventListener("click",(event)=>{
+                //alert('fdsfds') ;
+                event.stopPropagation() ;
+                event.preventDefault() ;
+
+                let jsonTool = {
+                    id:crypto.randomUUID(),
+                    type:"Gateway.Bookmark",
+                    title:'TBD',
+                    data:{
+                        url:'',
+                        memo:''
+                    }
+                } ;
+
+
+                const callbackPlusTool = (formDataTool)=>{
+                    console.log(formDataTool) ;
+                    /*
+                    let tagToolsContainer = document.querySelector('#idFolderContents') ;
+                    let jsonTool = {
+                        id:crypto.randomUUID(),
+                        type:"Gateway.Bookmark",
+                        title:formDataTool.title,
+                        data:{
+                            url:formDataTool.url
+                        }
+                    } ;
+                    plusDailyTool(jsonTool) ;
+                    _renderDailyTool(jsonTool,tagToolsContainer) ;
+                    */
+                } ;
+
+                const bookmarkSchema = [
+                    { "name": "title", "type": "string", "placeholder": "书签标题" },
+                     { "name": "memo", "type": "string", "placeholder": "书签memo" },
+                    { "name": "url", "type": "string", "placeholder": "https://..." }
+                ];
+                const bookmarkCallbacks = {
+                    onConfirm: callbackPlusTool,
+                    onCancel: () => {console.log("用户取消了操作。");}
+                };
+                createFormModal('edit每日工具', bookmarkSchema, bookmarkCallbacks);
+            }) ;
+
             tagTool.addEventListener('click',(event)=>{
                 window.open(jsonTool.data.url,"_blank") ;
             }) ;
@@ -1172,7 +1217,8 @@
                     type:"Gateway.Bookmark",
                     title:formDataTool.title,
                     data:{
-                        url:formDataTool.url
+                        url:formDataTool.url,
+                        memo:formDataTool.memo
                     }
                 } ;
                 plusDailyTool(jsonTool) ;
@@ -1184,11 +1230,15 @@
                     id:crypto.randomUUID(),
                     type:"Gateway.Bookmark",
                     title:'TBD',
-                    data:{url:''}
+                    data:{
+                        url:'',
+                        memo:''
+                    }
                 } ;
 
                 const bookmarkSchema = [
                     { "name": "title", "type": "string", "placeholder": "书签标题" },
+                    { "name": "memo", "type": "string", "placeholder": "书签memo" },
                     { "name": "url", "type": "string", "placeholder": "https://..." }
                 ];
                 const bookmarkCallbacks = {
