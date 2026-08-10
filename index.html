@@ -152,6 +152,28 @@
             transform: translateY(-3px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
+        .bookmark-card-add {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #64748b;
+        }
+
+        .bookmark-card-add:hover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            color: #2563eb;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15);
+        }
         
         .bookmark-header {
             display: flex;
@@ -380,6 +402,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="./js/dbStorage.js"></script>
     <script src="./Lab/DataAPI.js"></script>
     <script src="./js/list.min.js"></script>
     <script src="./js/modalFactoryV2.js"></script>
@@ -1027,7 +1050,14 @@
             tippy('#idBTNFreshData', {content: '下载数据!'});
             tippy('#idBTNSetting', {content: '系统设置!'});
 
-
+            // 监听后台 Web Worker 的数据同步推送，有变动时更新 DOM
+            window.addEventListener('appDataUpdated', () => {
+                const treeContainer = document.getElementById('directory-tree');
+                if (treeContainer) {
+                    treeContainer.innerHTML = '';
+                    renderTree(gFolderTree, treeContainer);
+                }
+            });
 
         });
     </script>
@@ -1183,12 +1213,54 @@
             }) ;
         }
 
+        function openPlusDailyToolModal(){
+            const callbackPlusTool = (formDataTool)=>{
+                let jsonTool = {
+                    id:crypto.randomUUID(),
+                    type:"Gateway.Bookmark",
+                    title:formDataTool.title,
+                    data:{
+                        url:formDataTool.url,
+                        memo:formDataTool.memo
+                    }
+                } ;
+                plusDailyTool(jsonTool) ;
+                displayDailyTools() ;
+            } ;
+
+            const bookmarkSchema = [
+                { "name": "title", "type": "string", "placeholder": "书签标题" },
+                { "name": "memo", "type": "string", "placeholder": "书签memo" },
+                { "name": "url", "type": "string", "placeholder": "https://..." }
+            ];
+            const bookmarkCallbacks = {
+                onConfirm: callbackPlusTool,
+                onCancel: () => {console.log("用户取消了操作。");}
+            };
+            createFormModal('新建每日工具', bookmarkSchema, bookmarkCallbacks);
+        }
+
+        function _renderAddToolCard(tagContainer){
+            let tagAddCard = document.createElement('div') ;
+            tagAddCard.classList.add('bookmark-card-add') ;
+            tagAddCard.innerHTML = `
+                <div class="w-10 h-10 rounded-full bg-gray-200/70 flex items-center justify-center mb-2">
+                    <i class="fas fa-plus text-xl text-gray-500"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-600">添加新应用</span>
+            ` ;
+            tagAddCard.addEventListener('click', (event)=>{
+                event.stopPropagation() ;
+                openPlusDailyToolModal() ;
+            }) ;
+            tagContainer.appendChild(tagAddCard) ;
+        }
+
         function displayDailyTools(){
             let tagCurrentFolder = document.querySelector(".selectedFolder") ;
             if(tagCurrentFolder!=null){
                 tagCurrentFolder.classList.remove("selectedFolder") ;
                 tagCurrentFolder.querySelector(".font-semibold").classList.remove("font-semibold") ;
-                //font-semibold
                 selectedNode = null;
             }
 
@@ -1203,50 +1275,16 @@
             currentFolder.textContent = "daily Toolbox";
             folderContents.innerHTML=``;
 
-            //function previous be here
-            //end of function
-
             for(let i=0;i<gDialyTools.length;i++){
                 _renderDailyTool(gDialyTools[i],folderContents) ;
             }
 
-            const callbackPlusTool = (formDataTool)=>{
-                let tagToolsContainer = document.querySelector('#idFolderContents') ;
-                let jsonTool = {
-                    id:crypto.randomUUID(),
-                    type:"Gateway.Bookmark",
-                    title:formDataTool.title,
-                    data:{
-                        url:formDataTool.url,
-                        memo:formDataTool.memo
-                    }
-                } ;
-                plusDailyTool(jsonTool) ;
-                _renderDailyTool(jsonTool,tagToolsContainer) ;
-            } ;
+            // 在最末尾添加新增卡片
+            _renderAddToolCard(folderContents) ;
 
-            document.querySelector("#idBTNPlusDailyTool").addEventListener('click',(event)=>{
-                let jsonTool = {
-                    id:crypto.randomUUID(),
-                    type:"Gateway.Bookmark",
-                    title:'TBD',
-                    data:{
-                        url:'',
-                        memo:''
-                    }
-                } ;
-
-                const bookmarkSchema = [
-                    { "name": "title", "type": "string", "placeholder": "书签标题" },
-                    { "name": "memo", "type": "string", "placeholder": "书签memo" },
-                    { "name": "url", "type": "string", "placeholder": "https://..." }
-                ];
-                const bookmarkCallbacks = {
-                    onConfirm: callbackPlusTool,
-                    onCancel: () => {console.log("用户取消了操作。");}
-                };
-                createFormModal('新建每日工具', bookmarkSchema, bookmarkCallbacks);
-            }) ;
+            document.querySelector("#idBTNPlusDailyTool").onclick = (event)=>{
+                openPlusDailyToolModal();
+            };
         }
     </script>
 </body>
