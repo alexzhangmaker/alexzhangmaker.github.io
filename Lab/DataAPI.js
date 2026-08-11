@@ -209,6 +209,13 @@ function removeAppShutterTab(tabId) {
     return false;
 }
 
+function reorderAppShutterTabs(newTabsArray) {
+    if (!newTabsArray || !Array.isArray(newTabsArray)) return;
+    gAppShutterTabs = newTabsArray;
+    flagDailyToolChanged = true;
+    persistLocalAndSync();
+}
+
 /**
  * 结构转换辅助函数
  */

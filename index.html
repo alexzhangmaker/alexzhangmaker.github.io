@@ -56,6 +56,20 @@
         .sidebar {
             min-width: 200px;
             max-width: 80%;
+            transition: width 0.25s ease, padding 0.25s ease, opacity 0.2s ease, min-width 0.25s ease;
+        }
+        .sidebar.collapsed {
+            width: 0 !important;
+            min-width: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            overflow: hidden !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        .sidebar.collapsed .resize-handle {
+            display: none !important;
         }
         .modal {
             transition: opacity 0.25s ease;
@@ -228,6 +242,17 @@
             box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.08);
         }
 
+        .app-tab-item.dragging-tab {
+            opacity: 0.45;
+            border: 1px dashed #60a5fa !important;
+            transform: scale(0.96);
+        }
+
+        .app-tab-item.drag-over-tab {
+            border-left: 4px solid #3b82f6 !important;
+            transform: translateY(-2px);
+        }
+
         .app-tab-add {
             padding: 7px 16px 6px 14px;
             font-size: 13px;
@@ -365,8 +390,10 @@
 <body class="bg-gray-100 h-screen flex flex-col">
     <!-- 顶部工具栏 -->
     <header class="bg-white shadow-sm py-2 px-6 flex items-center justify-between">
-        <div class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNHome" width="24" height="24" viewBox="0 0 1024 1025"><path fill="#000000" d="M1004.5 556.5Q985 576 957.5 576T911 557l-15-15v419q0 26-18.5 45t-45.5 19H192q-27 0-45.5-19T128 961V542l-15 15q-19 19-46.5 19t-47-19.5t-19.5-47T19 463L463 19Q479 3 501.5.5T543 10q8 0 18 9l444 444q19 19 19 46.5t-19.5 47zM768 414L512 158L256 414v483h512V414z"/></svg>        </div>
+        <div class="flex items-center space-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNToggleSidebar" width="24" height="24" viewBox="0 0 24 24"><path fill="#000000" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNHome" width="24" height="24" viewBox="0 0 1024 1025"><path fill="#000000" d="M1004.5 556.5Q985 576 957.5 576T911 557l-15-15v419q0 26-18.5 45t-45.5 19H192q-27 0-45.5-19T128 961V542l-15 15q-19 19-46.5 19t-47-19.5t-19.5-47T19 463L463 19Q479 3 501.5.5T543 10q8 0 18 9l444 444q19 19 19 46.5t-19.5 47zM768 414L512 158L256 414v483h512V414z"/></svg>
+        </div>
         <div class="flex space-x-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNDisplayCalendar" width="24" height="24" viewBox="0 0 26 26"><path fill="#000000" d="M7 0c-.551 0-1 .449-1 1v3c0 .551.449 1 1 1c.551 0 1-.449 1-1V1c0-.551-.449-1-1-1zm12 0c-.551 0-1 .449-1 1v3c0 .551.449 1 1 1c.551 0 1-.449 1-1V1c0-.551-.449-1-1-1zM3 2C1.344 2 0 3.344 0 5v18c0 1.656 1.344 3 3 3h20c1.656 0 3-1.344 3-3V5c0-1.656-1.344-3-3-3h-2v2a2 2 0 0 1-4 0V2H9v2a2 2 0 0 1-4 0V2H3zM2 9h22v14c0 .551-.449 1-1 1H3c-.551 0-1-.449-1-1V9zm7 3v2.313h4.813l-3.782 7.656H13.5l3.469-8.438V12H9z"/></svg>
             <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNDisplayTodos" width="24" height="24" viewBox="0 0 26 26"><path fill="#000000" d="M7.875 0a1 1 0 0 0-.656.375L3.812 4.656l-2.25-1.5A1.014 1.014 0 1 0 .438 4.844l3 2a1 1 0 0 0 1.344-.219l4-5A1 1 0 0 0 7.875 0zM12 3v2h14V3H12zM7.875 9a1 1 0 0 0-.656.375l-3.407 4.281l-2.25-1.5a1.014 1.014 0 1 0-1.125 1.688l3 2a1 1 0 0 0 1.344-.219l4-5A1 1 0 0 0 7.875 9zM12 12v2h14v-2H12zm-4.125 6a1 1 0 0 0-.656.375l-3.407 4.281l-2.25-1.5a1.014 1.014 0 1 0-1.125 1.688l3 2a1 1 0 0 0 1.344-.219l4-5A1 1 0 0 0 7.875 18zM12 21v2h14v-2H12z"/></svg>
@@ -398,7 +425,7 @@
         <main class="flex-1 bg-gray-50 p-6 overflow-y-auto" id="main-content">
             <div class="mx-auto">
                 <div class="rounded-xl shadow-sm p-6" style="background-color: #f5f7fb;">
-                    <div class="flex items-center mb-6">
+                    <div class="flex items-center mb-6" style="display:none">
                         <h2 class="text-2xl font-bold text-gray-800" id="idCurrentFolderTitle">应用快门</h2>
                         <span class="ml-2 text-sm text-gray-500" id="items-count">5</span>
                         <div class="canvasDailyToolbar">
@@ -1067,6 +1094,23 @@
             });
         }
 
+        // 切换左侧导航栏展开/收起状态
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            if (!sidebar) return;
+
+            const isCollapsed = sidebar.classList.toggle('collapsed');
+            if (isCollapsed) {
+                if (mainContent) mainContent.style.width = '100%';
+                localStorage.setItem('sidebarCollapsed', 'true');
+            } else {
+                sidebar.style.width = '';
+                if (mainContent) mainContent.style.width = '';
+                localStorage.setItem('sidebarCollapsed', 'false');
+            }
+        }
+
 
         // 初始化应用
         document.addEventListener('DOMContentLoaded', async () => {
@@ -1126,8 +1170,19 @@
                 }
             });
 
+            // 恢复侧边栏展开/收起状态
+            if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('main-content');
+                if (sidebar) sidebar.classList.add('collapsed');
+                if (mainContent) mainContent.style.width = '100%';
+            }
+
+            document.getElementById('idBTNToggleSidebar').addEventListener('click', toggleSidebar);
+
             displayDailyTools() ;
 
+            tippy('#idBTNToggleSidebar', {content: '展开/收起侧边栏!'});
             tippy('#idBTNDisplayDailyTools', {content: '应用快门!'});
             tippy('#idBTNSaveChange', {content: '保存数据!'});
             tippy('#idBTNFreshData', {content: '下载数据!'});
@@ -1320,6 +1375,8 @@
             createFormModal('新建应用分类 Tab', schema, callbacks);
         }
 
+        let draggedTabId = null;
+
         function renderAppShutterTabs() {
             const tabBar = document.getElementById('idAppShutterTabBar');
             if (!tabBar) return;
@@ -1333,6 +1390,8 @@
             gAppShutterTabs.forEach(tab => {
                 const tabItem = document.createElement('div');
                 tabItem.className = `app-tab-item ${tab.id === currentActiveAppTabId ? 'active' : ''}`;
+                tabItem.draggable = true;
+                tabItem.dataset.tabId = tab.id;
                 
                 const nameSpan = document.createElement('span');
                 nameSpan.textContent = tab.name;
@@ -1355,6 +1414,52 @@
                 tabItem.addEventListener('click', () => {
                     currentActiveAppTabId = tab.id;
                     displayDailyTools();
+                });
+
+                // HTML5 拖拽事件 - 调整 Tab 标签顺序
+                tabItem.addEventListener('dragstart', (e) => {
+                    draggedTabId = tab.id;
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', tab.id);
+                    tabItem.classList.add('dragging-tab');
+                });
+
+                tabItem.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+
+                tabItem.addEventListener('dragenter', (e) => {
+                    e.preventDefault();
+                    if (draggedTabId && draggedTabId !== tab.id) {
+                        tabItem.classList.add('drag-over-tab');
+                    }
+                });
+
+                tabItem.addEventListener('dragleave', () => {
+                    tabItem.classList.remove('drag-over-tab');
+                });
+
+                tabItem.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    tabItem.classList.remove('drag-over-tab');
+                    if (draggedTabId && draggedTabId !== tab.id) {
+                        const fromIndex = gAppShutterTabs.findIndex(t => t.id === draggedTabId);
+                        const toIndex = gAppShutterTabs.findIndex(t => t.id === tab.id);
+                        if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
+                            const [movedTab] = gAppShutterTabs.splice(fromIndex, 1);
+                            gAppShutterTabs.splice(toIndex, 0, movedTab);
+                            reorderAppShutterTabs(gAppShutterTabs);
+                            displayDailyTools();
+                        }
+                    }
+                });
+
+                tabItem.addEventListener('dragend', () => {
+                    draggedTabId = null;
+                    document.querySelectorAll('.app-tab-item').forEach(el => {
+                        el.classList.remove('dragging-tab', 'drag-over-tab');
+                    });
                 });
 
                 tabBar.appendChild(tabItem);
