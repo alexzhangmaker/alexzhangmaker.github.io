@@ -116,7 +116,7 @@ async function syncPendingData(dataPackage) {
     postStatus('SYNCING', 'Syncing local changes to server...');
 
     try {
-        const { jsonFolders, jsonMustHave, Bookmarks, flags } = dataPackage;
+        const { jsonFolders, jsonMustHave, Bookmarks, appShutterTabs, flags } = dataPackage;
 
         const promises = [];
 
@@ -129,6 +129,9 @@ async function syncPendingData(dataPackage) {
         if (!flags || flags.flagDailyToolChanged || flags.forceAll) {
             if (jsonMustHave !== undefined) {
                 promises.push(database.ref('Portal/jsonMustHave').set(jsonMustHave));
+            }
+            if (appShutterTabs !== undefined) {
+                promises.push(database.ref('Portal/appShutterTabs').set(appShutterTabs));
             }
         }
         if (!flags || flags.flagFolderChanged || flags.forceAll) {

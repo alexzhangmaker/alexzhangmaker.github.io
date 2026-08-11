@@ -174,6 +174,66 @@
             transform: translateY(-3px);
             box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15);
         }
+
+        /* 应用快门 多 Tab 样式 */
+        .app-shutter-tabs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .app-tab-item {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748b;
+            background: #f1f5f9;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+
+        .app-tab-item:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .app-tab-item.active {
+            background: #3b82f6;
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.25);
+        }
+
+        .app-tab-add {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #3b82f6;
+            background: #eff6ff;
+            border: 1px dashed #93c5fd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .app-tab-add:hover {
+            background: #dbeafe;
+            border-color: #3b82f6;
+        }
         
         .bookmark-header {
             display: flex;
@@ -321,7 +381,7 @@
             <div class="mx-auto">
                 <div class="rounded-xl shadow-sm p-6" style="background-color: #f5f7fb;">
                     <div class="flex items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-800" id="idCurrentFolderTitle">daily Toolbox</h2>
+                        <h2 class="text-2xl font-bold text-gray-800" id="idCurrentFolderTitle">应用快门</h2>
                         <span class="ml-2 text-sm text-gray-500" id="items-count">5</span>
                         <div class="canvasDailyToolbar">
                             <svg xmlns="http://www.w3.org/2000/svg" id="idBTNPlusBookmark" width="24" height="24" viewBox="0 0 32 32"><path fill="#000000" d="M24 16v10.752l-7.096-3.59l-.904-.457l-.9.456L8 26.748V4h10V2H8a2 2 0 0 0-2 2v26l10-5.054L26 30V16Z"/><path fill="#000000" d="M26 6V2h-2v4h-4v2h4v4h2V8h4V6h-4z"/></svg>
@@ -330,6 +390,9 @@
                             
                         </div>
                     </div>
+
+                    <!-- 应用快门 多 Tab 标签栏 -->
+                    <div id="idAppShutterTabBar" class="app-shutter-tabs noShow"></div>
                     
                     <!-- 文件列表区域 -->
                     <div id="idFolderContents" class="bookmarks-grid grid-view"></div>
@@ -652,6 +715,8 @@
         } ;
 
         function displayFolderContents(folder) {
+            const tabBar = document.getElementById('idAppShutterTabBar');
+            if (tabBar) tabBar.classList.add('noShow');
             const folderContents = document.getElementById('idFolderContents');
             const currentFolder = document.getElementById('idCurrentFolderTitle');
             let tagBTNPlusBookmark = document.getElementById("idBTNPlusBookmark") ;
@@ -1045,7 +1110,7 @@
 
             displayDailyTools() ;
 
-            tippy('#idBTNDisplayDailyTools', {content: '每日工具!'});
+            tippy('#idBTNDisplayDailyTools', {content: '应用快门!'});
             tippy('#idBTNSaveChange', {content: '保存数据!'});
             tippy('#idBTNFreshData', {content: '下载数据!'});
             tippy('#idBTNSetting', {content: '系统设置!'});
@@ -1058,7 +1123,7 @@
                     renderTree(gFolderTree, treeContainer);
                 }
                 const currentFolderTitle = document.getElementById('idCurrentFolderTitle');
-                if (currentFolderTitle && currentFolderTitle.textContent === "daily Toolbox") {
+                if (currentFolderTitle && (currentFolderTitle.textContent === "应用快门" || currentFolderTitle.textContent === "daily Toolbox")) {
                     displayDailyTools();
                 } else if (typeof selectedNode !== 'undefined' && selectedNode) {
                     displayFolderContents(selectedNode);
@@ -1219,6 +1284,75 @@
             }) ;
         }
 
+        function openCreateAppTabModal(){
+            const schema = [
+                { "name": "tabName", "type": "string", "placeholder": "Tab 分类名称..." }
+            ];
+            const callbacks = {
+                onConfirm: (formData)=>{
+                    if (formData.tabName) {
+                        const newTab = plusAppShutterTab(formData.tabName);
+                        if (newTab) {
+                            displayDailyTools();
+                        }
+                    }
+                },
+                onCancel: () => {}
+            };
+            createFormModal('新建应用分类 Tab', schema, callbacks);
+        }
+
+        function renderAppShutterTabs() {
+            const tabBar = document.getElementById('idAppShutterTabBar');
+            if (!tabBar) return;
+            tabBar.classList.remove('noShow');
+            tabBar.innerHTML = '';
+
+            if (!gAppShutterTabs || gAppShutterTabs.length === 0) {
+                gAppShutterTabs = [{ id: 'default', name: '常用' }];
+            }
+
+            gAppShutterTabs.forEach(tab => {
+                const tabItem = document.createElement('div');
+                tabItem.className = `app-tab-item ${tab.id === currentActiveAppTabId ? 'active' : ''}`;
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = tab.name;
+                tabItem.appendChild(nameSpan);
+
+                if (tab.id !== 'default') {
+                    const closeBtn = document.createElement('i');
+                    closeBtn.className = 'fas fa-times text-xs opacity-60 hover:opacity-100 ml-1';
+                    closeBtn.title = '删除此类目';
+                    closeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (confirm(`确定要删除分类 "${tab.name}" 吗？关联的卡片将转入常用分类。`)) {
+                            removeAppShutterTab(tab.id);
+                            displayDailyTools();
+                        }
+                    });
+                    tabItem.appendChild(closeBtn);
+                }
+
+                tabItem.addEventListener('click', () => {
+                    currentActiveAppTabId = tab.id;
+                    displayDailyTools();
+                });
+
+                tabBar.appendChild(tabItem);
+            });
+
+            // 尾部增加新建 Tab "+" 标签按钮
+            const addTabBtn = document.createElement('div');
+            addTabBtn.className = 'app-tab-add';
+            addTabBtn.title = '新建分类 Tab';
+            addTabBtn.innerHTML = '<i class="fas fa-plus mr-1"></i> 新建 Tab';
+            addTabBtn.addEventListener('click', () => {
+                openCreateAppTabModal();
+            });
+            tabBar.appendChild(addTabBtn);
+        }
+
         function openPlusDailyToolModal(){
             const callbackPlusTool = (formDataTool)=>{
                 if (!formDataTool.url || !formDataTool.url.trim()) {
@@ -1229,6 +1363,7 @@
                     id:crypto.randomUUID(),
                     type:"Gateway.Bookmark",
                     title:formDataTool.title || '未命名',
+                    tabId: currentActiveAppTabId || 'default',
                     data:{
                         url:formDataTool.url.trim(),
                         memo:formDataTool.memo || ''
@@ -1249,7 +1384,7 @@
                 onConfirm: callbackPlusTool,
                 onCancel: () => {console.log("用户取消了操作。");}
             };
-            createFormModal('新建每日工具', bookmarkSchema, bookmarkCallbacks);
+            createFormModal('新建应用卡片', bookmarkSchema, bookmarkCallbacks);
         }
 
         function _renderAddToolCard(tagContainer){
@@ -1283,15 +1418,28 @@
             let tagBTNPlusDailyTool = document.getElementById("idBTNPlusDailyTool") ;
             tagBTNPlusDailyTool.classList.remove('noShow') ;
 
-            // 更新标题
-            currentFolder.textContent = "daily Toolbox";
+            // 1. 更新标题为 "应用快门"
+            currentFolder.textContent = "应用快门";
             folderContents.innerHTML=``;
 
-            for(let i=0;i<gDialyTools.length;i++){
-                _renderDailyTool(gDialyTools[i],folderContents) ;
+            // 2. 渲染多 Tab 标签栏
+            renderAppShutterTabs();
+
+            // 3. 根据当前激活 Tab 过滤 App 卡片
+            const filteredTools = gDialyTools.filter(tool => {
+                if (currentActiveAppTabId === 'default') {
+                    return !tool.tabId || tool.tabId === 'default';
+                }
+                return tool.tabId === currentActiveAppTabId;
+            });
+
+            document.getElementById('items-count').textContent = `(${filteredTools.length} 个项目)`;
+
+            for(let i=0;i<filteredTools.length;i++){
+                _renderDailyTool(filteredTools[i],folderContents) ;
             }
 
-            // 在最末尾添加新增卡片
+            // 4. 在最末尾添加新增卡片
             _renderAddToolCard(folderContents) ;
 
             document.querySelector("#idBTNPlusDailyTool").onclick = (event)=>{

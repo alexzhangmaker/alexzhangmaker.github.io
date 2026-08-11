@@ -2,6 +2,8 @@
 let gFolderTree = [];
 let gDialyTools = [];
 let gBookmarks = [];
+let gAppShutterTabs = [{ id: 'default', name: '常用' }];
+let currentActiveAppTabId = 'default';
 let flagFolderChanged = false;
 let flagBookmarksChanged = false;
 let flagDailyToolChanged = false;
@@ -90,11 +92,15 @@ function updateSaveIconStatus(status) {
 /**
  * 本地数据持久化并触发 Worker 后台同步
  */
+/**
+ * 本地数据持久化并触发 Worker 后台同步
+ */
 async function persistLocalAndSync(flags = {}) {
     const dataPackage = {
         jsonFolders: gFolderTree,
         jsonMustHave: gDialyTools,
-        Bookmarks: gBookmarks
+        Bookmarks: gBookmarks,
+        appShutterTabs: gAppShutterTabs
     };
 
     // 1. 立即持久化到本地 IndexedDB
@@ -141,18 +147,66 @@ async function handleRemoteDataUpdate(jsonPortal) {
     gFolderTree = jsonPortal.jsonFolders || [];
     gDialyTools = jsonPortal.jsonMustHave || [];
     gBookmarks = jsonPortal.Bookmarks || [];
+    gAppShutterTabs = jsonPortal.appShutterTabs || [{ id: 'default', name: '常用' }];
 
     // 保存到 IndexedDB
     if (window.dbStorage) {
         await window.dbStorage.saveLocalAppState({
             jsonFolders: gFolderTree,
             jsonMustHave: gDialyTools,
-            Bookmarks: gBookmarks
+            Bookmarks: gBookmarks,
+            appShutterTabs: gAppShutterTabs
         });
     }
 
     // 触发自定义事件通知 UI 刷新
     window.dispatchEvent(new CustomEvent('appDataUpdated'));
+}
+
+/**
+ * 应用快门 Tab 管理方法
+ */
+function plusAppShutterTab(tabName) {
+    if (!tabName || !tabName.trim()) return null;
+    const name = tabName.trim();
+    const exists = gAppShutterTabs.some(t => t.name === name);
+    if (exists) {
+        alert('Tab 名称已存在');
+        return null;
+    }
+    const newTab = {
+        id: crypto.randomUUID(),
+        name: name,
+        createdAt: Date.now()
+    };
+    gAppShutterTabs.push(newTab);
+    currentActiveAppTabId = newTab.id;
+    flagDailyToolChanged = true;
+    persistLocalAndSync();
+    return newTab;
+}
+
+function removeAppShutterTab(tabId) {
+    if (tabId === 'default') {
+        alert('默认 Tab 无法删除');
+        return false;
+    }
+    const index = gAppShutterTabs.findIndex(t => t.id === tabId);
+    if (index !== -1) {
+        gAppShutterTabs.splice(index, 1);
+        if (gDialyTools) {
+            gDialyTools.forEach(tool => {
+                if (tool.tabId === tabId) {
+                    tool.tabId = 'default';
+                }
+            });
+        }
+        currentActiveAppTabId = 'default';
+        flagDailyToolChanged = true;
+        persistLocalAndSync();
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -198,6 +252,7 @@ async function asyncLoadAppData() {
         gFolderTree = localData.jsonFolders || [];
         gDialyTools = localData.jsonMustHave || [];
         gBookmarks = localData.Bookmarks || [];
+        gAppShutterTabs = localData.appShutterTabs || [{ id: 'default', name: '常用' }];
         flagFolderChanged = false;
         flagBookmarksChanged = false;
         flagDailyToolChanged = false;
@@ -214,12 +269,14 @@ async function asyncLoadAppData() {
                 gFolderTree = jsonPortal.jsonFolders || [];
                 gDialyTools = jsonPortal.jsonMustHave || [];
                 gBookmarks = jsonPortal.Bookmarks || [];
+                gAppShutterTabs = jsonPortal.appShutterTabs || [{ id: 'default', name: '常用' }];
 
                 if (window.dbStorage) {
                     await window.dbStorage.saveLocalAppState({
                         jsonFolders: gFolderTree,
                         jsonMustHave: gDialyTools,
-                        Bookmarks: gBookmarks
+                        Bookmarks: gBookmarks,
+                        appShutterTabs: gAppShutterTabs
                     });
                 }
                 updateSaveIconStatus('SYNCED');
