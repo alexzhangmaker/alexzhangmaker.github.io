@@ -320,10 +320,35 @@ async function removeBookmark(bookmarkID) {
     }
 }
 
+function normalizeUrl(url) {
+    if (!url) return '';
+    let str = url.trim().toLowerCase();
+    str = str.replace(/^https?:\/\//, '');
+    str = str.replace(/\/+$/, '');
+    return str;
+}
+
 function plusDailyTool(jsonTool) {
+    const targetUrl = jsonTool.data ? jsonTool.data.url : jsonTool.url;
+    const targetNorm = normalizeUrl(targetUrl);
+
+    if (targetNorm && gDialyTools) {
+        const isDuplicate = gDialyTools.some(tool => {
+            const toolUrl = tool.data ? tool.data.url : tool.url;
+            return normalizeUrl(toolUrl) === targetNorm;
+        });
+
+        if (isDuplicate) {
+            alert("该应用 URL 已经存在，无法重复添加！");
+            return false;
+        }
+    }
+
+    if (!jsonTool.updatedAt) jsonTool.updatedAt = Date.now();
     gDialyTools.push(jsonTool);
     flagDailyToolChanged = true;
     persistLocalAndSync();
+    return true;
 }
 
 function removeDailyTool(toolID) {
@@ -339,6 +364,7 @@ function removeDailyTool(toolID) {
 }
 
 function plusFolderatRoot(jsonFolder) {
+    if (!jsonFolder.updatedAt) jsonFolder.updatedAt = Date.now();
     gFolderTree.push(jsonFolder);
     flagFolderChanged = true;
     persistLocalAndSync();
@@ -348,6 +374,7 @@ function plusFolder2Folder(jsonFolder, selectedNode) {
     if (!selectedNode.children) {
         selectedNode.children = [];
     }
+    if (!jsonFolder.updatedAt) jsonFolder.updatedAt = Date.now();
     selectedNode.children.push(jsonFolder);
     flagFolderChanged = true;
     persistLocalAndSync();
@@ -395,6 +422,7 @@ function plusBookmark2Folder(jsonBookmark, folderNode) {
     if (!folderNode) {
         alert('something wrong in plusBookmark2Folder');
     } else {
+        if (!jsonBookmark.updatedAt) jsonBookmark.updatedAt = Date.now();
         jsonBookmark.folderID = folderNode.id;
         gBookmarks.push(jsonBookmark);
         flagBookmarksChanged = true;

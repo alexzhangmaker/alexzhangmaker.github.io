@@ -1,5 +1,6 @@
 /**
  * Web Worker for background data synchronization between Local-First IndexedDB and Server (Firebase).
+ * Supports Real-time WebSocket Listening (`on('value')`) for multi-device instant sync.
  */
 
 // Import Firebase JS SDK in Worker context
@@ -13,6 +14,7 @@ try {
 let firebaseApp = null;
 let database = null;
 let isSyncing = false;
+let isListening = false;
 
 // Handle messages from main thread
 self.onmessage = async function(e) {
@@ -45,6 +47,31 @@ function initFirebase(config) {
     }
     database = firebase.database();
     postStatus('READY', 'Firebase initialized in worker');
+
+    // 开启长连接 WebSocket 实时订阅，秒级感知其他端（如节点A）的修改
+    startRealtimeListener();
+}
+
+function startRealtimeListener() {
+    if (!database || isListening) return;
+    isListening = true;
+
+    database.ref('Portal').on('value', (snapshot) => {
+        const jsonPortal = snapshot.val();
+        if (jsonPortal) {
+            self.postMessage({
+                type: 'REMOTE_DATA',
+                data: jsonPortal,
+                timestamp: Date.now()
+            });
+            if (!isSyncing) {
+                postStatus('SYNCED', '已通过 WebSocket 收到远端实时数据更新');
+            }
+        }
+    }, (err) => {
+        console.error("Worker 实时订阅异常:", err);
+        postStatus('ERROR', '实时订阅失败: ' + err.message);
+    });
 }
 
 async function fetchRemoteData() {

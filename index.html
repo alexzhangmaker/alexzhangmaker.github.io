@@ -1057,6 +1057,12 @@
                     treeContainer.innerHTML = '';
                     renderTree(gFolderTree, treeContainer);
                 }
+                const currentFolderTitle = document.getElementById('idCurrentFolderTitle');
+                if (currentFolderTitle && currentFolderTitle.textContent === "daily Toolbox") {
+                    displayDailyTools();
+                } else if (typeof selectedNode !== 'undefined' && selectedNode) {
+                    displayFolderContents(selectedNode);
+                }
             });
 
         });
@@ -1215,17 +1221,23 @@
 
         function openPlusDailyToolModal(){
             const callbackPlusTool = (formDataTool)=>{
+                if (!formDataTool.url || !formDataTool.url.trim()) {
+                    alert("请填写有效的 URL");
+                    return;
+                }
                 let jsonTool = {
                     id:crypto.randomUUID(),
                     type:"Gateway.Bookmark",
-                    title:formDataTool.title,
+                    title:formDataTool.title || '未命名',
                     data:{
-                        url:formDataTool.url,
-                        memo:formDataTool.memo
+                        url:formDataTool.url.trim(),
+                        memo:formDataTool.memo || ''
                     }
                 } ;
-                plusDailyTool(jsonTool) ;
-                displayDailyTools() ;
+                const added = plusDailyTool(jsonTool) ;
+                if (added) {
+                    displayDailyTools() ;
+                }
             } ;
 
             const bookmarkSchema = [
