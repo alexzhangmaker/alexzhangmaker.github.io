@@ -116,7 +116,7 @@ async function syncPendingData(dataPackage) {
     postStatus('SYNCING', 'Syncing local changes to server...');
 
     try {
-        const { jsonFolders, jsonMustHave, Bookmarks, appShutterTabs, flags } = dataPackage;
+        const { jsonFolders, jsonMustHave, Bookmarks, appShutterTabs, kanbanTasks, flags } = dataPackage;
 
         const promises = [];
 
@@ -132,6 +132,9 @@ async function syncPendingData(dataPackage) {
             }
             if (appShutterTabs !== undefined) {
                 promises.push(database.ref('Portal/appShutterTabs').set(appShutterTabs));
+            }
+            if (kanbanTasks !== undefined) {
+                promises.push(database.ref('Portal/kanbanTasks').set(kanbanTasks));
             }
         }
         if (!flags || flags.flagFolderChanged || flags.forceAll) {

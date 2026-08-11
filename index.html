@@ -1383,9 +1383,7 @@
             tabBar.classList.remove('noShow');
             tabBar.innerHTML = '';
 
-            if (!gAppShutterTabs || gAppShutterTabs.length === 0) {
-                gAppShutterTabs = [{ id: 'default', name: '常用' }];
-            }
+            ensureDefaultAppShutterTabs();
 
             gAppShutterTabs.forEach(tab => {
                 const tabItem = document.createElement('div');
@@ -1397,13 +1395,13 @@
                 nameSpan.textContent = tab.name;
                 tabItem.appendChild(nameSpan);
 
-                if (tab.id !== 'default') {
+                if (!tab.isFixed && tab.id !== 'default' && tab.id !== 'kanban') {
                     const closeBtn = document.createElement('i');
                     closeBtn.className = 'fas fa-times text-xs opacity-60 hover:opacity-100 ml-1';
                     closeBtn.title = '删除此类目';
                     closeBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        if (confirm(`确定要删除分类 "${tab.name}" 吗？关联的卡片将转入常用分类。`)) {
+                        if (confirm(`确定要删除分类 "${tab.name}" 吗？关联的卡片将转入常用应用分类。`)) {
                             removeAppShutterTab(tab.id);
                             displayDailyTools();
                         }
@@ -1526,6 +1524,350 @@
             tagContainer.appendChild(tagAddCard) ;
         }
 
+        let currentKanbanDate = new Date();
+        let kanbanViewYear = currentKanbanDate.getFullYear();
+        let kanbanViewMonth = currentKanbanDate.getMonth();
+
+        function formatChineseDate(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            const weekDay = weekDays[date.getDay()];
+            return `${year}年${month}月${day}日 ${weekDay}`;
+        }
+
+        function renderKanbanView(container) {
+            container.className = "w-full";
+            container.innerHTML = "";
+
+            // 主容器：左右两列布局
+            const mainLayout = document.createElement('div');
+            mainLayout.className = "flex flex-col lg:flex-row items-start gap-6 w-full";
+
+            // 1. 左侧：月历组件列
+            const leftCol = document.createElement('div');
+            leftCol.className = "w-full lg:w-80 bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex-shrink-0";
+            _renderCalendarWidget(leftCol);
+            mainLayout.appendChild(leftCol);
+
+            // 2. 右侧：看板内容列
+            const rightCol = document.createElement('div');
+            rightCol.className = "flex-1 w-full space-y-6";
+            _renderKanbanRightContent(rightCol);
+            mainLayout.appendChild(rightCol);
+
+            container.appendChild(mainLayout);
+        }
+
+        function _renderCalendarWidget(container) {
+            const displayYear = kanbanViewYear;
+            const displayMonth = kanbanViewMonth;
+            const monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+
+            container.innerHTML = `
+                <!-- 顶栏：年月与导航 -->
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-gray-100">
+                    <button id="idBTNCalPrevMonth" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:bg-gray-50 transition-all">
+                        <i class="fas fa-chevron-left text-xs"></i>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <span class="font-extrabold text-gray-800 text-sm tracking-wide">${displayYear}年 ${monthNames[displayMonth]}</span>
+                        <button id="idBTNCalToday" class="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full hover:bg-indigo-100 transition-colors">今天</button>
+                    </div>
+                    <button id="idBTNCalNextMonth" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:bg-gray-50 transition-all">
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- 选中日期简报 -->
+                <div class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-3 flex items-center justify-between mb-4">
+                    <div>
+                        <div class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">SELECTED DATE</div>
+                        <div class="text-xs font-extrabold text-gray-800">${formatChineseDate(currentKanbanDate)}</div>
+                    </div>
+                    <span class="text-xl">📅</span>
+                </div>
+
+                <!-- 星期标头 -->
+                <div class="grid grid-cols-7 text-center text-xs font-bold text-gray-400 mb-2">
+                    <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+                </div>
+
+                <!-- 月历日期网格 -->
+                <div id="idCalGrid" class="grid grid-cols-7 gap-1 text-center text-xs font-medium"></div>
+            `;
+
+            const calGrid = container.querySelector('#idCalGrid');
+            const firstDayIndex = new Date(displayYear, displayMonth, 1).getDay();
+            const daysInMonth = new Date(displayYear, displayMonth + 1, 0).getDate();
+            const daysInPrevMonth = new Date(displayYear, displayMonth, 0).getDate();
+            const today = new Date();
+
+            // 填充上个月末尾天数
+            for (let i = firstDayIndex - 1; i >= 0; i--) {
+                const dayNum = daysInPrevMonth - i;
+                const cell = document.createElement('div');
+                cell.className = "text-gray-300 py-1.5 rounded-xl select-none";
+                cell.textContent = dayNum;
+                calGrid.appendChild(cell);
+            }
+
+            // 填充当月天数
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                const isSelected = currentKanbanDate.getFullYear() === displayYear &&
+                                   currentKanbanDate.getMonth() === displayMonth &&
+                                   currentKanbanDate.getDate() === day;
+                const isToday = today.getFullYear() === displayYear &&
+                                today.getMonth() === displayMonth &&
+                                today.getDate() === day;
+
+                let classes = "py-1.5 rounded-xl cursor-pointer transition-all select-none ";
+                if (isSelected) {
+                    classes += "bg-emerald-500 text-white font-extrabold shadow-md transform scale-105";
+                } else if (isToday) {
+                    classes += "bg-indigo-50 text-indigo-600 font-extrabold border border-indigo-200";
+                } else {
+                    classes += "text-gray-700 hover:bg-indigo-50 hover:text-indigo-600";
+                }
+
+                cell.className = classes;
+                cell.textContent = day;
+
+                cell.onclick = () => {
+                    currentKanbanDate = new Date(displayYear, displayMonth, day);
+                    displayDailyTools();
+                };
+
+                calGrid.appendChild(cell);
+            }
+
+            // 填充下个月开头天数
+            const totalCellsSoFar = firstDayIndex + daysInMonth;
+            const remainingCells = (totalCellsSoFar <= 35 ? 35 : 42) - totalCellsSoFar;
+            for (let day = 1; day <= remainingCells; day++) {
+                const cell = document.createElement('div');
+                cell.className = "text-gray-300 py-1.5 rounded-xl select-none";
+                cell.textContent = day;
+                calGrid.appendChild(cell);
+            }
+
+            // 按钮事件绑定
+            container.querySelector('#idBTNCalPrevMonth').onclick = () => {
+                kanbanViewMonth--;
+                if (kanbanViewMonth < 0) {
+                    kanbanViewMonth = 11;
+                    kanbanViewYear--;
+                }
+                displayDailyTools();
+            };
+            container.querySelector('#idBTNCalNextMonth').onclick = () => {
+                kanbanViewMonth++;
+                if (kanbanViewMonth > 11) {
+                    kanbanViewMonth = 0;
+                    kanbanViewYear++;
+                }
+                displayDailyTools();
+            };
+            container.querySelector('#idBTNCalToday').onclick = () => {
+                currentKanbanDate = new Date();
+                kanbanViewYear = currentKanbanDate.getFullYear();
+                kanbanViewMonth = currentKanbanDate.getMonth();
+                displayDailyTools();
+            };
+        }
+
+        function _renderKanbanRightContent(container) {
+            const totalCount = gKanbanTasks.length;
+            const todoTasks = gKanbanTasks.filter(t => t.status === 'todo');
+            const inProgressTasks = gKanbanTasks.filter(t => t.status === 'in_progress');
+            const completedTasks = gKanbanTasks.filter(t => t.status === 'completed');
+            const rateStr = totalCount > 0 ? Math.round((completedTasks.length / totalCount) * 100) + '%' : '0%';
+
+            // 行 1：5 个任务统计 UI 组件
+            const row1 = document.createElement('div');
+            row1.className = "grid grid-cols-2 sm:grid-cols-5 gap-3 w-full";
+            row1.innerHTML = `
+                <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-gray-100 flex flex-col items-center justify-center h-20">
+                    <div class="text-2xl font-black text-indigo-600 mb-0.5">${totalCount}</div>
+                    <div class="text-xs font-bold text-gray-400">全部</div>
+                </div>
+                <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-gray-100 flex flex-col items-center justify-center h-20">
+                    <div class="text-2xl font-black text-amber-500 mb-0.5">${todoTasks.length}</div>
+                    <div class="text-xs font-bold text-gray-400">待办</div>
+                </div>
+                <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-gray-100 flex flex-col items-center justify-center h-20">
+                    <div class="text-2xl font-black text-blue-500 mb-0.5">${inProgressTasks.length}</div>
+                    <div class="text-xs font-bold text-gray-400">进行中</div>
+                </div>
+                <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-gray-100 flex flex-col items-center justify-center h-20">
+                    <div class="text-2xl font-black text-emerald-500 mb-0.5">${completedTasks.length}</div>
+                    <div class="text-xs font-bold text-gray-400">已完成</div>
+                </div>
+                <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-gray-100 flex flex-col items-center justify-center h-20">
+                    <div class="text-2xl font-black text-purple-600 mb-0.5">${rateStr}</div>
+                    <div class="text-xs font-bold text-gray-400">完成率</div>
+                </div>
+            `;
+            container.appendChild(row1);
+
+            // 行 2：添加任务部分的 UI 组件
+            const row2 = document.createElement('div');
+            row2.className = "w-full bg-white rounded-2xl shadow-sm border-2 border-dashed border-indigo-200 p-2.5 px-4 flex items-center justify-between gap-3";
+            row2.innerHTML = `
+                <div class="flex items-center gap-2 flex-1">
+                    <span class="text-lg">✍️</span>
+                    <input type="text" id="idKanbanNewTaskInput" placeholder="输入新任务，按 Enter 添加..." class="w-full bg-transparent border-none outline-none text-gray-700 text-sm font-medium placeholder-gray-400">
+                </div>
+                <button id="idBTNKanbanAddTask" class="px-4 py-2 rounded-xl text-white font-bold text-xs shadow hover:shadow-md transition-all flex items-center gap-1.5 whitespace-nowrap" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+                    <i class="fas fa-plus text-xs"></i> 添加任务
+                </button>
+            `;
+            container.appendChild(row2);
+
+            // 行 3：三列布局的 待办 / 进行中 / 已完成
+            const row3 = document.createElement('div');
+            row3.className = "grid grid-cols-1 md:grid-cols-3 gap-5 w-full";
+            row3.innerHTML = `
+                <!-- 待办列 -->
+                <div class="bg-white rounded-2xl shadow-sm border-t-4 border-amber-400 border-gray-100 p-4 min-h-[380px] flex flex-col">
+                    <div class="flex items-center justify-between pb-3 mb-3 border-b border-gray-100">
+                        <div class="flex items-center gap-2 font-bold text-gray-800 text-sm">
+                            <span class="text-amber-500">📌</span> 待办
+                        </div>
+                        <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">${todoTasks.length}</span>
+                    </div>
+                    <div id="col-todo" class="space-y-3 flex-1 overflow-y-auto"></div>
+                </div>
+
+                <!-- 进行中列 -->
+                <div class="bg-white rounded-2xl shadow-sm border-t-4 border-blue-500 border-gray-100 p-4 min-h-[380px] flex flex-col">
+                    <div class="flex items-center justify-between pb-3 mb-3 border-b border-gray-100">
+                        <div class="flex items-center gap-2 font-bold text-gray-800 text-sm">
+                            <span class="text-blue-500">⏳</span> 进行中
+                        </div>
+                        <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full">${inProgressTasks.length}</span>
+                    </div>
+                    <div id="col-in_progress" class="space-y-3 flex-1 overflow-y-auto"></div>
+                </div>
+
+                <!-- 已完成列 -->
+                <div class="bg-white rounded-2xl shadow-sm border-t-4 border-emerald-500 border-gray-100 p-4 min-h-[380px] flex flex-col">
+                    <div class="flex items-center justify-between pb-3 mb-3 border-b border-gray-100">
+                        <div class="flex items-center gap-2 font-bold text-gray-800 text-sm">
+                            <span class="text-emerald-500">✅</span> 已完成
+                        </div>
+                        <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">${completedTasks.length}</span>
+                    </div>
+                    <div id="col-completed" class="space-y-3 flex-1 overflow-y-auto"></div>
+                </div>
+            `;
+            container.appendChild(row3);
+
+            // 渲染各列任务卡片
+            const colTodo = container.querySelector('#col-todo');
+            const colInProgress = container.querySelector('#col-in_progress');
+            const colCompleted = container.querySelector('#col-completed');
+
+            todoTasks.forEach(task => _renderKanbanCard(task, colTodo));
+            inProgressTasks.forEach(task => _renderKanbanCard(task, colInProgress));
+            completedTasks.forEach(task => _renderKanbanCard(task, colCompleted));
+
+            // 事件绑定：添加任务
+            const inputTask = container.querySelector('#idKanbanNewTaskInput');
+            const btnAddTask = container.querySelector('#idBTNKanbanAddTask');
+            const handleAddTask = () => {
+                if (inputTask && inputTask.value.trim()) {
+                    addKanbanTask(inputTask.value);
+                    displayDailyTools();
+                }
+            };
+            btnAddTask.onclick = handleAddTask;
+            inputTask.onkeydown = (e) => {
+                if (e.key === 'Enter') handleAddTask();
+            };
+        }
+
+        function _renderKanbanCard(task, container) {
+            const card = document.createElement('div');
+            card.className = "bg-white border border-gray-200/80 rounded-xl p-3.5 shadow-sm hover:shadow-md transition-all";
+
+            let badgeHtml = '';
+            let actionBtnsHtml = '';
+
+            if (task.status === 'todo') {
+                badgeHtml = `<span class="bg-amber-50 text-amber-600 text-[11px] font-bold px-2 py-0.5 rounded-md">待办</span>`;
+                actionBtnsHtml = `
+                    <button class="btn-move-status text-[11px] font-medium text-gray-500 hover:text-blue-600 bg-gray-100 hover:bg-blue-50 px-2 py-1 rounded transition-colors" data-status="in_progress">→ 进行中</button>
+                    <button class="btn-move-status text-[11px] font-medium text-gray-500 hover:text-emerald-600 bg-gray-100 hover:bg-emerald-50 px-2 py-1 rounded transition-colors" data-status="completed">→ 完成</button>
+                `;
+            } else if (task.status === 'in_progress') {
+                badgeHtml = `<span class="bg-blue-50 text-blue-600 text-[11px] font-bold px-2 py-0.5 rounded-md">进行中</span>`;
+                actionBtnsHtml = `
+                    <button class="btn-move-status text-[11px] font-medium text-gray-500 hover:text-amber-600 bg-gray-100 hover:bg-amber-50 px-2 py-1 rounded transition-colors" data-status="todo">← 待办</button>
+                    <button class="btn-move-status text-[11px] font-medium text-gray-500 hover:text-emerald-600 bg-gray-100 hover:bg-emerald-50 px-2 py-1 rounded transition-colors" data-status="completed">→ 完成</button>
+                `;
+            } else {
+                badgeHtml = `<span class="bg-emerald-50 text-emerald-600 text-[11px] font-bold px-2 py-0.5 rounded-md">已完成</span>`;
+                actionBtnsHtml = `
+                    <button class="btn-move-status text-[11px] font-medium text-gray-500 hover:text-amber-600 bg-gray-100 hover:bg-amber-50 px-2 py-1 rounded transition-colors" data-status="todo">← 待办</button>
+                    <button class="btn-move-status text-[11px] font-medium text-gray-500 hover:text-blue-600 bg-gray-100 hover:bg-blue-50 px-2 py-1 rounded transition-colors" data-status="in_progress">← 进行中</button>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="flex items-start justify-between gap-2 mb-2">
+                    <h4 class="text-sm font-bold text-gray-800 leading-snug break-all">${task.title}</h4>
+                    <button class="btn-delete-task text-gray-300 hover:text-red-500 text-xs p-0.5 transition-colors" title="删除任务">✕</button>
+                </div>
+                <div class="flex items-center gap-2 mb-3">
+                    ${badgeHtml}
+                    <div class="flex items-center gap-1">
+                        ${actionBtnsHtml}
+                    </div>
+                </div>
+                <div class="border-t border-dashed border-gray-100 pt-2 flex items-center justify-between gap-2 text-xs">
+                    <span class="text-gray-400 truncate max-w-[150px]" title="${task.memo || ''}">${task.memo || '无备注'}</span>
+                    <div class="flex items-center gap-1">
+                        <input type="text" placeholder="添加备注..." class="input-memo text-[11px] border border-gray-200 rounded px-2 py-0.5 w-24 outline-none focus:border-indigo-400">
+                        <button class="btn-save-memo text-xs text-indigo-500 hover:text-indigo-700 bg-indigo-50 w-5 h-5 rounded-full flex items-center justify-center font-bold">+</button>
+                    </div>
+                </div>
+            `;
+
+            // 删除按钮绑定
+            card.querySelector('.btn-delete-task').onclick = () => {
+                deleteKanbanTask(task.id);
+                displayDailyTools();
+            };
+
+            // 状态切换按钮绑定
+            card.querySelectorAll('.btn-move-status').forEach(btn => {
+                btn.onclick = () => {
+                    const newStatus = btn.dataset.status;
+                    updateKanbanTaskStatus(task.id, newStatus);
+                    displayDailyTools();
+                };
+            });
+
+            // 备注更新绑定
+            const memoInput = card.querySelector('.input-memo');
+            const memoBtn = card.querySelector('.btn-save-memo');
+            const handleMemoSave = () => {
+                if (memoInput && memoInput.value.trim()) {
+                    updateKanbanTaskMemo(task.id, memoInput.value.trim());
+                    displayDailyTools();
+                }
+            };
+            memoBtn.onclick = handleMemoSave;
+            memoInput.onkeydown = (e) => {
+                if (e.key === 'Enter') handleMemoSave();
+            };
+
+            container.appendChild(card);
+        }
+
         function displayDailyTools(){
             let tagCurrentFolder = document.querySelector(".selectedFolder") ;
             if(tagCurrentFolder!=null){
@@ -1539,7 +1881,6 @@
             let tagBTNPlusBookmark = document.getElementById("idBTNPlusBookmark") ;
             tagBTNPlusBookmark.classList.add('noShow') ;
             let tagBTNPlusDailyTool = document.getElementById("idBTNPlusDailyTool") ;
-            tagBTNPlusDailyTool.classList.remove('noShow') ;
 
             // 1. 更新标题为 "应用快门"
             currentFolder.textContent = "应用快门";
@@ -1548,26 +1889,37 @@
             // 2. 渲染多 Tab 标签栏
             renderAppShutterTabs();
 
-            // 3. 根据当前激活 Tab 过滤 App 卡片
-            const filteredTools = gDialyTools.filter(tool => {
-                if (currentActiveAppTabId === 'default') {
-                    return !tool.tabId || tool.tabId === 'default';
+            // 3. 判断是否选中 "每日看板" Tab
+            if (currentActiveAppTabId === 'kanban') {
+                tagBTNPlusDailyTool.classList.add('noShow');
+                document.getElementById('items-count').textContent = `(${gKanbanTasks.length} 个任务)`;
+                renderKanbanView(folderContents);
+            } else {
+                tagBTNPlusDailyTool.classList.remove('noShow');
+
+                // 根据当前激活 Tab 过滤 App 卡片
+                const filteredTools = gDialyTools.filter(tool => {
+                    if (currentActiveAppTabId === 'default') {
+                        return !tool.tabId || tool.tabId === 'default';
+                    }
+                    return tool.tabId === currentActiveAppTabId;
+                });
+
+                document.getElementById('items-count').textContent = `(${filteredTools.length} 个项目)`;
+
+                folderContents.className = "bookmarks-grid grid-view";
+
+                for(let i=0;i<filteredTools.length;i++){
+                    _renderDailyTool(filteredTools[i],folderContents) ;
                 }
-                return tool.tabId === currentActiveAppTabId;
-            });
 
-            document.getElementById('items-count').textContent = `(${filteredTools.length} 个项目)`;
+                // 在最末尾添加新增卡片
+                _renderAddToolCard(folderContents) ;
 
-            for(let i=0;i<filteredTools.length;i++){
-                _renderDailyTool(filteredTools[i],folderContents) ;
+                document.querySelector("#idBTNPlusDailyTool").onclick = (event)=>{
+                    openPlusDailyToolModal();
+                };
             }
-
-            // 4. 在最末尾添加新增卡片
-            _renderAddToolCard(folderContents) ;
-
-            document.querySelector("#idBTNPlusDailyTool").onclick = (event)=>{
-                openPlusDailyToolModal();
-            };
         }
     </script>
 </body>

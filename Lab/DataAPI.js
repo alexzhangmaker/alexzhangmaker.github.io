@@ -2,8 +2,17 @@
 let gFolderTree = [];
 let gDialyTools = [];
 let gBookmarks = [];
-let gAppShutterTabs = [{ id: 'default', name: '常用' }];
-let currentActiveAppTabId = 'default';
+let gAppShutterTabs = [
+    { id: 'kanban', name: '每日看板', isFixed: true },
+    { id: 'default', name: '常用应用', isFixed: true }
+];
+let currentActiveAppTabId = 'kanban';
+let gKanbanTasks = [
+    { id: 'task-1', title: '部署到服务器', status: 'todo', memo: '', createdAt: Date.now() - 3600000 },
+    { id: 'task-2', title: '编写使用文档', status: 'in_progress', memo: '19:03:27', createdAt: Date.now() - 7200000 },
+    { id: 'task-3', title: '准备katrain', status: 'in_progress', memo: '', createdAt: Date.now() - 5400000 },
+    { id: 'task-4', title: '完成每日看板开发', status: 'completed', memo: '', createdAt: Date.now() - 10800000 }
+];
 let flagFolderChanged = false;
 let flagBookmarksChanged = false;
 let flagDailyToolChanged = false;
@@ -100,7 +109,8 @@ async function persistLocalAndSync(flags = {}) {
         jsonFolders: gFolderTree,
         jsonMustHave: gDialyTools,
         Bookmarks: gBookmarks,
-        appShutterTabs: gAppShutterTabs
+        appShutterTabs: gAppShutterTabs,
+        kanbanTasks: gKanbanTasks
     };
 
     // 1. 立即持久化到本地 IndexedDB
@@ -135,6 +145,36 @@ async function persistLocalAndSync(flags = {}) {
     }
 }
 
+function ensureDefaultAppShutterTabs() {
+    if (!gAppShutterTabs || !Array.isArray(gAppShutterTabs) || gAppShutterTabs.length === 0) {
+        gAppShutterTabs = [
+            { id: 'kanban', name: '每日看板', isFixed: true },
+            { id: 'default', name: '常用应用', isFixed: true }
+        ];
+        return;
+    }
+    // 确保 'kanban' 标签存在
+    if (!gAppShutterTabs.some(t => t.id === 'kanban')) {
+        gAppShutterTabs.unshift({ id: 'kanban', name: '每日看板', isFixed: true });
+    } else {
+        const kanbanTab = gAppShutterTabs.find(t => t.id === 'kanban');
+        if (kanbanTab) {
+            kanbanTab.name = '每日看板';
+            kanbanTab.isFixed = true;
+        }
+    }
+    // 确保 'default' 标签存在
+    if (!gAppShutterTabs.some(t => t.id === 'default')) {
+        gAppShutterTabs.push({ id: 'default', name: '常用应用', isFixed: true });
+    } else {
+        const defTab = gAppShutterTabs.find(t => t.id === 'default');
+        if (defTab) {
+            defTab.name = '常用应用';
+            defTab.isFixed = true;
+        }
+    }
+}
+
 async function handleRemoteDataUpdate(jsonPortal) {
     if (!jsonPortal) return;
 
@@ -147,7 +187,11 @@ async function handleRemoteDataUpdate(jsonPortal) {
     gFolderTree = jsonPortal.jsonFolders || [];
     gDialyTools = jsonPortal.jsonMustHave || [];
     gBookmarks = jsonPortal.Bookmarks || [];
-    gAppShutterTabs = jsonPortal.appShutterTabs || [{ id: 'default', name: '常用' }];
+    gAppShutterTabs = jsonPortal.appShutterTabs || [];
+    ensureDefaultAppShutterTabs();
+    if (jsonPortal.kanbanTasks) {
+        gKanbanTasks = jsonPortal.kanbanTasks;
+    }
 
     // 保存到 IndexedDB
     if (window.dbStorage) {
@@ -155,7 +199,8 @@ async function handleRemoteDataUpdate(jsonPortal) {
             jsonFolders: gFolderTree,
             jsonMustHave: gDialyTools,
             Bookmarks: gBookmarks,
-            appShutterTabs: gAppShutterTabs
+            appShutterTabs: gAppShutterTabs,
+            kanbanTasks: gKanbanTasks
         });
     }
 
@@ -187,8 +232,9 @@ function plusAppShutterTab(tabName) {
 }
 
 function removeAppShutterTab(tabId) {
-    if (tabId === 'default') {
-        alert('默认 Tab 无法删除');
+    const tabObj = gAppShutterTabs.find(t => t.id === tabId);
+    if (tabId === 'default' || tabId === 'kanban' || (tabObj && tabObj.isFixed)) {
+        alert('系统默认 Tab 无法删除');
         return false;
     }
     const index = gAppShutterTabs.findIndex(t => t.id === tabId);
@@ -201,7 +247,7 @@ function removeAppShutterTab(tabId) {
                 }
             });
         }
-        currentActiveAppTabId = 'default';
+        currentActiveAppTabId = 'kanban';
         flagDailyToolChanged = true;
         persistLocalAndSync();
         return true;
@@ -214,6 +260,59 @@ function reorderAppShutterTabs(newTabsArray) {
     gAppShutterTabs = newTabsArray;
     flagDailyToolChanged = true;
     persistLocalAndSync();
+}
+
+/**
+ * 每日看板 Task 管理方法
+ */
+function addKanbanTask(title, status = 'todo') {
+    if (!title || !title.trim()) return null;
+    const task = {
+        id: 'task-' + crypto.randomUUID(),
+        title: title.trim(),
+        status: status,
+        memo: '',
+        createdAt: Date.now()
+    };
+    gKanbanTasks.push(task);
+    flagDailyToolChanged = true;
+    persistLocalAndSync();
+    return task;
+}
+
+function deleteKanbanTask(taskId) {
+    const index = gKanbanTasks.findIndex(t => t.id === taskId);
+    if (index !== -1) {
+        gKanbanTasks.splice(index, 1);
+        flagDailyToolChanged = true;
+        persistLocalAndSync();
+        return true;
+    }
+    return false;
+}
+
+function updateKanbanTaskStatus(taskId, newStatus) {
+    const task = gKanbanTasks.find(t => t.id === taskId);
+    if (task) {
+        task.status = newStatus;
+        task.updatedAt = Date.now();
+        flagDailyToolChanged = true;
+        persistLocalAndSync();
+        return true;
+    }
+    return false;
+}
+
+function updateKanbanTaskMemo(taskId, memoText) {
+    const task = gKanbanTasks.find(t => t.id === taskId);
+    if (task) {
+        task.memo = memoText;
+        task.updatedAt = Date.now();
+        flagDailyToolChanged = true;
+        persistLocalAndSync();
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -259,7 +358,11 @@ async function asyncLoadAppData() {
         gFolderTree = localData.jsonFolders || [];
         gDialyTools = localData.jsonMustHave || [];
         gBookmarks = localData.Bookmarks || [];
-        gAppShutterTabs = localData.appShutterTabs || [{ id: 'default', name: '常用' }];
+        gAppShutterTabs = localData.appShutterTabs || [];
+        ensureDefaultAppShutterTabs();
+        if (localData.kanbanTasks) {
+            gKanbanTasks = localData.kanbanTasks;
+        }
         flagFolderChanged = false;
         flagBookmarksChanged = false;
         flagDailyToolChanged = false;
@@ -276,14 +379,19 @@ async function asyncLoadAppData() {
                 gFolderTree = jsonPortal.jsonFolders || [];
                 gDialyTools = jsonPortal.jsonMustHave || [];
                 gBookmarks = jsonPortal.Bookmarks || [];
-                gAppShutterTabs = jsonPortal.appShutterTabs || [{ id: 'default', name: '常用' }];
+                gAppShutterTabs = jsonPortal.appShutterTabs || [];
+                ensureDefaultAppShutterTabs();
+                if (jsonPortal.kanbanTasks) {
+                    gKanbanTasks = jsonPortal.kanbanTasks;
+                }
 
                 if (window.dbStorage) {
                     await window.dbStorage.saveLocalAppState({
                         jsonFolders: gFolderTree,
                         jsonMustHave: gDialyTools,
                         Bookmarks: gBookmarks,
-                        appShutterTabs: gAppShutterTabs
+                        appShutterTabs: gAppShutterTabs,
+                        kanbanTasks: gKanbanTasks
                     });
                 }
                 updateSaveIconStatus('SYNCED');
