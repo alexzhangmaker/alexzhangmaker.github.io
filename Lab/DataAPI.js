@@ -17,6 +17,8 @@ let flagFolderChanged = false;
 let flagBookmarksChanged = false;
 let flagDailyToolChanged = false;
 
+window.gKanbanTasks = gKanbanTasks;
+
 // Firebase配置
 const firebaseConfig = {
     apiKey: "AIzaSyA6MZ_p5lVuy8TMAqiuV6IRx9fggV44lQs",
@@ -123,10 +125,8 @@ async function persistLocalAndSync(flags = {}) {
     }
 
     // 2. 更新同步指示指示灯
-    updateSaveIconStatus('SYNCING');
-
-    // 3. 驱动 Web Worker 后台异步推送到服务器
     if (syncWorker) {
+        updateSaveIconStatus('SYNCING');
         syncWorker.postMessage({
             type: 'SYNC_PENDING',
             data: {
@@ -139,9 +139,9 @@ async function persistLocalAndSync(flags = {}) {
                 }
             }
         });
-    } else if (database) {
-        // Fallback: 如果不支持 Worker，走异步 set
-        asyncSaveAppDataFallback();
+    } else {
+        // file:// 协议本地降级环境
+        updateSaveIconStatus('SYNCED');
     }
 }
 
