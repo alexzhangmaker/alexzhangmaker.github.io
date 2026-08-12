@@ -19,19 +19,24 @@ class BaseWidget {
 }
 
 /**
- * WidgetManager - Bento Grid 架构 Widget 注册与生命周期管理器 (支持紧凑纵向 Stack)
+ * WidgetManager - Bento Grid 架构 Widget 注册与生命周期管理器 (防抖单次渲染)
  */
 class WidgetManager {
     constructor() {
         this.widgets = new Map();
         this.loadUserConfig();
+        this._renderDebounceTimer = null;
     }
 
-    // 注册 Widget 实例
+    // 注册 Widget 实例 (幂等注册，防止重复日志)
     register(widget) {
         if (!(widget instanceof BaseWidget)) {
             console.error("注册失败: widget 必须继承 BaseWidget", widget);
             return;
+        }
+
+        if (this.widgets.has(widget.id)) {
+            return; // 已注册过，避免重复注册
         }
         
         // 恢复用户保存的使能与尺寸配置
@@ -98,8 +103,22 @@ class WidgetManager {
         localStorage.setItem('user_widget_configs', JSON.stringify(configs));
     }
 
-    // 渲染 Bento Grid 仪表板视图 (紧凑纵向排列, 解决 Row 高度间距过大问题)
+    // 渲染 Bento Grid 仪表板视图 (增加帧级防抖，解决重复多重渲染问题)
     async renderDashboard(container) {
+        if (this._renderDebounceTimer) {
+            cancelAnimationFrame(this._renderDebounceTimer);
+        }
+
+        return new Promise((resolve) => {
+            this._renderDebounceTimer = requestAnimationFrame(async () => {
+                await this._doRenderDashboard(container);
+                resolve();
+            });
+        });
+    }
+
+    // 实际执行渲染逻辑
+    async _doRenderDashboard(container) {
         container.innerHTML = '';
         container.className = "w-full min-w-0";
 

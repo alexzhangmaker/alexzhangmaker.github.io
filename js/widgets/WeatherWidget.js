@@ -14,6 +14,7 @@ class WeatherWidget extends BaseWidget {
 
         this.weatherData = null;
         this.cityName = '本地';
+        this.isFetching = false;
     }
 
     getWeatherIconAndDesc(code) {
@@ -45,50 +46,33 @@ class WeatherWidget extends BaseWidget {
         return await res.json();
     }
 
-    async autoLocateAndFetch() {
-        return new Promise((resolve) => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    async (pos) => {
-                        try {
-                            const lat = pos.coords.latitude;
-                            const lng = pos.coords.longitude;
-                            this.weatherData = await this.fetchWeatherData(lat, lng);
-                            this.cityName = "当前位置";
-                            resolve();
-                        } catch (e) {
-                            await this.fetchByIP(resolve);
-                        }
-                    },
-                    async () => {
-                        await this.fetchByIP(resolve);
-                    },
-                    { timeout: 4000 }
-                );
-            } else {
-                this.fetchByIP(resolve);
-            }
-        });
-    }
-
-    async fetchByIP(resolve) {
+    async fetchByIP() {
         try {
             const ipRes = await fetch('https://ipapi.co/json/');
             const ipData = await ipRes.json();
             if (ipData && ipData.latitude && ipData.longitude) {
                 this.cityName = ipData.city || ipData.region || '本地';
-                this.weatherData = await this.fetchWeatherData(ipData.latitude, ipData.longitude);
-            } else {
-                this.cityName = "北京";
-                this.weatherData = await this.fetchWeatherData(39.9042, 116.4074);
+                return await this.fetchWeatherData(ipData.latitude, ipData.longitude);
             }
-        } catch (e) {
-            this.cityName = "北京";
-            try {
-                this.weatherData = await this.fetchWeatherData(39.9042, 116.4074);
-            } catch (err) {}
+        } catch (e) {}
+        
+        // IP 失败时降级北京经纬度
+        this.cityName = "北京";
+        return await this.fetchWeatherData(39.9042, 116.4074);
+    }
+
+    async autoLocateAndFetch() {
+        if (this.isFetching) return;
+        this.isFetching = true;
+
+        try {
+            // 避免触发 macOS CoreLocation 错误，优先使用无痛 IP/城市快速定位
+            this.weatherData = await this.fetchByIP();
+        } catch (err) {
+            console.warn("天气数据获取降级:", err);
+        } finally {
+            this.isFetching = false;
         }
-        resolve();
     }
 
     async render(container) {
@@ -107,44 +91,52 @@ class WeatherWidget extends BaseWidget {
             </div>
         `;
 
-        if (!this.weatherData) {
-            await this.autoLocateAndFetch();
-        }
+        const updateUI = () => {
+            const body = container.querySelector('#idWeatherBody');
+            const cityBadge = container.querySelector('#idWeatherCityBadge');
+            if (!body || !cityBadge) return;
 
-        const body = container.querySelector('#idWeatherBody');
-        const cityBadge = container.querySelector('#idWeatherCityBadge');
-        cityBadge.textContent = this.cityName;
+            cityBadge.textContent = this.cityName;
 
-        if (this.weatherData && this.weatherData.current_weather) {
-            const cw = this.weatherData.current_weather;
-            const info = this.getWeatherIconAndDesc(cw.weathercode);
-            const temp = Math.round(cw.temperature);
-            const wind = cw.windspeed;
+            if (this.weatherData && this.weatherData.current_weather) {
+                const cw = this.weatherData.current_weather;
+                const info = this.getWeatherIconAndDesc(cw.weathercode);
+                const temp = Math.round(cw.temperature);
+                const wind = cw.windspeed;
 
-            let dailyHtml = '';
-            if (this.weatherData.daily && this.weatherData.daily.temperature_2m_max) {
-                const maxT = Math.round(this.weatherData.daily.temperature_2m_max[0]);
-                const minT = Math.round(this.weatherData.daily.temperature_2m_min[0]);
-                dailyHtml = `<span class="text-[11px] text-gray-400">${minT}°C ~ ${maxT}°C</span>`;
-            }
+                let dailyHtml = '';
+                if (this.weatherData.daily && this.weatherData.daily.temperature_2m_max) {
+                    const maxT = Math.round(this.weatherData.daily.temperature_2m_max[0]);
+                    const minT = Math.round(this.weatherData.daily.temperature_2m_min[0]);
+                    dailyHtml = `<span class="text-[11px] text-gray-400">${minT}°C ~ ${maxT}°C</span>`;
+                }
 
-            body.innerHTML = `
-                <div class="w-full flex items-center justify-between px-2">
-                    <div class="flex items-center gap-3">
-                        <span class="text-4xl">${info.icon}</span>
-                        <div>
-                            <div class="text-2xl font-black text-gray-800">${temp}°C</div>
-                            <div class="text-xs font-bold text-gray-500">${info.desc}</div>
+                body.innerHTML = `
+                    <div class="w-full flex items-center justify-between px-2">
+                        <div class="flex items-center gap-3">
+                            <span class="text-4xl">${info.icon}</span>
+                            <div>
+                                <div class="text-2xl font-black text-gray-800">${temp}°C</div>
+                                <div class="text-xs font-bold text-gray-500">${info.desc}</div>
+                            </div>
+                        </div>
+                        <div class="text-right space-y-1">
+                            ${dailyHtml}
+                            <div class="text-[10px] text-gray-400">风速: ${wind} km/h</div>
                         </div>
                     </div>
-                    <div class="text-right space-y-1">
-                        ${dailyHtml}
-                        <div class="text-[10px] text-gray-400">风速: ${wind} km/h</div>
-                    </div>
-                </div>
-            `;
+                `;
+            } else {
+                body.innerHTML = `<span class="text-xs text-red-400">天气数据加载失败，请检查网络</span>`;
+            }
+        };
+
+        if (this.weatherData) {
+            updateUI();
         } else {
-            body.innerHTML = `<span class="text-xs text-red-400">天气数据加载失败，请检查网络连接</span>`;
+            this.autoLocateAndFetch().then(() => {
+                updateUI();
+            });
         }
     }
 }
