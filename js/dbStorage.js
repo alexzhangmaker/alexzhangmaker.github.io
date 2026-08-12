@@ -137,12 +137,47 @@ async function clearPendingSyncTasks() {
     });
 }
 
+/**
+ * Save QuickMemo data to IndexedDB.
+ */
+async function saveQuickMemo(memoData) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_APP_STATE, 'readwrite');
+        const store = tx.objectStore(STORE_APP_STATE);
+        const record = {
+            key: 'quick_memo',
+            data: memoData,
+            updatedAt: Date.now()
+        };
+        const req = store.put(record);
+        req.onsuccess = () => resolve(true);
+        req.onerror = (e) => reject(e.target.error);
+    });
+}
+
+/**
+ * Get stored QuickMemo data from IndexedDB.
+ */
+async function getQuickMemo() {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_APP_STATE, 'readonly');
+        const store = tx.objectStore(STORE_APP_STATE);
+        const req = store.get('quick_memo');
+        req.onsuccess = () => resolve(req.result ? req.result.data : null);
+        req.onerror = (e) => reject(e.target.error);
+    });
+}
+
 // Export for global window scope
 if (typeof window !== 'undefined') {
     window.dbStorage = {
         openDB,
         getLocalAppState,
         saveLocalAppState,
+        saveQuickMemo,
+        getQuickMemo,
         enqueueSyncTask,
         getPendingSyncTasks,
         clearPendingSyncTasks
