@@ -1,5 +1,6 @@
 /**
  * WeatherWidget - 多城市天气关注与管理 Widget (基于 Open-Meteo 开放 API)
+ * 采用城市天气列表形式展示各个城市的实时温度、天气状况、风速及高低温范围
  */
 
 const DEFAULT_WEATHER_CITIES = [
@@ -30,34 +31,30 @@ class WeatherWidget extends BaseWidget {
             id: 'widget-weather',
             name: 'Weather 实时天气',
             icon: '🌤️',
-            description: '基于 Open-Meteo 开放 API 支持多城市天气预报、城市切换及自定义关注城市列表',
+            description: '基于 Open-Meteo 开放 API 支持多城市天气列表展示、实时更新及关注城市管理',
             enabled: true,
             gridSize: 'bento-span-4' // Bento 架构: 4/12 (1/3 宽度)
         });
 
         this.cities = [];
-        this.activeCityId = 'bangkok';
         this.weatherCache = new Map(); // city.id -> weatherData
+        this.lastUpdateTime = null;
         this.loadCityConfig();
     }
 
-    // 读取关注城市列表与当前选中城市
+    // 读取关注城市列表
     loadCityConfig() {
         try {
             const rawCities = localStorage.getItem('weather_widget_cities');
             this.cities = rawCities ? JSON.parse(rawCities) : [...DEFAULT_WEATHER_CITIES];
-            const rawActiveId = localStorage.getItem('weather_widget_active_city');
-            this.activeCityId = rawActiveId || (this.cities[0] ? this.cities[0].id : 'bangkok');
         } catch (e) {
             this.cities = [...DEFAULT_WEATHER_CITIES];
-            this.activeCityId = 'bangkok';
         }
     }
 
     // 保存关注城市配置
     saveCityConfig() {
         localStorage.setItem('weather_widget_cities', JSON.stringify(this.cities));
-        localStorage.setItem('weather_widget_active_city', this.activeCityId);
     }
 
     getWeatherIconAndDesc(code) {
@@ -67,30 +64,50 @@ class WeatherWidget extends BaseWidget {
             2: { icon: '⛅', desc: '多云' },
             3: { icon: '☁️', desc: '阴天' },
             45: { icon: '🌫️', desc: '有雾' },
-            48: { icon: '🌫️', desc: '淞雾' },
-            51: { icon: '🌦️', desc: '细雨' },
-            53: { icon: '🌧️', desc: '中雨' },
-            55: { icon: '🌧️', desc: '大雨' },
+            48: { icon: '🌫️', desc: '雾淞' },
+            51: { icon: '🌦️', desc: '毛毛细雨' },
+            53: { icon: '🌧️', desc: '细雨' },
+            55: { icon: '🌧️', desc: '小雨' },
+            56: { icon: '🌧️', desc: '冻雨' },
+            57: { icon: '🌧️', desc: '中冻雨' },
             61: { icon: '🌧️', desc: '小雨' },
             63: { icon: '🌧️', desc: '中雨' },
-            65: { icon: '⛈️', desc: '暴雨' },
+            65: { icon: '⛈️', desc: '大雨' },
+            66: { icon: '🌨️', desc: '冻雨' },
+            67: { icon: '🌨️', desc: '强冻雨' },
             71: { icon: '🌨️', desc: '小雪' },
             73: { icon: '🌨️', desc: '中雪' },
             75: { icon: '❄️', desc: '大雪' },
+            77: { icon: '🌨️', desc: '雪粒' },
+            80: { icon: '🌧️', desc: '阵雨' },
+            81: { icon: '🌧️', desc: '中度阵雨' },
+            82: { icon: '⛈️', desc: '强阵雨' },
+            85: { icon: '🌨️', desc: '小阵雪' },
+            86: { icon: '🌨️', desc: '大阵雪' },
             95: { icon: '⚡', desc: '雷阵雨' },
-            96: { icon: '⛈️', desc: '雷阵雨伴有冰雹' }
+            96: { icon: '⛈️', desc: '雷阵雨伴冰雹' },
+            99: { icon: '⛈️', desc: '强雷雨伴冰雹' }
         };
         return map[code] || { icon: '🌤️', desc: '多云' };
     }
 
     async fetchWeatherData(lat, lng) {
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`;
-        const res = await fetch(url);
-        return await res.json();
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 6000);
+        try {
+            const res = await fetch(url, { signal: controller.signal });
+            clearTimeout(timer);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return await res.json();
+        } catch (err) {
+            clearTimeout(timer);
+            throw err;
+        }
     }
 
-    async getCityWeather(city) {
-        if (this.weatherCache.has(city.id)) {
+    async getCityWeather(city, forceRefresh = false) {
+        if (!forceRefresh && this.weatherCache.has(city.id)) {
             return this.weatherCache.get(city.id);
         }
         try {
@@ -106,101 +123,155 @@ class WeatherWidget extends BaseWidget {
     async render(container) {
         container.className = "w-full min-w-0 bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col space-y-3";
 
-        // 当前激活的城市
-        let currentCity = this.cities.find(c => c.id === this.activeCityId);
-        if (!currentCity && this.cities.length > 0) {
-            currentCity = this.cities[0];
-            this.activeCityId = currentCity.id;
-        }
+        const updateTimeStr = this.lastUpdateTime ? `更新于 ${this.lastUpdateTime}` : '实时同步中';
 
-        // 构建 Header 栏 (左: 标题, 右: ⚙️ 设置按钮)
+        // 构建 Header 栏 (左: 标题 + 城市数, 右: 🔄 刷新 + ⚙️ 设置按钮)
         container.innerHTML = `
             <div class="flex items-center justify-between pb-2 border-b border-gray-100">
                 <div class="flex items-center gap-2">
                     <span class="text-base">🌤️</span>
                     <span class="font-extrabold text-gray-800 text-xs">实时天气</span>
+                    <span class="text-[10px] font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">${this.cities.length}</span>
                 </div>
                 <div class="flex items-center gap-1.5">
+                    <button id="idBTNWeatherRefresh" class="w-7 h-7 rounded-lg text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all flex items-center justify-center text-xs" title="刷新天气数据">
+                        <i class="fas fa-sync-alt text-[11px]"></i>
+                    </button>
                     <button id="idBTNWeatherSettings" class="w-7 h-7 rounded-lg text-gray-400 hover:text-indigo-600 hover:bg-gray-100 transition-all flex items-center justify-center text-xs" title="管理关注城市">
-                        <i class="fas fa-cog"></i>
+                        <i class="fas fa-cog text-[11px]"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- 天气主界面区域 -->
-            <div id="idWeatherBody" class="py-1 min-h-[85px] flex items-center justify-center">
-                <span class="text-xs text-gray-400">正在拉取 ${currentCity ? currentCity.name : ''} 天气...</span>
-            </div>
-
-            <!-- 关注城市快速切换 Chips 标签栏 -->
-            <div id="idWeatherCityChips" class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs pt-1 border-t border-dashed border-gray-100 no-scrollbar"></div>
-        `;
-
-        // 渲染城市 Chips 标签
-        const chipsContainer = container.querySelector('#idWeatherCityChips');
-        this.cities.forEach(city => {
-            const isActive = city.id === this.activeCityId;
-            const chip = document.createElement('button');
-            chip.className = `px-2.5 py-1 rounded-full text-[11px] font-bold whitespace-nowrap transition-all select-none ${
-                isActive 
-                ? 'bg-indigo-600 text-white shadow-sm scale-105' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`;
-            chip.textContent = city.name;
-            chip.onclick = async () => {
-                this.activeCityId = city.id;
-                this.saveCityConfig();
-                await this.render(container);
-            };
-            chipsContainer.appendChild(chip);
-        });
-
-        // 绑定 Setting 按钮点击事件，弹出 Modal
-        container.querySelector('#idBTNWeatherSettings').onclick = () => {
-            this.openWeatherSettingsModal(container);
-        };
-
-        // 获取并渲染天气数据
-        if (currentCity) {
-            const weatherData = await this.getCityWeather(currentCity);
-            const body = container.querySelector('#idWeatherBody');
-            if (!body) return;
-
-            if (weatherData && weatherData.current_weather) {
-                const cw = weatherData.current_weather;
-                const info = this.getWeatherIconAndDesc(cw.weathercode);
-                const temp = Math.round(cw.temperature);
-                const wind = cw.windspeed;
-
-                let dailyHtml = '';
-                if (weatherData.daily && weatherData.daily.temperature_2m_max) {
-                    const maxT = Math.round(weatherData.daily.temperature_2m_max[0]);
-                    const minT = Math.round(weatherData.daily.temperature_2m_min[0]);
-                    dailyHtml = `<span class="text-[11px] font-semibold text-gray-400">${minT}°C ~ ${maxT}°C</span>`;
-                }
-
-                body.innerHTML = `
-                    <div class="w-full flex items-center justify-between px-1">
-                        <div class="flex items-center gap-3">
-                            <span class="text-4xl">${info.icon}</span>
-                            <div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-2xl font-black text-gray-800">${temp}°C</span>
-                                    <span class="text-[11px] font-extrabold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded-md">${currentCity.name}</span>
-                                </div>
-                                <div class="text-xs font-bold text-gray-500">${info.desc}</div>
+            <!-- 城市天气列表展示区域 -->
+            <div id="idWeatherList" class="space-y-2 max-h-[300px] overflow-y-auto pr-0.5 select-none">
+                ${this.cities.map(c => `
+                    <div class="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80 border border-gray-100/80 animate-pulse">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-7 h-7 bg-gray-200 rounded-lg"></div>
+                            <div class="space-y-1.5">
+                                <div class="w-20 h-3 bg-gray-200 rounded"></div>
+                                <div class="w-14 h-2 bg-gray-200 rounded"></div>
                             </div>
                         </div>
-                        <div class="text-right space-y-1">
-                            ${dailyHtml}
-                            <div class="text-[10px] text-gray-400">风速: ${wind} km/h</div>
+                        <div class="space-y-1 text-right">
+                            <div class="w-10 h-4 bg-gray-200 rounded ml-auto"></div>
+                            <div class="w-12 h-2 bg-gray-200 rounded ml-auto"></div>
                         </div>
                     </div>
-                `;
-            } else {
-                body.innerHTML = `<span class="text-xs text-red-400">网络开小差了，无法获取 ${currentCity.name} 天气</span>`;
-            }
+                `).join('')}
+            </div>
+
+            <!-- 底部状态栏 -->
+            <div class="flex items-center justify-between text-[10px] text-gray-400 border-t border-dashed border-gray-100 pt-2">
+                <span>已关注 ${this.cities.length} 个城市</span>
+                <span id="idWeatherUpdateTime">${updateTimeStr}</span>
+            </div>
+        `;
+
+        const listContainer = container.querySelector('#idWeatherList');
+        const updateTimeEl = container.querySelector('#idWeatherUpdateTime');
+        const btnRefresh = container.querySelector('#idBTNWeatherRefresh');
+        const btnSettings = container.querySelector('#idBTNWeatherSettings');
+
+        // 绑定 Setting 按钮点击事件，弹出 Modal
+        if (btnSettings) {
+            btnSettings.onclick = () => {
+                this.openWeatherSettingsModal(container);
+            };
         }
+
+        // 异步批量拉取所有城市天气并更新列表 UI
+        const fetchAndUpdateList = async (forceRefresh = false) => {
+            const spinIcon = btnRefresh ? btnRefresh.querySelector('i') : null;
+            if (spinIcon) spinIcon.classList.add('animate-spin');
+
+            const weatherResults = await Promise.all(
+                this.cities.map(city => this.getCityWeather(city, forceRefresh))
+            );
+
+            if (spinIcon) spinIcon.classList.remove('animate-spin');
+
+            const now = new Date();
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            this.lastUpdateTime = timeStr;
+            if (updateTimeEl) {
+                updateTimeEl.textContent = `更新于 ${timeStr}`;
+            }
+
+            if (!listContainer) return;
+            listContainer.innerHTML = '';
+
+            if (this.cities.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-6 text-xs text-gray-400 space-y-2">
+                        <div class="text-2xl">🌍</div>
+                        <div>暂未添加关注城市</div>
+                    </div>
+                `;
+                return;
+            }
+
+            this.cities.forEach((city, index) => {
+                const weatherData = weatherResults[index];
+                const row = document.createElement('div');
+
+                if (weatherData && weatherData.current_weather) {
+                    const cw = weatherData.current_weather;
+                    const info = this.getWeatherIconAndDesc(cw.weathercode);
+                    const temp = Math.round(cw.temperature);
+                    const wind = cw.windspeed;
+
+                    let dailyHtml = '';
+                    if (weatherData.daily && weatherData.daily.temperature_2m_max) {
+                        const maxT = Math.round(weatherData.daily.temperature_2m_max[0]);
+                        const minT = Math.round(weatherData.daily.temperature_2m_min[0]);
+                        dailyHtml = `<span class="text-[10px] font-semibold text-gray-400 block">${minT}° ~ ${maxT}°C</span>`;
+                    }
+
+                    row.className = "flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80 hover:bg-indigo-50/40 border border-gray-100/80 hover:border-indigo-100 transition-all duration-200 group";
+                    row.innerHTML = `
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="text-2xl shrink-0 leading-none select-none">${info.icon}</span>
+                            <div class="min-w-0">
+                                <div class="font-bold text-gray-800 text-xs truncate group-hover:text-indigo-600 transition-colors">${city.name}</div>
+                                <div class="text-[11px] text-gray-500 font-medium flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-indigo-600 font-semibold">${info.desc}</span>
+                                    <span class="text-gray-300">·</span>
+                                    <span class="text-gray-400 text-[10px]">风速 ${wind} km/h</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <div class="text-sm font-black text-gray-800 tracking-tight">${temp}°C</div>
+                            ${dailyHtml}
+                        </div>
+                    `;
+                } else {
+                    row.className = "flex items-center justify-between p-2.5 rounded-xl bg-gray-50 border border-gray-100";
+                    row.innerHTML = `
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="text-sm text-gray-400">⚠️</span>
+                            <span class="font-bold text-gray-700 text-xs truncate">${city.name}</span>
+                        </div>
+                        <span class="text-[10px] text-red-400 font-semibold">获取失败</span>
+                    `;
+                }
+
+                listContainer.appendChild(row);
+            });
+        };
+
+        // 绑定刷新按钮事件
+        if (btnRefresh) {
+            btnRefresh.onclick = async () => {
+                this.weatherCache.clear();
+                await fetchAndUpdateList(true);
+            };
+        }
+
+        // 立即执行天气获取与渲染
+        await fetchAndUpdateList(false);
     }
 
     // 关注城市管理 Modal
@@ -302,9 +373,6 @@ class WeatherWidget extends BaseWidget {
                         return;
                     }
                     this.cities = this.cities.filter(c => c.id !== cId);
-                    if (this.activeCityId === cId) {
-                        this.activeCityId = this.cities[0].id;
-                    }
                     updateModalBody();
                 };
             });
@@ -350,6 +418,7 @@ class WeatherWidget extends BaseWidget {
             // 保存完成设置按钮
             modalOverlay.querySelector('#idBTNSaveWeatherSettings').onclick = async () => {
                 this.saveCityConfig();
+                this.weatherCache.clear();
                 document.body.removeChild(modalOverlay);
                 await this.render(widgetContainer);
             };
