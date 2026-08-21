@@ -193,6 +193,212 @@
         #idFolderContents::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* ========================================================= */
+        /* 智能工作台 12列 x 15行 积木网格桌面系统样式 */
+        /* ========================================================= */
+        .smart-workbench-root {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .workbench-toolbar {
+            transition: all 0.2s ease;
+        }
+
+        .workbench-grid-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: calc(100vh - 200px);
+        }
+
+        .workbench-grid-canvas {
+            position: relative;
+            width: 100%;
+            background-color: #f5f7fa;
+            border-radius: 16px;
+            padding: 0;
+            user-select: none;
+            transition: min-height 0.3s ease;
+        }
+
+        .workbench-grid-canvas.show-grid-lines {
+            background-image: 
+                radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.25) 1.2px, transparent 0);
+            background-size: 24px 24px;
+        }
+
+        .grid-cell-guide {
+            position: absolute;
+            border: 1px dashed rgba(203, 213, 225, 0.5);
+            border-radius: 12px;
+            pointer-events: none;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 积木卡片样式 */
+        .workbench-card {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-sizing: border-box;
+            z-index: 10;
+            transition: left 0.22s cubic-bezier(0.2, 0, 0, 1), 
+                        top 0.22s cubic-bezier(0.2, 0, 0, 1), 
+                        width 0.22s cubic-bezier(0.2, 0, 0, 1), 
+                        height 0.22s cubic-bezier(0.2, 0, 0, 1), 
+                        box-shadow 0.2s ease,
+                        transform 0.2s ease;
+        }
+
+        .workbench-card:hover {
+            box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+            border-color: rgba(203, 213, 225, 0.9);
+        }
+
+        .workbench-card.is-dragging {
+            opacity: 0.92;
+            transform: scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08) !important;
+            cursor: grabbing !important;
+            z-index: 100 !important;
+            transition: none !important;
+            pointer-events: none;
+        }
+
+        .workbench-card.is-resizing {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+            z-index: 100 !important;
+            transition: none !important;
+        }
+
+        /* 卡片顶栏 */
+        .workbench-card-header {
+            padding: 8px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: grab;
+            background: #ffffff;
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .workbench-card-header:active {
+            cursor: grabbing;
+        }
+
+        .card-hover-actions {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .workbench-card:hover .card-hover-actions {
+            opacity: 1;
+        }
+
+        .card-btn-action {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            color: #94a3b8;
+            transition: all 0.15s;
+        }
+
+        .card-btn-action:hover {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        /* 右下角缩放手柄 */
+        .card-resize-handle {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 18px;
+            height: 18px;
+            cursor: se-resize;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 3px;
+            opacity: 0.4;
+            transition: opacity 0.2s, transform 0.2s;
+            z-index: 20;
+        }
+
+        .workbench-card:hover .card-resize-handle {
+            opacity: 1;
+        }
+
+        .card-resize-handle:hover {
+            opacity: 1;
+            transform: scale(1.2);
+            color: #4f46e5;
+        }
+
+        /* 蓝色虚线落位预览框 */
+        .workbench-placeholder {
+            position: absolute;
+            border: 2px dashed #3b82f6;
+            background: rgba(59, 130, 246, 0.08);
+            border-radius: 12px;
+            pointer-events: none;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            transition: left 0.15s cubic-bezier(0.2, 0, 0, 1), 
+                        top 0.15s cubic-bezier(0.2, 0, 0, 1), 
+                        width 0.15s cubic-bezier(0.2, 0, 0, 1), 
+                        height 0.15s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .placeholder-inner {
+            color: #3b82f6;
+            font-size: 11px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 10px;
+            border-radius: 9999px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        /* 卡片内容滚动与容器自适应 */
+        .workbench-card-body {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
+
+        .workbench-card-body::-webkit-scrollbar {
+            width: 4px;
+        }
+        .workbench-card-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .workbench-card-body::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+
+        /* 适配嵌入各 widget 在 card-body 中渲染时的边框与圆角融合 */
+        .workbench-card-body > div {
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
         
         .bookmark-card {
             background: white;
@@ -485,8 +691,8 @@
                     <!-- 应用快门 多 Tab 标签栏 -->
                     <div id="idAppShutterTabBar" class="app-shutter-tabs noShow"></div>
                     
-                    <!-- 文件列表区域 -->
-                    <div id="idFolderContents" class="bookmarks-grid grid-view"></div>
+                    <!-- 智能工作台与文件列表区域 -->
+                    <div id="idFolderContents" class="w-full min-w-0"></div>
                 </div>
             </div>
         </main>
@@ -565,6 +771,7 @@
     <script src="./js/widgets/QuickMemoWidget.js"></script>
     <script src="./js/widgets/WeatherWidget.js"></script>
     <script src="./js/widgets/TreasuryYieldsWidget.js"></script>
+    <script src="./js/SmartWorkbench.js"></script>
     <script src="./js/list.min.js"></script>
     <script src="./js/modalFactoryV2.js"></script>
     <script>
@@ -1250,7 +1457,7 @@
                     renderTree(gFolderTree, treeContainer);
                 }
                 const currentFolderTitle = document.getElementById('idCurrentFolderTitle');
-                if (currentFolderTitle && (currentFolderTitle.textContent === "应用快门" || currentFolderTitle.textContent === "daily Toolbox")) {
+                if (currentFolderTitle && (currentFolderTitle.textContent === "智能工作台" || currentFolderTitle.textContent === "应用快门" || currentFolderTitle.textContent === "daily Toolbox")) {
                     displayDailyTools();
                 } else if (typeof selectedNode !== 'undefined' && selectedNode) {
                     displayFolderContents(selectedNode);
@@ -1706,19 +1913,23 @@
             tagBTNPlusBookmark.classList.add('noShow') ;
             let tagBTNPlusDailyTool = document.getElementById("idBTNPlusDailyTool") ;
 
-            // 1. 更新标题为 "应用快门"
-            currentFolder.textContent = "应用快门";
+            // 1. 更新标题为 "智能工作台"
+            currentFolder.textContent = "智能工作台";
             folderContents.innerHTML=``;
 
             // 2. 渲染多 Tab 标签栏
             renderAppShutterTabs();
 
-            // 3. 判断是否选中 "每日看板" Tab
-            if (currentActiveAppTabId === 'kanban') {
+            // 3. 判断是否选中 "智能工作台" Tab
+            if (currentActiveAppTabId === 'workbench' || currentActiveAppTabId === 'kanban') {
                 tagBTNPlusDailyTool.classList.add('noShow');
-                document.getElementById('items-count').textContent = `(${gKanbanTasks.length} 个任务)`;
+                document.getElementById('items-count').textContent = `(12列 × 15行 网格)`;
                 folderContents.className = "w-full min-w-0";
-                renderKanbanView(folderContents);
+                if (typeof window.initSmartWorkbench === 'function') {
+                    window.initSmartWorkbench(folderContents);
+                } else if (window.gWidgetManager) {
+                    renderKanbanView(folderContents);
+                }
             } else {
                 tagBTNPlusDailyTool.classList.remove('noShow');
 

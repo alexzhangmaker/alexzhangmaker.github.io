@@ -3,10 +3,10 @@ let gFolderTree = [];
 let gDialyTools = [];
 let gBookmarks = [];
 let gAppShutterTabs = [
-    { id: 'kanban', name: '每日看板', isFixed: true },
+    { id: 'workbench', name: '⚡ 智能工作台', isFixed: true },
     { id: 'default', name: '常用应用', isFixed: true }
 ];
-let currentActiveAppTabId = 'kanban';
+let currentActiveAppTabId = 'workbench';
 let gKanbanTasks = [
     { id: 'task-1', title: '部署到服务器', status: 'todo', memo: '', createdAt: Date.now() - 3600000 },
     { id: 'task-2', title: '编写使用文档', status: 'in_progress', memo: '19:03:27', createdAt: Date.now() - 7200000 },
@@ -148,19 +148,19 @@ async function persistLocalAndSync(flags = {}) {
 function ensureDefaultAppShutterTabs() {
     if (!gAppShutterTabs || !Array.isArray(gAppShutterTabs) || gAppShutterTabs.length === 0) {
         gAppShutterTabs = [
-            { id: 'kanban', name: '每日看板', isFixed: true },
+            { id: 'workbench', name: '⚡ 智能工作台', isFixed: true },
             { id: 'default', name: '常用应用', isFixed: true }
         ];
         return;
     }
-    // 确保 'kanban' 标签存在
-    if (!gAppShutterTabs.some(t => t.id === 'kanban')) {
-        gAppShutterTabs.unshift({ id: 'kanban', name: '每日看板', isFixed: true });
+    // 确保 'workbench' 标签存在并置于最前
+    if (!gAppShutterTabs.some(t => t.id === 'workbench')) {
+        gAppShutterTabs.unshift({ id: 'workbench', name: '⚡ 智能工作台', isFixed: true });
     } else {
-        const kanbanTab = gAppShutterTabs.find(t => t.id === 'kanban');
-        if (kanbanTab) {
-            kanbanTab.name = '每日看板';
-            kanbanTab.isFixed = true;
+        const wbTab = gAppShutterTabs.find(t => t.id === 'workbench');
+        if (wbTab) {
+            wbTab.name = '⚡ 智能工作台';
+            wbTab.isFixed = true;
         }
     }
     // 确保 'default' 标签存在

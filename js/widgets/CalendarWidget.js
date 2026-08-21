@@ -104,11 +104,7 @@ class CalendarWidget extends BaseWidget {
 
             cell.onclick = () => {
                 this.currentKanbanDate = new Date(displayYear, displayMonth, day);
-                if (typeof displayDailyTools === 'function') {
-                    displayDailyTools();
-                } else {
-                    this.render(container);
-                }
+                this.render(container);
             };
 
             calGrid.appendChild(cell);
@@ -131,11 +127,7 @@ class CalendarWidget extends BaseWidget {
                 this.kanbanViewMonth = 11;
                 this.kanbanViewYear--;
             }
-            if (typeof displayDailyTools === 'function') {
-                displayDailyTools();
-            } else {
-                this.render(container);
-            }
+            this.render(container);
         };
         container.querySelector('#idBTNCalNextMonth').onclick = () => {
             this.kanbanViewMonth++;
@@ -143,21 +135,13 @@ class CalendarWidget extends BaseWidget {
                 this.kanbanViewMonth = 0;
                 this.kanbanViewYear++;
             }
-            if (typeof displayDailyTools === 'function') {
-                displayDailyTools();
-            } else {
-                this.render(container);
-            }
+            this.render(container);
         };
         container.querySelector('#idBTNCalToday').onclick = () => {
             this.currentKanbanDate = new Date();
             this.kanbanViewYear = this.currentKanbanDate.getFullYear();
             this.kanbanViewMonth = this.currentKanbanDate.getMonth();
-            if (typeof displayDailyTools === 'function') {
-                displayDailyTools();
-            } else {
-                this.render(container);
-            }
+            this.render(container);
         };
     }
 }
