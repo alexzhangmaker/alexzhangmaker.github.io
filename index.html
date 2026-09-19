@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sentry.Anywhere</title>
+    <script src="./js/singleInstanceLock.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
@@ -1618,29 +1619,33 @@
     </script>
     <script>
         function _renderDailyTool(jsonTool,tagContainer){
-            console.log(jsonTool) ;
+            if (!jsonTool) return;
+            const toolUrl = (jsonTool.data && jsonTool.data.url) ? jsonTool.data.url : (jsonTool.url || '');
+            const toolMemo = (jsonTool.data && jsonTool.data.hasOwnProperty("memo")) ? jsonTool.data.memo : (jsonTool.memo || 'memo');
+            const toolTitle = jsonTool.title || '未命名';
+
             let tagTool = document.createElement('div') ;
             tagTool.classList.add('bookmark-card') ;
-            tagTool.dataset.toolID = jsonTool.id ;
-            tagTool.dataset.url = jsonTool.data.url ;
+            tagTool.dataset.toolID = jsonTool.id || '' ;
+            tagTool.dataset.url = toolUrl ;
             tagContainer.appendChild(tagTool) ;
 
             let stringBookmarks = '' ;
-            if(jsonTool.hasOwnProperty("tags")){
+            if(jsonTool.hasOwnProperty("tags") && Array.isArray(jsonTool.tags)){
                 for(let i=0;i<jsonTool.tags.length;i++){
                     stringBookmarks = stringBookmarks + `<span>${jsonTool.tags[i]}</span>`
                 }
             }else{
                 stringBookmarks = `<span>没有标签</span>` ;
             }
-            const iconText = getIconText(jsonTool.url, "first-two");
+            const iconText = getIconText(toolUrl, "first-two");
 
             tagTool.innerHTML = `
                     <div class="bookmark-header">
                         <div class="bookmark-favicon">${iconText}</div>
                         <div class="bookmark-info">
-                            <div class="bookmark-title">${jsonTool.title}</div>
-                            <div class="bookmark-url">${jsonTool.data.url}</div>
+                            <div class="bookmark-title">${toolTitle}</div>
+                            <div class="bookmark-url">${toolUrl}</div>
                         </div>
                         <div class="bookmark-actions">
                             <button><i class="fas fa-star"></i></button>
@@ -1648,7 +1653,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="bmActionRemove" width="14" height="14" viewBox="0 0 16 16"><path fill="#000000" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1l-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg>
                         </div>
                     </div>
-                    <div class="bookmark-description">${jsonTool.data.hasOwnProperty("memo")?jsonTool.data.memo:"memo"}</div>
+                    <div class="bookmark-description">${toolMemo}</div>
                     <div class="bookmark-footer">
                         <div class="bookmark-date">${jsonTool.hasOwnProperty("date")?formatDateYYYYMMDD(jsonTool.date):"date TBD"}</div>
                         <div class="bookmark-tags">
@@ -1767,6 +1772,9 @@
 
                 tabItem.addEventListener('click', () => {
                     currentActiveAppTabId = tab.id;
+                    try {
+                        localStorage.setItem('currentActiveAppTabId', tab.id);
+                    } catch (e) {}
                     displayDailyTools();
                 });
 

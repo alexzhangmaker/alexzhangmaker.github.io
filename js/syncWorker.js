@@ -15,6 +15,7 @@ let firebaseApp = null;
 let database = null;
 let isSyncing = false;
 let isListening = false;
+let nextSyncPackage = null;
 
 // Handle messages from main thread
 self.onmessage = async function(e) {
@@ -31,7 +32,7 @@ self.onmessage = async function(e) {
             break;
 
         case 'SYNC_PENDING':
-            await syncPendingData(msg.data);
+            await handleSyncPending(msg.data);
             break;
 
         default:
@@ -102,21 +103,26 @@ async function fetchRemoteData() {
     }
 }
 
-async function syncPendingData(dataPackage) {
+async function handleSyncPending(dataPackage) {
+    if (isSyncing) {
+        // 当已有同步正在进行时，排队缓存最新的数据包，严禁直接丢弃！
+        nextSyncPackage = dataPackage;
+        return;
+    }
+    await executeSync(dataPackage);
+}
+
+async function executeSync(dataPackage) {
     if (!database) {
         postStatus('ERROR', 'Firebase not initialized in worker');
         return;
-    }
-
-    if (isSyncing) {
-        return; // Prevent concurrent sync loops
     }
 
     isSyncing = true;
     postStatus('SYNCING', 'Syncing local changes to server...');
 
     try {
-        const { jsonFolders, jsonMustHave, Bookmarks, appShutterTabs, kanbanTasks, flags } = dataPackage;
+        const { jsonFolders, jsonMustHave, Bookmarks, appShutterTabs, kanbanTasks, flags, syncId } = dataPackage;
 
         const promises = [];
 
@@ -151,13 +157,28 @@ async function syncPendingData(dataPackage) {
         postStatus('SYNCED', 'All changes synced to server');
         self.postMessage({
             type: 'SYNC_COMPLETE',
+            syncId: syncId,
             timestamp: Date.now()
         });
+
+        // 检查是否有排队的后续数据包，如有立即自动执行无缝同步
+        if (nextSyncPackage) {
+            const nextData = nextSyncPackage;
+            nextSyncPackage = null;
+            await executeSync(nextData);
+        }
 
     } catch (err) {
         isSyncing = false;
         console.error("Worker sync failed:", err);
         postStatus('ERROR', 'Server sync failed: ' + err.message);
+
+        // 出错后若有后续数据包，继续尝试执行
+        if (nextSyncPackage) {
+            const nextData = nextSyncPackage;
+            nextSyncPackage = null;
+            await executeSync(nextData);
+        }
     }
 }
 
@@ -169,3 +190,4 @@ function postStatus(status, message = '') {
         timestamp: Date.now()
     });
 }
+
