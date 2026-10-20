@@ -173,7 +173,7 @@ function createFormModal(title, schema, callbacks) {
 
         const label = document.createElement('label');
         label.setAttribute('for', field.name);
-        label.textContent = field.name;
+        label.textContent = field.label || field.name;
         group.appendChild(label);
 
         let input;
@@ -208,13 +208,27 @@ function createFormModal(title, schema, callbacks) {
         if (field.type !== 'boolean') {
              input.id = field.name;
              input.name = field.name;
-             if(field.placeholder) {
+             if (field.placeholder) {
                 input.placeholder = field.placeholder;
+             }
+             if (field.value !== undefined && field.value !== null) {
+                if (field.type === 'array' && Array.isArray(field.value)) {
+                    input.value = field.value.join(', ');
+                } else {
+                    input.value = field.value;
+                }
+             } else if (field.defaultValue !== undefined && field.defaultValue !== null) {
+                input.value = field.defaultValue;
              }
              group.appendChild(input);
         } else {
              input.id = field.name;
              input.name = field.name;
+             if (field.value !== undefined) {
+                input.checked = !!field.value;
+             } else if (field.defaultValue !== undefined) {
+                input.checked = !!field.defaultValue;
+             }
         }
 
         form.appendChild(group);

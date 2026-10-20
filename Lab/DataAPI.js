@@ -11,14 +11,20 @@ try {
 } catch (e) {}
 
 let currentSyncId = 0;
-const recentDeletedToolIds = new Set();
+let flagDailyToolChanged = false;
+
+// 本地待同步修改的精准脏追踪字典（解决多端并发冲突与误恢复的关键）
+const pendingToolEdits = new Map();     // toolId -> toolObject (本地明确新增或编辑的卡片)
+const pendingToolDeletions = new Set(); // toolId (本地明确删除的卡片 ID)
+const pendingTabEdits = new Map();      // tabId -> tabObject (本地新增或修改的 Tab)
+const pendingTabDeletions = new Set();  // tabId (本地明确删除的 Tab ID)
+
 let gKanbanTasks = [
     { id: 'task-1', title: '部署到服务器', status: 'todo', memo: '', createdAt: Date.now() - 3600000 },
     { id: 'task-2', title: '编写使用文档', status: 'in_progress', memo: '19:03:27', createdAt: Date.now() - 7200000 },
     { id: 'task-3', title: '准备katrain', status: 'in_progress', memo: '', createdAt: Date.now() - 5400000 },
     { id: 'task-4', title: '完成每日看板开发', status: 'completed', memo: '', createdAt: Date.now() - 10800000 }
 ];
-let flagDailyToolChanged = false;
 
 window.gKanbanTasks = gKanbanTasks;
 
@@ -34,7 +40,6 @@ const firebaseConfig = {
     measurementId: "G-QPHWRTH6BH"
 };
 
-const gPortalPath = "Portal";
 const color2Save = "#4f46e5";
 const colorSaved = "#4b5563";
 
@@ -70,6 +75,10 @@ function initSyncWorker() {
                 // 仅当完成的同步版本号不小于当前最新修改版本时，才清除 dirty 标记
                 if (!msg.syncId || msg.syncId >= currentSyncId) {
                     flagDailyToolChanged = false;
+                    pendingToolEdits.clear();
+                    pendingToolDeletions.clear();
+                    pendingTabEdits.clear();
+                    pendingTabDeletions.clear();
                     updateSaveIconStatus('SYNCED');
                 }
             } else if (msg.type === 'REMOTE_DATA') {
@@ -184,86 +193,95 @@ function sanitizeArray(val) {
 }
 
 /**
- * 智能增量合并本地与云端应用卡片，以卡片唯一 ID 和 updatedAt 时间戳为准，防止云端滞后快照覆盖本地刚添加的卡片
+ * 处理从 Firebase 实时推送回来的云端数据快照 (WebSocket on('value'))
+ * 关键规则：
+ * 1. 当本机无任何未同步修改（闲置浏览机器）时，云端即权威真理，直接应用云端全量数据，绝不向云端回写旧数据！
+ * 2. 只有当本机确实存在明确未完成同步的增/删/改时，才以云端为底本叠加本地改动，彻底杜绝已删除卡片死灰复燃。
  */
-function mergeDailyTools(localTools, remoteTools) {
-    const localArr = sanitizeArray(localTools);
-    const remoteArr = sanitizeArray(remoteTools);
+async function handleRemoteDataUpdate(jsonPortal) {
+    if (!jsonPortal) return;
 
+    const hasPendingChanges = flagDailyToolChanged || 
+                              pendingToolEdits.size > 0 || 
+                              pendingToolDeletions.size > 0 || 
+                              pendingTabEdits.size > 0 || 
+                              pendingTabDeletions.size > 0;
+
+    // 场景 A：本机没有未完成的本地修改（例如在另一台电脑上只是运行 app，或者已完成同步）
+    // 此时直接以云端数据为准，严禁任何形式的本地反向推送！
+    if (!hasPendingChanges) {
+        gDialyTools = sanitizeArray(jsonPortal.jsonMustHave);
+        gAppShutterTabs = sanitizeArray(jsonPortal.appShutterTabs);
+        ensureDefaultAppShutterTabs();
+
+        if (jsonPortal.kanbanTasks) {
+            gKanbanTasks = sanitizeArray(jsonPortal.kanbanTasks);
+        }
+
+        // 仅在本地持久化以备离线秒开，绝不回写云端
+        if (window.dbStorage) {
+            await window.dbStorage.saveLocalAppState({
+                jsonMustHave: gDialyTools,
+                appShutterTabs: gAppShutterTabs,
+                kanbanTasks: gKanbanTasks
+            });
+        }
+
+        updateSaveIconStatus('SYNCED');
+        window.dispatchEvent(new CustomEvent('appDataUpdated'));
+        return;
+    }
+
+    // 场景 B：本机恰好处于离线编辑中或有待同步修改，以云端数据为底本做精准冲突合并
+    console.log("检测到本地存在待同步的修改，基于云端做精确增量叠加...");
+
+    const remoteTools = sanitizeArray(jsonPortal.jsonMustHave);
     const toolMap = new Map();
 
-    // 1. 将远端数据放入 map
-    remoteArr.forEach(tool => {
+    // 1. 载入云端卡片，但跳过本机用户明确主动删除了的卡片
+    remoteTools.forEach(tool => {
         if (tool && tool.id) {
-            if (recentDeletedToolIds.has(tool.id)) return;
-            toolMap.set(tool.id, tool);
+            if (!pendingToolDeletions.has(tool.id)) {
+                toolMap.set(tool.id, tool);
+            }
         }
     });
 
-    let hasLocalExclusive = false;
-
-    // 2. 将本地卡片与远端比对
-    localArr.forEach(localTool => {
-        if (!localTool || !localTool.id) return;
-        if (recentDeletedToolIds.has(localTool.id)) return;
-
-        const remoteTool = toolMap.get(localTool.id);
+    // 2. 叠加本机用户明确新增或更新的卡片
+    pendingToolEdits.forEach((localTool, toolId) => {
+        const remoteTool = toolMap.get(toolId);
         if (remoteTool) {
             const localTime = localTool.updatedAt || 0;
             const remoteTime = remoteTool.updatedAt || 0;
             if (localTime >= remoteTime) {
-                toolMap.set(localTool.id, localTool);
+                toolMap.set(toolId, localTool);
             }
         } else {
-            toolMap.set(localTool.id, localTool);
-            hasLocalExclusive = true;
+            toolMap.set(toolId, localTool);
         }
     });
 
-    return {
-        merged: Array.from(toolMap.values()),
-        hasLocalExclusive
-    };
-}
+    gDialyTools = Array.from(toolMap.values());
 
-/**
- * 智能增量合并本地与云端 Tab 分类
- */
-function mergeAppTabs(localTabs, remoteTabs) {
-    const localArr = sanitizeArray(localTabs);
-    const remoteArr = sanitizeArray(remoteTabs);
-
+    // 3. 合并 Tab 分类
+    const remoteTabs = sanitizeArray(jsonPortal.appShutterTabs);
     const tabMap = new Map();
-    remoteArr.forEach(t => { if (t && t.id) tabMap.set(t.id, t); });
-    localArr.forEach(t => {
-        if (t && t.id && !tabMap.has(t.id)) {
+    remoteTabs.forEach(t => {
+        if (t && t.id && !pendingTabDeletions.has(t.id)) {
             tabMap.set(t.id, t);
         }
     });
-    return Array.from(tabMap.values());
-}
-
-async function handleRemoteDataUpdate(jsonPortal) {
-    if (!jsonPortal) return;
-
-    // 如果本地有未同步的修改，优先保留本地修改
-    if (flagDailyToolChanged) {
-        console.log("本地存在未同步修改，跳过远端覆盖");
-        return;
-    }
-
-    // 执行智能合并
-    const { merged: mergedTools, hasLocalExclusive } = mergeDailyTools(gDialyTools, jsonPortal.jsonMustHave);
-    gDialyTools = mergedTools;
-
-    gAppShutterTabs = mergeAppTabs(gAppShutterTabs, jsonPortal.appShutterTabs);
+    pendingTabEdits.forEach((localTab, tabId) => {
+        tabMap.set(tabId, localTab);
+    });
+    gAppShutterTabs = Array.from(tabMap.values());
     ensureDefaultAppShutterTabs();
 
     if (jsonPortal.kanbanTasks) {
         gKanbanTasks = sanitizeArray(jsonPortal.kanbanTasks);
     }
 
-    // 保存到 IndexedDB
+    // 保存合并后的最新状态并推送到云端
     if (window.dbStorage) {
         await window.dbStorage.saveLocalAppState({
             jsonMustHave: gDialyTools,
@@ -272,14 +290,7 @@ async function handleRemoteDataUpdate(jsonPortal) {
         });
     }
 
-    // 如果发现本地有远端缺失的新增卡片，立即主动补发同步到云端
-    if (hasLocalExclusive) {
-        console.log("检测到本地存在云端未收录的新增卡片，触发增量补发同步...");
-        flagDailyToolChanged = true;
-        persistLocalAndSync();
-    }
-
-    // 触发自定义事件通知 UI 刷新
+    persistLocalAndSync();
     window.dispatchEvent(new CustomEvent('appDataUpdated'));
 }
 
@@ -297,13 +308,18 @@ function plusAppShutterTab(tabName) {
     const newTab = {
         id: crypto.randomUUID(),
         name: name,
-        createdAt: Date.now()
+        createdAt: Date.now(),
+        updatedAt: Date.now()
     };
+    pendingTabDeletions.delete(newTab.id);
+    pendingTabEdits.set(newTab.id, newTab);
+
     gAppShutterTabs.push(newTab);
     currentActiveAppTabId = newTab.id;
     try {
         localStorage.setItem('currentActiveAppTabId', newTab.id);
     } catch (e) {}
+
     flagDailyToolChanged = true;
     persistLocalAndSync();
     return newTab;
@@ -317,11 +333,16 @@ function removeAppShutterTab(tabId) {
     }
     const index = gAppShutterTabs.findIndex(t => t.id === tabId);
     if (index !== -1) {
+        pendingTabEdits.delete(tabId);
+        pendingTabDeletions.add(tabId);
+
         gAppShutterTabs.splice(index, 1);
         if (gDialyTools) {
             gDialyTools.forEach(tool => {
                 if (tool.tabId === tabId) {
                     tool.tabId = 'default';
+                    tool.updatedAt = Date.now();
+                    pendingToolEdits.set(tool.id, tool);
                 }
             });
         }
@@ -329,6 +350,7 @@ function removeAppShutterTab(tabId) {
         try {
             localStorage.setItem('currentActiveAppTabId', 'workbench');
         } catch (e) {}
+
         flagDailyToolChanged = true;
         persistLocalAndSync();
         return true;
@@ -339,6 +361,10 @@ function removeAppShutterTab(tabId) {
 function reorderAppShutterTabs(newTabsArray) {
     if (!newTabsArray || !Array.isArray(newTabsArray)) return;
     gAppShutterTabs = newTabsArray;
+    gAppShutterTabs.forEach(t => {
+        t.updatedAt = Date.now();
+        pendingTabEdits.set(t.id, t);
+    });
     flagDailyToolChanged = true;
     persistLocalAndSync();
 }
@@ -353,7 +379,8 @@ function addKanbanTask(title, status = 'todo') {
         title: title.trim(),
         status: status,
         memo: '',
-        createdAt: Date.now()
+        createdAt: Date.now(),
+        updatedAt: Date.now()
     };
     gKanbanTasks.push(task);
     flagDailyToolChanged = true;
@@ -403,7 +430,7 @@ async function asyncLoadAppData() {
     // 1. 初始化 Worker
     initSyncWorker();
 
-    // 2. 优先从 IndexedDB 读取本地数据
+    // 2. 优先从 IndexedDB 读取本地数据以秒开页面
     let localData = null;
     try {
         if (window.dbStorage) {
@@ -414,20 +441,26 @@ async function asyncLoadAppData() {
     }
 
     if (localData) {
-        console.log("🚀 [Local-First] 从本地 IndexedDB 加载数据成功:", localData);
+        console.log("🚀 [Local-First] 从本地 IndexedDB 成功加载缓存:", localData);
         gDialyTools = localData.jsonMustHave || [];
         gAppShutterTabs = localData.appShutterTabs || [];
         ensureDefaultAppShutterTabs();
         if (localData.kanbanTasks) {
             gKanbanTasks = localData.kanbanTasks;
         }
+
+        // 初始化加载时，尚未有任何本地待提交变更
         flagDailyToolChanged = false;
+        pendingToolEdits.clear();
+        pendingToolDeletions.clear();
+        pendingTabEdits.clear();
+        pendingTabDeletions.clear();
         updateSaveIconStatus('SYNCED');
     }
 
-    // 3. 如果本地没有缓存数据，从 Firebase 拉取
+    // 3. 如果本地完全没有缓存数据，同步从 Firebase 拉取初始数据
     if (!localData && database) {
-        console.log("☁️ 首次运行，本地无缓存，从 Firebase 获取数据...");
+        console.log("☁️ 首次运行，本地无缓存，从 Firebase 获取初始数据...");
         try {
             const snapshot = await database.ref('Portal').once('value');
             const jsonPortal = snapshot.val();
@@ -452,7 +485,7 @@ async function asyncLoadAppData() {
             console.error("加载 Firebase 初始数据失败:", err);
         }
     } else {
-        // 本地已有数据，通知 Worker 在后台拉取最新远端数据进行对比
+        // 本地已有缓存，通知 Worker 在后台拉取最新远端数据（并通过 WebSocket 持续监听）
         if (syncWorker) {
             syncWorker.postMessage({ type: 'FETCH_REMOTE' });
         }
@@ -494,11 +527,41 @@ function plusDailyTool(jsonTool) {
         }
     }
 
-    if (jsonTool.id && recentDeletedToolIds.has(jsonTool.id)) {
-        recentDeletedToolIds.delete(jsonTool.id);
+    if (!jsonTool.id) jsonTool.id = crypto.randomUUID();
+    jsonTool.updatedAt = Date.now();
+    if (!jsonTool.data) {
+        jsonTool.data = {
+            url: jsonTool.url || '',
+            memo: jsonTool.memo || ''
+        };
     }
-    if (!jsonTool.updatedAt) jsonTool.updatedAt = Date.now();
+
+    pendingToolDeletions.delete(jsonTool.id);
+    pendingToolEdits.set(jsonTool.id, jsonTool);
+
     gDialyTools.push(jsonTool);
+    flagDailyToolChanged = true;
+    persistLocalAndSync();
+    return true;
+}
+
+/**
+ * 更新应用信息
+ */
+function updateDailyTool(toolID, updateFields) {
+    const tool = gDialyTools.find(t => t.id === toolID);
+    if (!tool) return false;
+
+    if (updateFields.title !== undefined) tool.title = updateFields.title;
+    if (!tool.data) tool.data = {};
+    if (updateFields.url !== undefined) tool.data.url = updateFields.url;
+    if (updateFields.memo !== undefined) tool.data.memo = updateFields.memo;
+    if (updateFields.tabId !== undefined) tool.tabId = updateFields.tabId;
+    tool.updatedAt = Date.now();
+
+    pendingToolDeletions.delete(tool.id);
+    pendingToolEdits.set(tool.id, tool);
+
     flagDailyToolChanged = true;
     persistLocalAndSync();
     return true;
@@ -508,7 +571,11 @@ function plusDailyTool(jsonTool) {
  * 从导航桌面移除应用
  */
 function removeDailyTool(toolID) {
-    if (toolID) recentDeletedToolIds.add(toolID);
+    if (!toolID) return false;
+
+    pendingToolEdits.delete(toolID);
+    pendingToolDeletions.add(toolID);
+
     for (let i = 0; i < gDialyTools.length; i++) {
         if (gDialyTools[i].id == toolID) {
             gDialyTools.splice(i, 1);

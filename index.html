@@ -565,7 +565,7 @@
 
     <!-- 主展示区：全宽应用导航桌面 -->
     <main class="flex-1 bg-gray-50 p-6 overflow-y-auto" id="main-content">
-        <div class="max-w-7xl mx-auto">
+        <div class="w-[95%] md:w-[85%] mx-auto">
             <div class="rounded-2xl shadow-sm p-6" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
                 <!-- 顶栏状态与项目计数 -->
                 <div class="flex items-center justify-between mb-4">
@@ -713,20 +713,18 @@
                 event.preventDefault();
 
                 const callbackEditTool = (formDataTool) => {
-                    jsonTool.title = formDataTool.title || jsonTool.title;
-                    if (!jsonTool.data) jsonTool.data = {};
-                    jsonTool.data.url = formDataTool.url || toolUrl;
-                    jsonTool.data.memo = formDataTool.memo || '';
-                    jsonTool.updatedAt = Date.now();
-                    flagDailyToolChanged = true;
-                    persistLocalAndSync();
+                    updateDailyTool(tagTool.dataset.toolID, {
+                        title: formDataTool.title,
+                        url: formDataTool.url,
+                        memo: formDataTool.memo
+                    });
                     displayDailyTools();
                 };
 
                 const formSchema = [
-                    { "name": "title", "type": "string", "placeholder": "应用名称", "value": toolTitle },
-                    { "name": "memo", "type": "string", "placeholder": "应用说明备注", "value": toolMemo },
-                    { "name": "url", "type": "string", "placeholder": "https://...", "value": toolUrl }
+                    { "name": "title", "label": "应用名称", "type": "string", "placeholder": "应用名称", "value": toolTitle },
+                    { "name": "memo", "label": "应用说明备注", "type": "string", "placeholder": "应用说明备注", "value": toolMemo },
+                    { "name": "url", "label": "应用链接 URL", "type": "string", "placeholder": "https://...", "value": toolUrl }
                 ];
                 const formCallbacks = {
                     onConfirm: callbackEditTool,
@@ -790,9 +788,9 @@
             };
 
             const appSchema = [
-                { "name": "title", "type": "string", "placeholder": "应用名称" },
-                { "name": "memo", "type": "string", "placeholder": "应用说明备注" },
-                { "name": "url", "type": "string", "placeholder": "https://..." }
+                { "name": "title", "label": "应用名称", "type": "string", "placeholder": "请输入应用名称..." },
+                { "name": "memo", "label": "应用说明备注", "type": "string", "placeholder": "请输入应用说明或备注..." },
+                { "name": "url", "label": "应用链接 URL", "type": "string", "placeholder": "https://..." }
             ];
             const appCallbacks = {
                 onConfirm: callbackPlusTool,
@@ -806,7 +804,7 @@
          */
         function openCreateAppTabModal() {
             const schema = [
-                { "name": "tabName", "type": "string", "placeholder": "Tab 分类名称..." }
+                { "name": "tabName", "label": "分类名称", "type": "string", "placeholder": "请输入分类 Tab 名称..." }
             ];
             const callbacks = {
                 onConfirm: (formData) => {
