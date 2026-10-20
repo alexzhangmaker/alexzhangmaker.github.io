@@ -1,7 +1,5 @@
-// 模拟从Firebase及IndexedDB获取的数据（本地优先架构）
-let gFolderTree = [];
+// Sentry · 应用导航桌面 数据服务与多端同步中心 (本地优先架构 Local-First)
 let gDialyTools = [];
-let gBookmarks = [];
 let gAppShutterTabs = [
     { id: 'workbench', name: '⚡ 智能工作台', isFixed: true },
     { id: 'default', name: '常用应用', isFixed: true }
@@ -20,8 +18,6 @@ let gKanbanTasks = [
     { id: 'task-3', title: '准备katrain', status: 'in_progress', memo: '', createdAt: Date.now() - 5400000 },
     { id: 'task-4', title: '完成每日看板开发', status: 'completed', memo: '', createdAt: Date.now() - 10800000 }
 ];
-let flagFolderChanged = false;
-let flagBookmarksChanged = false;
 let flagDailyToolChanged = false;
 
 window.gKanbanTasks = gKanbanTasks;
@@ -39,8 +35,8 @@ const firebaseConfig = {
 };
 
 const gPortalPath = "Portal";
-const color2Save = "#0000FF";
-const colorSaved = "#FFFFFF";
+const color2Save = "#4f46e5";
+const colorSaved = "#4b5563";
 
 // 初始化Firebase（主线程备用）
 if (typeof firebase !== 'undefined' && firebase.apps && !firebase.apps.length) {
@@ -73,8 +69,6 @@ function initSyncWorker() {
             } else if (msg.type === 'SYNC_COMPLETE') {
                 // 仅当完成的同步版本号不小于当前最新修改版本时，才清除 dirty 标记
                 if (!msg.syncId || msg.syncId >= currentSyncId) {
-                    flagFolderChanged = false;
-                    flagBookmarksChanged = false;
                     flagDailyToolChanged = false;
                     updateSaveIconStatus('SYNCED');
                 }
@@ -98,15 +92,16 @@ function updateSaveIconStatus(status) {
     const svgElement = document.querySelector('#idBTNSaveChange');
     if (!svgElement) return;
 
+    const path = svgElement.querySelector('path') || svgElement;
     if (status === 'SYNCED') {
-        svgElement.setAttribute('fill', colorSaved);
-        svgElement.setAttribute('title', '数据已完美同步到本地与云端');
+        path.setAttribute('fill', colorSaved);
+        svgElement.setAttribute('title', '数据已同步到本地与云端');
     } else if (status === 'SYNCING') {
-        svgElement.setAttribute('fill', color2Save);
-        svgElement.setAttribute('title', '后台 Worker 正在同步到云端...');
+        path.setAttribute('fill', color2Save);
+        svgElement.setAttribute('title', '后台正在同步到云端...');
     } else if (status === 'ERROR') {
-        svgElement.setAttribute('fill', '#EF476F');
-        svgElement.setAttribute('title', '同步遇到网络波动，保存在本地并自动重试');
+        path.setAttribute('fill', '#EF4444');
+        svgElement.setAttribute('title', '网络波动，已保存在本地并自动重试');
     }
 }
 
@@ -119,9 +114,7 @@ async function persistLocalAndSync(flags = {}) {
 
     const dataPackage = {
         syncId: thisSyncId,
-        jsonFolders: gFolderTree,
         jsonMustHave: gDialyTools,
-        Bookmarks: gBookmarks,
         appShutterTabs: gAppShutterTabs,
         kanbanTasks: gKanbanTasks
     };
@@ -135,7 +128,7 @@ async function persistLocalAndSync(flags = {}) {
         }
     }
 
-    // 2. 更新同步指示指示灯
+    // 2. 更新同步指示灯并通知 Worker
     if (syncWorker) {
         updateSaveIconStatus('SYNCING');
         syncWorker.postMessage({
@@ -143,15 +136,12 @@ async function persistLocalAndSync(flags = {}) {
             data: {
                 ...dataPackage,
                 flags: {
-                    flagFolderChanged,
                     flagDailyToolChanged,
-                    flagBookmarksChanged,
                     ...flags
                 }
             }
         });
     } else {
-        // file:// 协议本地降级环境
         updateSaveIconStatus('SYNCED');
     }
 }
@@ -205,7 +195,6 @@ function mergeDailyTools(localTools, remoteTools) {
     // 1. 将远端数据放入 map
     remoteArr.forEach(tool => {
         if (tool && tool.id) {
-            // 如果本地最近明确删除了该卡片，不从远端复活
             if (recentDeletedToolIds.has(tool.id)) return;
             toolMap.set(tool.id, tool);
         }
@@ -220,14 +209,12 @@ function mergeDailyTools(localTools, remoteTools) {
 
         const remoteTool = toolMap.get(localTool.id);
         if (remoteTool) {
-            // 两端都存在，比较时间戳保留更新的那个
             const localTime = localTool.updatedAt || 0;
             const remoteTime = remoteTool.updatedAt || 0;
             if (localTime >= remoteTime) {
                 toolMap.set(localTool.id, localTool);
             }
         } else {
-            // 本地存在但远端缺失：保留本地刚添加的数据，严禁被云端旧快照抹除！
             toolMap.set(localTool.id, localTool);
             hasLocalExclusive = true;
         }
@@ -250,7 +237,6 @@ function mergeAppTabs(localTabs, remoteTabs) {
     remoteArr.forEach(t => { if (t && t.id) tabMap.set(t.id, t); });
     localArr.forEach(t => {
         if (t && t.id && !tabMap.has(t.id)) {
-            // 保留本地自建 Tab，防止被冲掉
             tabMap.set(t.id, t);
         }
     });
@@ -261,18 +247,15 @@ async function handleRemoteDataUpdate(jsonPortal) {
     if (!jsonPortal) return;
 
     // 如果本地有未同步的修改，优先保留本地修改
-    if (flagFolderChanged || flagBookmarksChanged || flagDailyToolChanged) {
+    if (flagDailyToolChanged) {
         console.log("本地存在未同步修改，跳过远端覆盖");
         return;
     }
 
-    gFolderTree = sanitizeArray(jsonPortal.jsonFolders);
-
-    // 执行智能合并，防止云端滞后的 WebSocket 快照意外冲掉本地新增卡片
+    // 执行智能合并
     const { merged: mergedTools, hasLocalExclusive } = mergeDailyTools(gDialyTools, jsonPortal.jsonMustHave);
     gDialyTools = mergedTools;
 
-    gBookmarks = sanitizeArray(jsonPortal.Bookmarks);
     gAppShutterTabs = mergeAppTabs(gAppShutterTabs, jsonPortal.appShutterTabs);
     ensureDefaultAppShutterTabs();
 
@@ -283,9 +266,7 @@ async function handleRemoteDataUpdate(jsonPortal) {
     // 保存到 IndexedDB
     if (window.dbStorage) {
         await window.dbStorage.saveLocalAppState({
-            jsonFolders: gFolderTree,
             jsonMustHave: gDialyTools,
-            Bookmarks: gBookmarks,
             appShutterTabs: gAppShutterTabs,
             kanbanTasks: gKanbanTasks
         });
@@ -310,7 +291,7 @@ function plusAppShutterTab(tabName) {
     const name = tabName.trim();
     const exists = gAppShutterTabs.some(t => t.name === name);
     if (exists) {
-        alert('Tab 名称已存在');
+        alert('Tab 分类名称已存在');
         return null;
     }
     const newTab = {
@@ -330,7 +311,7 @@ function plusAppShutterTab(tabName) {
 
 function removeAppShutterTab(tabId) {
     const tabObj = gAppShutterTabs.find(t => t.id === tabId);
-    if (tabId === 'default' || tabId === 'kanban' || (tabObj && tabObj.isFixed)) {
+    if (tabId === 'default' || tabId === 'workbench' || tabId === 'kanban' || (tabObj && tabObj.isFixed)) {
         alert('系统默认 Tab 无法删除');
         return false;
     }
@@ -344,9 +325,9 @@ function removeAppShutterTab(tabId) {
                 }
             });
         }
-        currentActiveAppTabId = 'kanban';
+        currentActiveAppTabId = 'workbench';
         try {
-            localStorage.setItem('currentActiveAppTabId', 'kanban');
+            localStorage.setItem('currentActiveAppTabId', 'workbench');
         } catch (e) {}
         flagDailyToolChanged = true;
         persistLocalAndSync();
@@ -363,7 +344,7 @@ function reorderAppShutterTabs(newTabsArray) {
 }
 
 /**
- * 每日看板 Task 管理方法
+ * 看板任务管理方法
  */
 function addKanbanTask(title, status = 'todo') {
     if (!title || !title.trim()) return null;
@@ -416,34 +397,13 @@ function updateKanbanTaskMemo(taskId, memoText) {
 }
 
 /**
- * 结构转换辅助函数
- */
-function _transformPortal(portalEntries) {
-    if (!portalEntries) return portalEntries;
-    for (let i = 0; i < portalEntries.length; i++) {
-        let jsonNode = portalEntries[i];
-        if (jsonNode.type == "Gateway.Folder") {
-            if (jsonNode.hasOwnProperty("Contents")) {
-                _transformPortal(jsonNode.Contents);
-                jsonNode.children = jsonNode.Contents;
-                delete jsonNode.Contents;
-            }
-            jsonNode.type = "folder";
-            jsonNode.name = jsonNode.title;
-            delete jsonNode.title;
-        }
-    }
-    return portalEntries;
-}
-
-/**
  * 本地优先的加载数据入口
  */
 async function asyncLoadAppData() {
     // 1. 初始化 Worker
     initSyncWorker();
 
-    // 2. 优先从 IndexedDB 读取本地数据 (实现 0 延迟秒开)
+    // 2. 优先从 IndexedDB 读取本地数据
     let localData = null;
     try {
         if (window.dbStorage) {
@@ -455,30 +415,24 @@ async function asyncLoadAppData() {
 
     if (localData) {
         console.log("🚀 [Local-First] 从本地 IndexedDB 加载数据成功:", localData);
-        gFolderTree = localData.jsonFolders || [];
         gDialyTools = localData.jsonMustHave || [];
-        gBookmarks = localData.Bookmarks || [];
         gAppShutterTabs = localData.appShutterTabs || [];
         ensureDefaultAppShutterTabs();
         if (localData.kanbanTasks) {
             gKanbanTasks = localData.kanbanTasks;
         }
-        flagFolderChanged = false;
-        flagBookmarksChanged = false;
         flagDailyToolChanged = false;
         updateSaveIconStatus('SYNCED');
     }
 
-    // 3. 如果本地没有缓存数据，同步从 Firebase 拉取
+    // 3. 如果本地没有缓存数据，从 Firebase 拉取
     if (!localData && database) {
         console.log("☁️ 首次运行，本地无缓存，从 Firebase 获取数据...");
         try {
             const snapshot = await database.ref('Portal').once('value');
             const jsonPortal = snapshot.val();
             if (jsonPortal) {
-                gFolderTree = jsonPortal.jsonFolders || [];
                 gDialyTools = jsonPortal.jsonMustHave || [];
-                gBookmarks = jsonPortal.Bookmarks || [];
                 gAppShutterTabs = jsonPortal.appShutterTabs || [];
                 ensureDefaultAppShutterTabs();
                 if (jsonPortal.kanbanTasks) {
@@ -487,9 +441,7 @@ async function asyncLoadAppData() {
 
                 if (window.dbStorage) {
                     await window.dbStorage.saveLocalAppState({
-                        jsonFolders: gFolderTree,
                         jsonMustHave: gDialyTools,
-                        Bookmarks: gBookmarks,
                         appShutterTabs: gAppShutterTabs,
                         kanbanTasks: gKanbanTasks
                     });
@@ -500,7 +452,7 @@ async function asyncLoadAppData() {
             console.error("加载 Firebase 初始数据失败:", err);
         }
     } else {
-        // 本地已有数据，通知 Worker 在后台校验远端最新数据
+        // 本地已有数据，通知 Worker 在后台拉取最新远端数据进行对比
         if (syncWorker) {
             syncWorker.postMessage({ type: 'FETCH_REMOTE' });
         }
@@ -508,88 +460,11 @@ async function asyncLoadAppData() {
 }
 
 /**
- * 保存全量数据
+ * 手动保存并同步数据
  */
 async function asyncSaveAppData() {
-    flagFolderChanged = true;
-    flagBookmarksChanged = true;
     flagDailyToolChanged = true;
     await persistLocalAndSync({ forceAll: true });
-}
-
-async function asyncSaveAppDataFallback() {
-    try {
-        if (flagBookmarksChanged) {
-            await database.ref(`Portal/Bookmarks`).set(gBookmarks);
-            flagBookmarksChanged = false;
-        }
-        if (flagDailyToolChanged) {
-            await database.ref(`Portal/jsonMustHave`).set(gDialyTools);
-            flagDailyToolChanged = false;
-        }
-        if (flagFolderChanged) {
-            await database.ref(`Portal/jsonFolders`).set(gFolderTree);
-            flagFolderChanged = false;
-        }
-        updateSaveIconStatus('SYNCED');
-    } catch (err) {
-        console.error("Fallback 保存数据失败:", err);
-        updateSaveIconStatus('ERROR');
-    }
-}
-
-function loadAppData() {
-    if (!database) return;
-    const PortalRef = database.ref(gPortalPath);
-    PortalRef.on('value', (snapshot) => {
-        const jsonPortal = snapshot.val();
-        if (jsonPortal) {
-            _transformPortal(jsonPortal.jsonFolders);
-            gFolderTree = jsonPortal.jsonFolders;
-        }
-    }, (error) => {
-        console.error('加载Portal数据失败:', error);
-    });
-}
-
-function fetchFolderBookmarks(folder) {
-    const bookmarks = [];
-    if (!gBookmarks) return bookmarks;
-    gBookmarks.forEach(jsonBookmark => {
-        if (jsonBookmark.folderID == folder.id) bookmarks.push(jsonBookmark);
-    });
-    return bookmarks;
-}
-
-function findObjectsWithSameValue(array, attribute) {
-    const groupedByValue = new Map();
-    array.forEach(obj => {
-        const value = obj[attribute];
-        if (value !== undefined) {
-            if (!groupedByValue.has(value)) {
-                groupedByValue.set(value, []);
-            }
-            groupedByValue.get(value).push(obj);
-        }
-    });
-    return Array.from(groupedByValue.entries())
-        .filter(([_, group]) => group.length > 1)
-        .map(([value, objects]) => ({
-            attributeValue: value,
-            objects: objects
-        }));
-}
-
-async function removeBookmark(bookmarkID) {
-    console.log(`will removeBookmark:${bookmarkID}`);
-    for (let i = 0; i < gBookmarks.length; i++) {
-        if (gBookmarks[i].id == bookmarkID) {
-            gBookmarks.splice(i, 1);
-            flagBookmarksChanged = true;
-            await persistLocalAndSync();
-            return;
-        }
-    }
 }
 
 function normalizeUrl(url) {
@@ -600,6 +475,9 @@ function normalizeUrl(url) {
     return str;
 }
 
+/**
+ * 添加应用到导航桌面
+ */
 function plusDailyTool(jsonTool) {
     const targetUrl = jsonTool.data ? jsonTool.data.url : jsonTool.url;
     const targetNorm = normalizeUrl(targetUrl);
@@ -626,6 +504,9 @@ function plusDailyTool(jsonTool) {
     return true;
 }
 
+/**
+ * 从导航桌面移除应用
+ */
 function removeDailyTool(toolID) {
     if (toolID) recentDeletedToolIds.add(toolID);
     for (let i = 0; i < gDialyTools.length; i++) {
@@ -637,71 +518,4 @@ function removeDailyTool(toolID) {
         }
     }
     return false;
-}
-
-function plusFolderatRoot(jsonFolder) {
-    if (!jsonFolder.updatedAt) jsonFolder.updatedAt = Date.now();
-    gFolderTree.push(jsonFolder);
-    flagFolderChanged = true;
-    persistLocalAndSync();
-}
-
-function plusFolder2Folder(jsonFolder, selectedNode) {
-    if (!selectedNode.children) {
-        selectedNode.children = [];
-    }
-    if (!jsonFolder.updatedAt) jsonFolder.updatedAt = Date.now();
-    selectedNode.children.push(jsonFolder);
-    flagFolderChanged = true;
-    persistLocalAndSync();
-}
-
-function removeFolderFromForest(folderID) {
-    function _callRemoved() {
-        flagFolderChanged = true;
-        persistLocalAndSync();
-    }
-
-    function _removeFolder(jsonRoot, folderID) {
-        if (!jsonRoot.children || jsonRoot.children.length === 0) return false;
-        for (let i = 0; i < jsonRoot.children.length; i++) {
-            if (jsonRoot.children[i].id == folderID) {
-                jsonRoot.children.splice(i, 1);
-                return true;
-            }
-            let bRemoved = _removeFolder(jsonRoot.children[i], folderID);
-            if (bRemoved) return true;
-        }
-        return false;
-    }
-
-    for (let i = 0; i < gFolderTree.length; i++) {
-        if (gFolderTree[i].id == folderID) {
-            if (!gFolderTree[i].children || gFolderTree[i].children.length === 0) {
-                gFolderTree.splice(i, 1);
-                _callRemoved();
-                return true;
-            }
-            return false;
-        }
-
-        let bRemoved = _removeFolder(gFolderTree[i], folderID);
-        if (bRemoved) {
-            _callRemoved();
-            return true;
-        }
-    }
-    return false;
-}
-
-function plusBookmark2Folder(jsonBookmark, folderNode) {
-    if (!folderNode) {
-        alert('something wrong in plusBookmark2Folder');
-    } else {
-        if (!jsonBookmark.updatedAt) jsonBookmark.updatedAt = Date.now();
-        jsonBookmark.folderID = folderNode.id;
-        gBookmarks.push(jsonBookmark);
-        flagBookmarksChanged = true;
-        persistLocalAndSync();
-    }
 }

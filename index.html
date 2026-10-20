@@ -3,150 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentry.Anywhere</title>
+    <title>Sentry · 应用导航桌面</title>
     <script src="./js/singleInstanceLock.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
 
-    </style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #e0e7ff;
+            --gray: #64748b;
+            --gray-light: #f1f5f9;
+            --dark: #1e293b;
+            --border-radius: 12px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+        }
 
-    <style>
-        body{
+        body {
             overflow-y: hidden;
-            /*font-family: "Noto Sans", sans-serif;
-            font-variation-settings:    "wdth" 100;
-            */
-            font-family: "Oswald", sans-serif;
+            font-family: "Oswald", "Noto Sans", sans-serif;
             font-optical-sizing: auto;
             font-weight: 300;
             font-style: normal;
-            
         }
-        .tree-node {
-            transition: all 0.2s ease;
-        }
-        .tree-node.dragging {
-            opacity: 0.6;
-            background-color: #f3f4f6;
-        }
-        .tree-node.drag-over {
-            background-color: #e5e7eb;
-        }
-        .tree-children {
-            margin-left: 1.5rem;
-            border-left: 1px dashed #d1d5db;
-        }
-        .node-content {
-            cursor: pointer;
-            user-select: none;
-        }
-        .resize-handle {
-            width: 5px;
-            background: transparent;
-            cursor: col-resize;
-            transition: background 0.2s;
-        }
-        .resize-handle:hover, .resize-handle.active {
-            background: #3b82f6;
-        }
-        .sidebar {
-            min-width: 200px;
-            max-width: 80%;
-            transition: width 0.25s ease, padding 0.25s ease, opacity 0.2s ease, min-width 0.25s ease;
-        }
-        .sidebar.collapsed {
-            width: 0 !important;
-            min-width: 0 !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-            overflow: hidden !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-        }
-        .sidebar.collapsed .resize-handle {
+
+        .noShow {
             display: none !important;
         }
-        .modal {
-            transition: opacity 0.25s ease;
-        }
-        .node-actions {
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .tree-node:hover .node-actions {
-            opacity: 1;
-        }
-        .file-item {
-            transition: all 0.2s;
-        }
-        .file-item:hover {
-            background-color: #f3f4f6;
-        }
-    </style>
-    <style>
 
-        .noShow{
-            display: none !important;
-        }
-        .dailyTool{
-            display: flex;
-            flex-direction: row;
-        }
-
-        .dailyTool :hover{
+        .btnOutpost {
             cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+        .btnOutpost:hover {
+            transform: scale(1.08);
+            opacity: 0.85;
         }
 
-        .dailyToolAction {
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .dailyTool:hover .dailyToolAction {
-            opacity: 1;
-        }
-        
-    </style>
-    <style>
-        .bookmarkItem{
-            display: flex;
-            flex-direction: row;
-            justify-content:flex-start;
-            align-items: center;
-            gap: 10px;
-
-            /*width:100% ;*/
-        }
-        .bookmarkItem :hover{
-            cursor: pointer;
-            color: #3b82f6;
-        }
-
-        .bookmarkAction {
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .bookmarkItem:hover .bookmarkAction {
-            opacity: 1;
-        }
-        
-        .btnOutpost:hover{
-            cursor: pointer;
-        }
-    </style>
-    <style>
-        /* 紧凑书签网格样式 */
+        /* 紧凑应用卡片网格样式 */
         .bookmarks-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
         }
 
         /* Bento Grid 12列桌面响应式网格 */
@@ -172,9 +74,9 @@
             }
         }
 
-        /* #idFolderContents 垂直独立滚动支持 */
+        /* 桌面内容区域滚动容器 */
         #idFolderContents {
-            max-height: calc(100vh - 165px);
+            max-height: calc(100vh - 130px);
             overflow-y: auto;
             overflow-x: hidden;
             padding-right: 4px;
@@ -210,7 +112,7 @@
         .workbench-grid-wrapper {
             position: relative;
             width: 100%;
-            min-height: calc(100vh - 200px);
+            min-height: calc(100vh - 180px);
         }
 
         .workbench-grid-canvas {
@@ -250,10 +152,10 @@
             overflow: hidden;
             box-sizing: border-box;
             z-index: 10;
-            transition: left 0.22s cubic-bezier(0.2, 0, 0, 1), 
-                        top 0.22s cubic-bezier(0.2, 0, 0, 1), 
-                        width 0.22s cubic-bezier(0.2, 0, 0, 1), 
-                        height 0.22s cubic-bezier(0.2, 0, 0, 1), 
+            transition: left 0.22s cubic-bezier(0.2, 0, 1), 
+                        top 0.22s cubic-bezier(0.2, 0, 1), 
+                        width 0.22s cubic-bezier(0.2, 0, 1), 
+                        height 0.22s cubic-bezier(0.2, 0, 1), 
                         box-shadow 0.2s ease,
                         transform 0.2s ease;
         }
@@ -359,10 +261,10 @@
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-            transition: left 0.15s cubic-bezier(0.2, 0, 0, 1), 
-                        top 0.15s cubic-bezier(0.2, 0, 0, 1), 
-                        width 0.15s cubic-bezier(0.2, 0, 0, 1), 
-                        height 0.15s cubic-bezier(0.2, 0, 0, 1);
+            transition: left 0.15s cubic-bezier(0.2, 0, 1), 
+                        top 0.15s cubic-bezier(0.2, 0, 1), 
+                        width 0.15s cubic-bezier(0.2, 0, 1), 
+                        height 0.15s cubic-bezier(0.2, 0, 1);
         }
 
         .placeholder-inner {
@@ -394,163 +296,163 @@
             border-radius: 9999px;
         }
 
-        /* 适配嵌入各 widget 在 card-body 中渲染时的边框与圆角融合 */
         .workbench-card-body > div {
             border: none !important;
             box-shadow: none !important;
             border-radius: 0 !important;
         }
         
+        /* 应用卡片样式 */
         .bookmark-card {
             background: white;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
             overflow: hidden;
             transition: var(--transition);
-            padding: 12px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            height: 150px;
-
-            transform: translateY(0px);
+            height: 156px;
+            cursor: pointer;
+            position: relative;
         }
         
         .bookmark-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
         }
 
         .bookmark-card-add {
             background: #f8fafc;
             border: 2px dashed #cbd5e1;
-            border-radius: 8px;
-            height: 150px;
+            border-radius: var(--border-radius);
+            height: 156px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: var(--transition);
             color: #64748b;
         }
 
         .bookmark-card-add:hover {
-            border-color: #3b82f6;
-            background-color: #eff6ff;
-            color: #2563eb;
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+            color: #4338ca;
             transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15);
+            box-shadow: 0 6px 14px rgba(79, 70, 229, 0.15);
         }
 
-        /* 应用快门 经典文件夹切角 Tab 样式（参照对比视觉效果） */
+        /* 应用分类 Tab 样式 */
         .app-shutter-tabs {
             display: flex;
             align-items: flex-end;
-            gap: 4px;
-            padding-left: 8px;
-            border-bottom: 3px solid #4b5563;
-            margin-bottom: 20px;
+            gap: 6px;
+            padding-left: 4px;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 18px;
             overflow-x: auto;
             position: relative;
         }
 
         .app-tab-item {
             position: relative;
-            padding: 8px 22px 7px 18px;
+            padding: 9px 20px 8px 18px;
             font-size: 13px;
             font-weight: 600;
             letter-spacing: 0.3px;
-            color: #e5e7eb;
-            background: linear-gradient(180deg, #6b7280 0%, #4b5563 100%);
-            border: 1px solid #4b5563;
+            color: #64748b;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
             border-bottom: none;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 14px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             white-space: nowrap;
             display: flex;
             align-items: center;
             gap: 8px;
             user-select: none;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
-            margin-bottom: 0;
+            margin-bottom: -2px;
         }
 
         .app-tab-item:hover {
-            background: linear-gradient(180deg, #7c8594 0%, #566170 100%);
-            color: #ffffff;
+            background: #e2e8f0;
+            color: #1e293b;
         }
 
         .app-tab-item.active {
             background: #ffffff;
-            color: #111827;
+            color: #4f46e5;
             font-weight: 700;
-            border: 1px solid #4b5563;
-            border-bottom: 3px solid #ffffff;
-            margin-bottom: -3px;
+            border: 1px solid #e2e8f0;
+            border-bottom: 2px solid #ffffff;
+            border-top: 2px solid #4f46e5;
             z-index: 10;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 14px;
-            box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.04);
         }
 
         .app-tab-item.dragging-tab {
             opacity: 0.45;
-            border: 1px dashed #60a5fa !important;
+            border: 1px dashed #6366f1 !important;
             transform: scale(0.96);
         }
 
         .app-tab-item.drag-over-tab {
-            border-left: 4px solid #3b82f6 !important;
+            border-left: 4px solid #4f46e5 !important;
             transform: translateY(-2px);
         }
 
         .app-tab-add {
-            padding: 7px 16px 6px 14px;
-            font-size: 13px;
+            padding: 8px 16px 7px 14px;
+            font-size: 12px;
             font-weight: 600;
-            color: #d1d5db;
-            background: linear-gradient(180deg, #4b5563 0%, #374151 100%);
-            border: 1px dashed #9ca3af;
+            color: #64748b;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
             border-bottom: none;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 14px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             user-select: none;
-            margin-bottom: 0;
+            margin-bottom: -2px;
         }
 
         .app-tab-add:hover {
-            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
-            color: #ffffff;
-            border-color: #60a5fa;
+            background: #eef2ff;
+            color: #4f46e5;
+            border-color: #818cf8;
         }
         
         .bookmark-header {
             display: flex;
             align-items: flex-start;
             margin-bottom: 8px;
-            width:100% ;
+            width: 100%;
         }
         
         .bookmark-favicon {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
             background: var(--primary-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            color:black;
+            color: #ffffff;
             font-weight: bold;
             margin-right: 10px;
             flex-shrink: 0;
-            font-size: 14px;
+            font-size: 13px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         
         .bookmark-info {
@@ -560,58 +462,55 @@
         
         .bookmark-title {
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             line-height: 1.3;
             font-size: 14px;
+            color: #1e293b;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            max-width: 10em;
-
-            /*
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            */
         }
         
         .bookmark-url {
-            font-size: 10px;
-            color: var(--gray);
+            font-size: 11px;
+            color: #94a3b8;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-
-            max-width: 15em;
         }
         
         .bookmark-actions {
             display: flex;
-            gap: 5px;
-            margin-left: 5px;
+            gap: 4px;
+            margin-left: 6px;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
 
-            align-items:center
+        .bookmark-card:hover .bookmark-actions {
+            opacity: 1;
         }
         
         .bookmark-actions button {
             background: none;
             border: none;
-            color: var(--gray);
+            color: #94a3b8;
             cursor: pointer;
-            padding: 4px;
-            border-radius: 3px;
-            transition: var(--transition);
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: all 0.15s;
             font-size: 12px;
         }
         
         .bookmark-actions button:hover {
-            background: var(--gray-light);
-            color: var(--dark);
+            background: #f1f5f9;
+            color: #1e293b;
         }
         
         .bookmark-description {
             font-size: 12px;
-            color: var(--gray);
+            color: #64748b;
             line-height: 1.4;
             margin-bottom: 8px;
             overflow: hidden;
@@ -627,136 +526,65 @@
             justify-content: space-between;
             align-items: center;
             font-size: 11px;
-            color: var(--gray);
-
-            width:100%;
+            color: #94a3b8;
+            width: 100%;
         }
         
         .bookmark-tags span {
-            background: var(--gray-light);
+            background: #f1f5f9;
+            color: #64748b;
             padding: 2px 6px;
-            border-radius: 10px;
+            border-radius: 6px;
             margin-right: 4px;
+            font-size: 10px;
         }
     </style>
 </head>
 <body class="bg-gray-100 h-screen flex flex-col">
-    <!-- 顶部工具栏 -->
-    <header class="bg-white shadow-sm py-2 px-6 flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNToggleSidebar" width="24" height="24" viewBox="0 0 24 24"><path fill="#000000" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNHome" width="24" height="24" viewBox="0 0 1024 1025"><path fill="#000000" d="M1004.5 556.5Q985 576 957.5 576T911 557l-15-15v419q0 26-18.5 45t-45.5 19H192q-27 0-45.5-19T128 961V542l-15 15q-19 19-46.5 19t-47-19.5t-19.5-47T19 463L463 19Q479 3 501.5.5T543 10q8 0 18 9l444 444q19 19 19 46.5t-19.5 47zM768 414L512 158L256 414v483h512V414z"/></svg>
+    <!-- 顶部应用导航栏 -->
+    <header class="bg-white shadow-sm py-2 px-6 flex items-center justify-between border-b border-gray-200 z-20">
+        <!-- 左侧 Logo 与标题 -->
+        <div class="flex items-center space-x-3 cursor-pointer" id="idBTNHome" title="点击返回工作台主页">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+                <i class="fas fa-compass text-base"></i>
+            </div>
+            <div>
+                <span class="text-base font-bold text-gray-800 tracking-tight">Sentry · 应用导航桌面</span>
+            </div>
         </div>
-        <div class="flex space-x-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNDisplayCalendar" width="24" height="24" viewBox="0 0 26 26"><path fill="#000000" d="M7 0c-.551 0-1 .449-1 1v3c0 .551.449 1 1 1c.551 0 1-.449 1-1V1c0-.551-.449-1-1-1zm12 0c-.551 0-1 .449-1 1v3c0 .551.449 1 1 1c.551 0 1-.449 1-1V1c0-.551-.449-1-1-1zM3 2C1.344 2 0 3.344 0 5v18c0 1.656 1.344 3 3 3h20c1.656 0 3-1.344 3-3V5c0-1.656-1.344-3-3-3h-2v2a2 2 0 0 1-4 0V2H9v2a2 2 0 0 1-4 0V2H3zM2 9h22v14c0 .551-.449 1-1 1H3c-.551 0-1-.449-1-1V9zm7 3v2.313h4.813l-3.782 7.656H13.5l3.469-8.438V12H9z"/></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNDisplayTodos" width="24" height="24" viewBox="0 0 26 26"><path fill="#000000" d="M7.875 0a1 1 0 0 0-.656.375L3.812 4.656l-2.25-1.5A1.014 1.014 0 1 0 .438 4.844l3 2a1 1 0 0 0 1.344-.219l4-5A1 1 0 0 0 7.875 0zM12 3v2h14V3H12zM7.875 9a1 1 0 0 0-.656.375l-3.407 4.281l-2.25-1.5a1.014 1.014 0 1 0-1.125 1.688l3 2a1 1 0 0 0 1.344-.219l4-5A1 1 0 0 0 7.875 9zM12 12v2h14v-2H12zm-4.125 6a1 1 0 0 0-.656.375l-3.407 4.281l-2.25-1.5a1.014 1.014 0 1 0-1.125 1.688l3 2a1 1 0 0 0 1.344-.219l4-5A1 1 0 0 0 7.875 18zM12 21v2h14v-2H12z"/></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNDisplayDailyTools" width="24" height="24" viewBox="0 0 24 24"><path fill="#000000" d="M18.29 5.706a1.405 1.405 0 0 0-1.987 0L4.716 17.296l1.324-2.65l-2.65-2.649l3.312-3.311l2.65 2.65l1.986-1.988l-3.642-3.642a1.405 1.405 0 0 0-1.987 0L.411 11.004a1.404 1.404 0 0 0 0 1.987l4.305 4.304l.993.993a1.405 1.405 0 0 0 1.987 0L19.285 6.7l-.993-.994Zm-.332 3.647l2.65 2.65l-4.306 4.305a1.404 1.404 0 1 0 1.986 1.986l5.299-5.298a1.404 1.404 0 0 0 0-1.987l-4.305-4.304z"/></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNFreshData" width="24" height="24" viewBox="0 0 14 14"><path fill="#000000" fill-rule="evenodd" d="M.127 1.85c0-.111.055-.283.294-.506c.241-.225.623-.456 1.148-.663C2.614.27 4.1 0 5.775 0c1.673 0 3.16.269 4.205.681c.525.207.907.438 1.148.663c.24.223.294.395.294.506c0 .111-.055.283-.294.506c-.24.225-.623.456-1.148.663c-1.045.412-2.532.68-4.205.68c-1.674 0-3.161-.268-4.206-.68C1.044 2.812.662 2.58.42 2.356C.18 2.133.126 1.961.126 1.85ZM11.55 3.61a5.75 5.75 0 0 1-1.11.57c-1.225.484-2.874.769-4.664.769c-1.79 0-3.44-.285-4.665-.769A5.747 5.747 0 0 1 0 3.611v2.585c.04.093.118.207.266.342c.248.226.643.458 1.183.666c1.076.414 2.605.683 4.326.683c.451 0 .89-.018 1.31-.053a1.87 1.87 0 0 1 .984-.156c.056-.208.152-.41.294-.598a1.91 1.91 0 0 1 .962-.655c.543-.17 1.117-.126 1.413-.09c.215.026.425.067.628.122a.89.89 0 0 0 .183-.262V3.611ZM1 8.371c1.181.454 2.75.733 4.461.764a1.875 1.875 0 0 0 .356 2.48c.04.214.096.424.166.628l-.208.002C2.585 12.245 0 11.135 0 9.77V7.888c.298.182.636.343 1 .482Zm12.403 2.377l.058.008a.625.625 0 0 1 .29 1.117l-.84.636a.625.625 0 0 1-.876-.122l-.635-.84a.625.625 0 0 1 .585-.997l.16.023a1.955 1.955 0 0 0-2.187-1.757a.625.625 0 0 1-.697-.543V8.27c-.03-.252.05-.42.192-.53a.622.622 0 0 1 .352-.165a3.19 3.19 0 0 1 .782 0a3.205 3.205 0 0 1 2.816 3.172ZM7.484 9.043a.625.625 0 0 1 .876.121l.635.841a.625.625 0 0 1-.584.996l-.161-.022a1.955 1.955 0 0 0 2.187 1.757a.625.625 0 1 1 .153 1.24a3.207 3.207 0 0 1-3.599-3.172l-.057-.008a.625.625 0 0 1-.29-1.118z" clip-rule="evenodd"/></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNSaveChange" width="24" height="24" viewBox="0 0 24 24"><path fill="#000000" d="M12 4a5 5 0 0 0-5 5v2H6c-.78 0-1.805.302-2.62.964C2.598 12.6 2 13.572 2 15c0 1.414.615 2.388 1.42 3.032c.836.67 1.866.968 2.58.968c.973 0 2.239-.015 3.263-.521c.485-.24.9-.585 1.203-1.097c.306-.517.534-1.27.534-2.382v-1.086l-1.5 1.5L8.086 14L12 10.086L15.914 14L14.5 15.414l-1.5-1.5V15c0 1.387-.286 2.51-.812 3.4a4.783 4.783 0 0 1-2.04 1.872C8.674 21 6.979 21 6.056 21H6c-1.168 0-2.638-.452-3.83-1.407C.943 18.613 0 17.086 0 15c0-2.072.903-3.6 2.12-4.589A6.447 6.447 0 0 1 5 9.093V9a7 7 0 0 1 14 0v.093a6.447 6.447 0 0 1 2.88 1.318C23.099 11.401 24 12.928 24 15c0 2.076-.907 3.614-2.205 4.607C20.529 20.575 18.93 21 17.5 21h-4v-2h4c1.07 0 2.221-.325 3.08-.982C21.407 17.386 22 16.424 22 15c0-1.428-.598-2.4-1.38-3.036C19.804 11.302 18.78 11 18 11h-1V9a5 5 0 0 0-5-5Z"/></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNPortfolioMan" width="24" height="24" viewBox="0 0 24 24"><path fill="#000000" d="M8 13.65V7q0-.425.288-.713T9 6h1q.425 0 .713.288T11 7v6.65l-.125-.125q-.575-.55-1.375-.55t-1.375.55L8 13.65Zm5 1.5V3q0-.425.288-.713T14 2h1q.425 0 .713.288T16 3v9.15l-3 3ZM3 18.6V11q0-.425.288-.713T4 10h1q.425 0 .713.288T6 11v4.6l-3 3Zm2.4 2.45q-.65 0-.913-.613T4.7 19.35l4.1-4.1q.275-.275.663-.3t.687.25L13 17.65l5.6-5.6H18q-.425 0-.713-.288T17 11.05q0-.425.288-.713T18 10.05h3q.425 0 .713.288t.287.712v3q0 .425-.288.713T21 15.05q-.425 0-.713-.288T20 14.05v-.6l-6.25 6.25q-.275.275-.663.3t-.687-.25L9.55 17.3L6.1 20.75q-.125.125-.312.213t-.388.087Z"/></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNSetting" width="24" height="24" viewBox="0 0 48 48"><path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M41.5 10h-6m-8-4v8m0-4h-22m8 14h-8m16-4v8m22-4h-22m20 14h-6m-8-4v8m0-4h-22"/></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNSignIn" width="24" height="24" viewBox="0 0 24 24"><path fill="#000000" d="M8 15h8v-.55q0-1.125-1.1-1.788T12 12q-1.8 0-2.9.663T8 14.45V15Zm4-4q.825 0 1.413-.588T14 9q0-.825-.588-1.413T12 7q-.825 0-1.413.588T10 9q0 .825.588 1.413T12 11ZM8 21v-2H4q-.825 0-1.413-.588T2 17V5q0-.825.588-1.413T4 3h16q.825 0 1.413.588T22 5v12q0 .825-.588 1.413T20 19h-4v2H8Zm-4-4h16V5H4v12Zm0 0V5v12Z"/></svg>        </div>
+
+        <!-- 右侧功能工具栏 -->
+        <div class="flex items-center space-x-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNDisplayTodos" width="22" height="22" viewBox="0 0 26 26"><path fill="#4b5563" d="M7.875 0a1 1 0 0 0-.656.375L3.812 4.656l-2.25-1.5A1.014 1.014 0 1 0 .438 4.844l3 2a1 1 0 0 0 1.344-.219l4-5A1 1 0 0 0 7.875 0zM12 3v2h14V3H12zM7.875 9a1 1 0 0 0-.656.375l-3.407 4.281l-2.25-1.5a1.014 1.014 0 1 0-1.125 1.688l3 2a1 1 0 0 0 1.344-.219l4-5A1 1 0 0 0 7.875 9zM12 12v2h14v-2H12zm-4.125 6a1 1 0 0 0-.656.375l-3.407 4.281l-2.25-1.5a1.014 1.014 0 1 0-1.125 1.688l3 2a1 1 0 0 0 1.344-.219l4-5A1 1 0 0 0 7.875 18zM12 21v2h14v-2H12z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNDisplayDailyTools" width="22" height="22" viewBox="0 0 24 24"><path fill="#4b5563" d="M18.29 5.706a1.405 1.405 0 0 0-1.987 0L4.716 17.296l1.324-2.65l-2.65-2.649l3.312-3.311l2.65 2.65l1.986-1.988l-3.642-3.642a1.405 1.405 0 0 0-1.987 0L.411 11.004a1.404 1.404 0 0 0 0 1.987l4.305 4.304l.993.993a1.405 1.405 0 0 0 1.987 0L19.285 6.7l-.993-.994Zm-.332 3.647l2.65 2.65l-4.306 4.305a1.404 1.404 0 1 0 1.986 1.986l5.299-5.298a1.404 1.404 0 0 0 0-1.987l-4.305-4.304z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNFreshData" width="22" height="22" viewBox="0 0 14 14"><path fill="#4b5563" fill-rule="evenodd" d="M.127 1.85c0-.111.055-.283.294-.506c.241-.225.623-.456 1.148-.663C2.614.27 4.1 0 5.775 0c1.673 0 3.16.269 4.205.681c.525.207.907.438 1.148.663c.24.223.294.395.294.506c0 .111-.055.283-.294.506c-.24.225-.623.456-1.148.663c-1.045.412-2.532.68-4.205.68c-1.674 0-3.161-.268-4.206-.68C1.044 2.812.662 2.58.42 2.356C.18 2.133.126 1.961.126 1.85ZM11.55 3.61a5.75 5.75 0 0 1-1.11.57c-1.225.484-2.874.769-4.664.769c-1.79 0-3.44-.285-4.665-.769A5.747 5.747 0 0 1 0 3.611v2.585c.04.093.118.207.266.342c.248.226.643.458 1.183.666c1.076.414 2.605.683 4.326.683c.451 0 .89-.018 1.31-.053a1.87 1.87 0 0 1 .984-.156c.056-.208.152-.41.294-.598a1.91 1.91 0 0 1 .962-.655c.543-.17 1.117-.126 1.413-.09c.215.026.425.067.628.122a.89.89 0 0 0 .183-.262V3.611ZM1 8.371c1.181.454 2.75.733 4.461.764a1.875 1.875 0 0 0 .356 2.48c.04.214.096.424.166.628l-.208.002C2.585 12.245 0 11.135 0 9.77V7.888c.298.182.636.343 1 .482Zm12.403 2.377l.058.008a.625.625 0 0 1 .29 1.117l-.84.636a.625.625 0 0 1-.876-.122l-.635-.84a.625.625 0 0 1 .585-.997l.16.023a1.955 1.955 0 0 0-2.187-1.757a.625.625 0 0 1-.697-.543V8.27c-.03-.252.05-.42.192-.53a.622.622 0 0 1 .352-.165a3.19 3.19 0 0 1 .782 0a3.205 3.205 0 0 1 2.816 3.172ZM7.484 9.043a.625.625 0 0 1 .876.121l.635.841a.625.625 0 0 1-.584.996l-.161-.022a1.955 1.955 0 0 0 2.187 1.757a.625.625 0 1 1 .153 1.24a3.207 3.207 0 0 1-3.599-3.172l-.057-.008a.625.625 0 0 1-.29-1.118z" clip-rule="evenodd"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNSaveChange" width="22" height="22" viewBox="0 0 24 24"><path fill="#4b5563" d="M12 4a5 5 0 0 0-5 5v2H6c-.78 0-1.805.302-2.62.964C2.598 12.6 2 13.572 2 15c0 1.414.615 2.388 1.42 3.032c.836.67 1.866.968 2.58.968c.973 0 2.239-.015 3.263-.521c.485-.24.9-.585 1.203-1.097c.306-.517.534-1.27.534-2.382v-1.086l-1.5 1.5L8.086 14L12 10.086L15.914 14L14.5 15.414l-1.5-1.5V15c0 1.387-.286 2.51-.812 3.4a4.783 4.783 0 0 1-2.04 1.872C8.674 21 6.979 21 6.056 21H6c-1.168 0-2.638-.452-3.83-1.407C.943 18.613 0 17.086 0 15c0-2.072.903-3.6 2.12-4.589A6.447 6.447 0 0 1 5 9.093V9a7 7 0 0 1 14 0v.093a6.447 6.447 0 0 1 2.88 1.318C23.099 11.401 24 12.928 24 15c0 2.076-.907 3.614-2.205 4.607C20.529 20.575 18.93 21 17.5 21h-4v-2h4c1.07 0 2.221-.325 3.08-.982C21.407 17.386 22 16.424 22 15c0-1.428-.598-2.4-1.38-3.036C19.804 11.302 18.78 11 18 11h-1V9a5 5 0 0 0-5-5Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="btnOutpost" id="idBTNSetting" width="22" height="22" viewBox="0 0 48 48"><path fill="none" stroke="#4b5563" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M41.5 10h-6m-8-4v8m0-4h-22m8 14h-8m16-4v8m22-4h-22m20 14h-6m-8-4v8m0-4h-22"/></svg>
+        </div>
     </header>
 
-    <div class="flex flex-1 overflow-hidden">
-        <!-- 左侧导航栏 -->
-        <aside class="sidebar bg-white shadow-md px-2 py-2 overflow-y-auto relative" id="sidebar">            
-            <div style="height:100%;overflow-y: hidden; display: flex;flex-direction: column;">
-                <h3 class="text-md font-medium text-gray-600 flex items-center justify-between" style="height:30px;">
-                    <input type="text" placeholder="搜索目录..." class="w-full px-2 border rounded-lg focus:outline-none  focus:ring-blue-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" id="idBTNSearchCategory" width="20" height="20" viewBox="0 0 26 26"><path fill="#000000" d="M10 .188A9.812 9.812 0 0 0 .187 10A9.812 9.812 0 0 0 10 19.813c2.29 0 4.393-.811 6.063-2.125l.875.875a1.845 1.845 0 0 0 .343 2.156l4.594 4.625c.713.714 1.88.714 2.594 0l.875-.875a1.84 1.84 0 0 0 0-2.594l-4.625-4.594a1.824 1.824 0 0 0-2.157-.312l-.875-.875A9.812 9.812 0 0 0 10 .188zM10 2a8 8 0 1 1 0 16a8 8 0 0 1 0-16zM4.937 7.469a5.446 5.446 0 0 0-.812 2.875a5.46 5.46 0 0 0 5.469 5.469a5.516 5.516 0 0 0 3.156-1a7.166 7.166 0 0 1-.75.03a7.045 7.045 0 0 1-7.063-7.062c0-.104-.005-.208 0-.312z"/></svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" id="add-node-btn" width="20" height="20" viewBox="0 0 24 24"><mask id="lineMdFolderPlus0"><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="64" stroke-dashoffset="64" d="M12 7h8c0.55 0 1 0.45 1 1v10c0 0.55 -0.45 1 -1 1h-16c-0.55 0 -1 -0.45 -1 -1v-11Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0"/></path><path d="M12 7h-9v0c0 0 0.45 0 1 0h6z" opacity="0"><animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s" values="M12 7h-9v0c0 0 0.45 0 1 0h6z;M12 7h-9v-1c0 -0.55 0.45 -1 1 -1h6z"/><set fill="freeze" attributeName="opacity" begin="0.6s" to="1"/></path><path fill="#000" fill-opacity="0" stroke="none" d="M19 13c3.31 0 6 2.69 6 6c0 3.31 -2.69 6 -6 6c-3.31 0 -6 -2.69 -6 -6c0 -3.31 2.69 -6 6 -6Z"><set fill="freeze" attributeName="fill-opacity" begin="0.8s" to="1"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M16 19h6"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.8s" dur="0.2s" values="8;0"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M19 16v6"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1s" dur="0.2s" values="8;0"/></path></g></mask><rect width="24" height="24" fill="currentColor" mask="url(#lineMdFolderPlus0)"/></svg>
-                </h3>
-                <div id="directory-tree" class="mt-2" style="overflow-y: auto; flex-grow: 1;"><!-- 目录树将通过JS动态生成 --></div>
-            </div>
-            
-            <!-- 调整宽度的拖拽手柄 -->
-            <div class="resize-handle absolute top-0 right-0 h-full" id="resize-handle"></div>
-        </aside>
-
-        <!-- 右侧内容展示区 -->
-        <main class="flex-1 bg-gray-50 p-6 overflow-y-auto" id="main-content">
-            <div class="mx-auto">
-                <div class="rounded-xl shadow-sm p-6" style="background-color: #f5f7fb;">
-                    <div class="flex items-center mb-6" style="display:none">
-                        <h2 class="text-2xl font-bold text-gray-800" id="idCurrentFolderTitle">应用快门</h2>
-                        <span class="ml-2 text-sm text-gray-500" id="items-count">5</span>
-                        <div class="canvasDailyToolbar">
-                            <svg xmlns="http://www.w3.org/2000/svg" id="idBTNPlusBookmark" width="24" height="24" viewBox="0 0 32 32"><path fill="#000000" d="M24 16v10.752l-7.096-3.59l-.904-.457l-.9.456L8 26.748V4h10V2H8a2 2 0 0 0-2 2v26l10-5.054L26 30V16Z"/><path fill="#000000" d="M26 6V2h-2v4h-4v2h4v4h2V8h4V6h-4z"/></svg>
-                           
-                            <svg xmlns="http://www.w3.org/2000/svg" id="idBTNPlusDailyTool" class="canvasToolbarBTN" width="18" height="18" viewBox="0 0 16 16" fill="#000000"><g fill="#000000"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/><path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4zM8 8a.5.5 0 0 1 .5.5V10H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V11H6a.5.5 0 0 1 0-1h1.5V8.5A.5.5 0 0 1 8 8z"/></g></svg>
-                            
-                        </div>
+    <!-- 主展示区：全宽应用导航桌面 -->
+    <main class="flex-1 bg-gray-50 p-6 overflow-y-auto" id="main-content">
+        <div class="max-w-7xl mx-auto">
+            <div class="rounded-2xl shadow-sm p-6" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                <!-- 顶栏状态与项目计数 -->
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <h2 class="text-xl font-bold text-gray-800" id="idCurrentFolderTitle">智能工作台</h2>
+                        <span class="text-xs font-semibold text-gray-400 bg-gray-200/60 px-2 py-0.5 rounded-full" id="items-count"></span>
                     </div>
-
-                    <!-- 应用快门 多 Tab 标签栏 -->
-                    <div id="idAppShutterTabBar" class="app-shutter-tabs noShow"></div>
-                    
-                    <!-- 智能工作台与文件列表区域 -->
-                    <div id="idFolderContents" class="w-full min-w-0"></div>
                 </div>
-            </div>
-        </main>
-    </div>
 
-    <!-- 添加节点的模态框 -->
-    <div class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden" id="add-node-modal">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">添加新节点</h3>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="node-name">
-                    节点名称
-                </label>
-                <input type="text" id="node-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div class="flex justify-end space-x-3">
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded" id="cancel-add">
-                    取消
-                </button>
-                <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" id="confirm-add">
-                    确认添加
-                </button>
+                <!-- 应用分类 Tab 标签栏 -->
+                <div id="idAppShutterTabBar" class="app-shutter-tabs"></div>
+                
+                <!-- 桌面内容区域（智能工作台网格 / 应用卡片网格） -->
+                <div id="idFolderContents" class="w-full min-w-0"></div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- 添加节点的模态框 -->
-    <div class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden" id="add-DailyTool-modal">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">添加新节点</h3>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="node-name">
-                    节点名称
-                </label>
-                <input type="text" id="node-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div class="flex justify-end space-x-3">
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded" id="cancel-add">
-                    取消
-                </button>
-                <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" id="confirm-add">
-                    确认添加
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 删除确认模态框 -->
-    <div class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden" id="delete-node-modal">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">确认删除</h3>
-            <p class="text-gray-600 mb-6" id="delete-confirm-msg">确定要删除这个节点吗？此操作不可撤销。</p>
-            <div class="flex justify-end space-x-3">
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded" id="cancel-delete">
-                    取消
-                </button>
-                <button class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" id="confirm-delete">
-                    确认删除
-                </button>
-            </div>
-        </div>
-    </div>
-
+    <!-- 基础依赖库 -->
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
@@ -773,957 +601,215 @@
     <script src="./js/widgets/WeatherWidget.js"></script>
     <script src="./js/widgets/TreasuryYieldsWidget.js"></script>
     <script src="./js/SmartWorkbench.js"></script>
-    <script src="./js/list.min.js"></script>
     <script src="./js/modalFactoryV2.js"></script>
+
     <script>
         function formatDateYYYYMMDD(date) {
-            let cDate = new Date(date) ;
+            if (!date) return '';
+            let cDate = new Date(date);
             const year = cDate.getFullYear();
             const month = String(cDate.getMonth() + 1).padStart(2, '0');
             const day = String(cDate.getDate()).padStart(2, '0');
-            return `${year}${month}${day}`;
+            return `${year}-${month}-${day}`;
         }
 
-        // 颜色方案
+        // 卡片色彩预设
         const colorSchemes = {
             vibrant: [
-                "#FF6B6B", "#4ECDC4", "#FFD166", "#06D6A0", 
-                "#118AB2", "#EF476F", "#7209B7", "#3A86FF"
-            ],
-            pastel: [
-                "#FFADAD", "#9BF6FF", "#CAFFBF", "#FDFFB6",
-                "#A0C4FF", "#BDB2FF", "#FFC6FF", "#FFFFFC"
-            ],
-            monochromatic: [
-                "#4361EE", "#4895EF", "#4CC9F0", "#3F37C9",
-                "#3A0CA3", "#480CA8", "#560BAD", "#7209B7"
+                "#4F46E5", "#0EA5E9", "#10B981", "#F59E0B", 
+                "#EF4444", "#8B5CF6", "#EC4899", "#06B6D4"
             ]
         };
 
-        // 生成随机颜色
-        function getRandomColor(scheme) {
-            if (scheme === "random") {
-                // 生成完全随机颜色
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-            } else {
-                // 从预定义方案中选择颜色
-                const colors = colorSchemes[scheme];
-                return colors[Math.floor(Math.random() * colors.length)];
-            }
+        function getRandomColor(scheme = "vibrant") {
+            const colors = colorSchemes[scheme] || colorSchemes.vibrant;
+            return colors[Math.floor(Math.random() * colors.length)];
         }
 
-        // 从URL提取域名并生成图标文本
-        function getIconText(url, mode) {
+        // 从 URL 提取缩写文本用于图标展示
+        function getIconText(url, mode = "first-two") {
             try {
-                const domain = new URL(url).hostname.replace('www.', '');
+                if (!url) return "APP";
+                const domain = new URL(url.startsWith('http') ? url : `https://${url}`).hostname.replace('www.', '');
                 const parts = domain.split('.');
-                const mainDomain = parts[0];
+                const mainDomain = parts[0] || "APP";
                 
                 switch(mode) {
                     case "first-letter":
                         return mainDomain.charAt(0).toUpperCase();
                     case "first-two":
                         return mainDomain.substring(0, 2).toUpperCase();
-                    case "domain":
-                        // 取域名前两个字母或整个短域名
-                        return mainDomain.length <= 3 ? 
-                            mainDomain.toUpperCase() : 
-                            mainDomain.substring(0, 2).toUpperCase();
                     default:
-                        return mainDomain.charAt(0).toUpperCase();
+                        return mainDomain.substring(0, 2).toUpperCase();
                 }
             } catch (e) {
-                return "?";
+                return "AP";
             }
         }
     </script>
+
     <script>
-        // 当前选中的节点
-        let selectedNode = null;
-        let nodeToDelete = null;
+        /**
+         * 渲染单个应用卡片
+         */
+        function _renderDailyTool(jsonTool, tagContainer) {
+            if (!jsonTool) return;
+            const toolUrl = (jsonTool.data && jsonTool.data.url) ? jsonTool.data.url : (jsonTool.url || '');
+            const toolMemo = (jsonTool.data && jsonTool.data.hasOwnProperty("memo")) ? jsonTool.data.memo : (jsonTool.memo || '');
+            const toolTitle = jsonTool.title || '未命名应用';
 
+            let tagTool = document.createElement('div');
+            tagTool.classList.add('bookmark-card');
+            tagTool.dataset.toolID = jsonTool.id || '';
+            tagTool.dataset.url = toolUrl;
 
-        // 目录树渲染功能
-        function renderTree(data, parentElement, level = 0) {
-            data.forEach(item => {
-                const hasChildren = item.children && item.children.length > 0;
-                
-                const nodeElement = document.createElement('div');
-                nodeElement.className = 'tree-node';
-                nodeElement.dataset.id = item.id;
-                nodeElement.draggable = true;
-                
-                // 所有节点都显示为文件夹图标
-                nodeElement.innerHTML = `
-                    <div class="node-content px-2 rounded-lg flex items-center hover:bg-gray-100 group">
-                        <span class="toggle-icon mr-2 text-gray-500 ${hasChildren ? '' : 'invisible'}">
-                            <i class="fas fa-caret-right"></i>
-                        </span>
-                        <i class="fas fa-folder text-yellow-500 mr-2"></i>
-                        <span class="text-gray-700 flex-grow" style="font-size:18px;">${item.name}</span>
-                        <div class="node-actions flex">
-                            <i class="fas fa-times text-red-400 hover:text-red-600 ml-2 delete-node" title="删除节点"></i>
-                        </div>
-                    </div>
-                    ${hasChildren ? `<div class="tree-children ${level > 0 ? 'pl-4' : ''}"></div>` : ''}
-                `;
-
-                
-                parentElement.appendChild(nodeElement);
-                
-                // 添加展开/折叠功能
-                const toggleIcon = nodeElement.querySelector('.toggle-icon');
-                const childrenContainer = nodeElement.querySelector('.tree-children');
-                
-                if (hasChildren && childrenContainer) {
-                    let expanded = false;
-                    
-                    toggleIcon.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        expanded = !expanded;
-                        
-                        if (expanded) {
-                            childrenContainer.style.display = 'block';
-                            toggleIcon.innerHTML = '<i class="fas fa-caret-down"></i>';
-                            renderTree(item.children, childrenContainer, level + 1);
-                        } else {
-                            childrenContainer.style.display = 'none';
-                            toggleIcon.innerHTML = '<i class="fas fa-caret-right"></i>';
-                            childrenContainer.innerHTML = '';
-                        }
-                    });
+            let stringTags = '';
+            if (jsonTool.hasOwnProperty("tags") && Array.isArray(jsonTool.tags) && jsonTool.tags.length > 0) {
+                for (let i = 0; i < jsonTool.tags.length; i++) {
+                    stringTags += `<span>${jsonTool.tags[i]}</span>`;
                 }
-                
-                // 添加点击事件
-                const nodeContent = nodeElement.querySelector('.node-content');
-                nodeContent.addEventListener('click', () => {
-                    document.querySelectorAll('.node-content').forEach(el => {
-                        el.classList.remove('bg-blue-100', 'font-semibold');
-                    });
-                    nodeContent.classList.add('bg-blue-100', 'font-semibold');
-                    
-                    // 更新当前选中的节点
-                    selectedNode = item;
-                    
-                    // 显示文件夹内容
-                    displayFolderContents(item);
-
-                    let tagCurrentFolder = document.querySelector(".selectedFolder") ;
-                    if(tagCurrentFolder == nodeElement) return ;
-
-                    if(tagCurrentFolder!=null)tagCurrentFolder.classList.remove("selectedFolder") ;
-                    nodeElement.classList.add('selectedFolder') ;
-                });
-                
-                // 添加删除节点事件
-                const deleteBtn = nodeElement.querySelector('.delete-node');
-                deleteBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    nodeToDelete = item;
-                    showDeleteModal();
-                });
-                
-                // 添加拖拽事件
-                nodeElement.addEventListener('dragstart', handleDragStart);
-                nodeElement.addEventListener('dragover', handleDragOver);
-                nodeElement.addEventListener('dragenter', handleDragEnter);
-                nodeElement.addEventListener('dragleave', handleDragLeave);
-                nodeElement.addEventListener('drop', handleDrop);
-                nodeElement.addEventListener('dragend', handleDragEnd);
-            });
-        }
-
-        // 显示文件夹内容
-        function displayFoldersInFolder(folder) {
-            const folderContents = document.getElementById('idFolderContents');
-            const currentFolder = document.getElementById('idCurrentFolderTitle');
-            
-            // 更新标题
-            currentFolder.textContent = folder.name;
-            
-            // 清空内容区域
-            folderContents.innerHTML = '';
-            
-            // 检查文件夹是否为空
-            if (!folder.children || folder.children.length === 0) {
-                folderContents.innerHTML = `
-                    <div class="text-center py-12">
-                        <i class="fas fa-folder-open text-5xl text-gray-300 mb-4"></i>
-                        <p class="text-gray-500 text-lg">此文件夹为空</p>
-                    </div>
-                `;
-                document.getElementById('items-count').textContent = '(0 个项目)';
-                return;
             }
-            
-            // 显示项目数量
-            const itemsCount = folder.children.length;
-            document.getElementById('items-count').textContent = `(${itemsCount} 个项目)`;
-            
-            // 创建文件列表容器
-            const fileList = document.createElement('div');
-            fileList.className = 'bg-gray-50 rounded-lg p-4';
-            
-            // 添加标题
-            const title = document.createElement('h3');
-            title.className = 'text-lg font-semibold text-gray-700 mb-4';
-            title.textContent = '内容';
-            fileList.appendChild(title);
-            
-            // 添加文件和文件夹项目
-            folder.children.forEach(item => {
-                const isFolder = item.type === 'folder';
-                
-                const itemElement = document.createElement('div');
-                itemElement.className = 'file-item flex items-center py-3 px-4 border-b border-gray-200 last:border-b-0';
-                
-                itemElement.innerHTML = `
-                    <i class="fas ${isFolder ? 'fa-folder text-yellow-500' : 'fa-file text-blue-400'} mr-3"></i>
-                    <span class="text-gray-700 flex-grow">${item.name}</span>
-                    <span class="text-xs text-gray-500">${isFolder ? '文件夹' : '文件'}</span>
-                `;
-                
-                // 添加点击事件（如果是文件夹）
-                if (isFolder) {
-                    itemElement.style.cursor = 'pointer';
-                    itemElement.addEventListener('click', () => {
-                        // 在目录树中找到并高亮对应的节点
-                        highlightTreeNode(item.id);
-                        // 显示文件夹内容
-                        displayFolderContents(item);
-                    });
-                }
-                
-                fileList.appendChild(itemElement);
-            });
-            
-            folderContents.appendChild(fileList);
-        }
 
-        const callbackPlusBookmark = (formData)=>{
-            let jsonBookmark = {
-                id:crypto.randomUUID(),
-                type:"Gateway.Bookmark",
-                title:formData.title,
-                url:formData.url,
-                userID:'alexszhang'
-            } ;
-            plusBookmark2Folder(jsonBookmark,selectedNode) ;
-            //_renderDailyTool(jsonTool,tagToolsContainer) ;
-            //displayFolderContents(selectedNode) ;
-            let tagCanvas = document.querySelector("#idFolderContents");
-            renderBookmark(jsonBookmark,tagCanvas) ;
-        } ;
-
-        function displayFolderContents(folder) {
-            const tabBar = document.getElementById('idAppShutterTabBar');
-            if (tabBar) tabBar.classList.add('noShow');
-            const folderContents = document.getElementById('idFolderContents');
-            folderContents.className = "bookmarks-grid grid-view";
-            const currentFolder = document.getElementById('idCurrentFolderTitle');
-            let tagBTNPlusBookmark = document.getElementById("idBTNPlusBookmark") ;
-            tagBTNPlusBookmark.classList.remove('noShow') ;
-            let tagBTNPlusDailyTool = document.getElementById("idBTNPlusDailyTool") ;
-            tagBTNPlusDailyTool.classList.add('noShow') ;
-            //let tagBookmarks = document.
-            console.log(folder) ;
-            // 更新标题
-            currentFolder.textContent = folder.name;
-            // 清空内容区域
-            folderContents.innerHTML = `
-                <!---
-                <div id="idBookmarkList"></div>
-                -->
-            `;
-            let bookmarksInFolder = fetchFolderBookmarks(folder) ;
-            console.log(bookmarksInFolder) ;
-            bookmarksInFolder.forEach(bookmark=>{
-                renderBookmark(bookmark,folderContents) ;
-            }) ;
-
-            
-            document.querySelector("#idBTNPlusBookmark").addEventListener('click',(event)=>{
-                const bookmarkSchema = [
-                    { "name": "title", "type": "string", "placeholder": "书签标题" },
-                    { "name": "url", "type": "string", "placeholder": "https://..." }
-                ];
-                const bookmarkCallbacks = {
-                    onConfirm: callbackPlusBookmark,
-                    onCancel: () => {
-                        console.log("用户取消了操作。");
-                    }
-                };
-                createFormModal('新建书签', bookmarkSchema, bookmarkCallbacks);
-            }) ;
-        }
-
-        function renderBookmark(bookmark,tagContainer){
             const color = getRandomColor("vibrant");
-            const iconText = getIconText(bookmark.url, "first-two");
+            const iconText = getIconText(toolUrl, "first-two");
 
-            let tagBookmark = document.createElement('div') ;
-            tagBookmark.classList.add("bookmarkItem")
-            tagBookmark.dataset.dataID = bookmark.id ;
-            tagContainer.appendChild(tagBookmark) ;
-
-
-            let stringBookmarks = '' ;
-            if(bookmark.hasOwnProperty("tags")){
-                for(let i=0;i<bookmark.tags.length;i++){
-                    stringBookmarks = stringBookmarks + `<span>${bookmark.tags[i]}</span>`
-                }
-            }else{
-                stringBookmarks = `<span>没有标签</span>` ;
-            }
-
-            tagBookmark.innerHTML = `
-                    <div class="bookmark-header">
-                        <div class="bookmark-favicon" style="background-color: ${color};">${iconText}</div>
-                        <div class="bookmark-info">
-                            <div class="bookmark-title">${bookmark.title}</div>
-                            <div class="bookmark-url">${bookmark.url.replace(/^https?:\/\//, '')}</div>
-                        </div>
-                        <div class="bookmark-actions">
-                            <button><i class="fas fa-star"></i></button>
-                            <button><i class="fas fa-ellipsis-v"></i></button>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="bmActionRemove" width="14" height="14" viewBox="0 0 16 16"><path fill="#000000" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1l-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg>
-
-                        </div>
+            tagTool.innerHTML = `
+                <div class="bookmark-header">
+                    <div class="bookmark-favicon" style="background-color: ${color};">${iconText}</div>
+                    <div class="bookmark-info">
+                        <div class="bookmark-title" title="${toolTitle}">${toolTitle}</div>
+                        <div class="bookmark-url" title="${toolUrl}">${toolUrl.replace(/^https?:\/\//, '')}</div>
                     </div>
-                    <div class="bookmark-description">${bookmark.hasOwnProperty("memo")?bookmark.memo:"memo"}</div>
-                    <div class="bookmark-footer">
-                        <div class="bookmark-date">${bookmark.hasOwnProperty("date")?formatDateYYYYMMDD(bookmark.date):"date TBD"}</div>
-                        <div class="bookmark-tags">
-                            ${stringBookmarks}
-                        </div>
+                    <div class="bookmark-actions">
+                        <button class="btnMetaEditor" title="编辑应用信息"><i class="fas fa-edit"></i></button>
+                        <button class="bmActionRemove text-red-400 hover:text-red-600" title="移除应用"><i class="fas fa-trash-alt"></i></button>
                     </div>
-                `;
-            tagBookmark.classList.add('bookmark-card') ;
-            tagContainer.appendChild(tagBookmark) ;
-            
-            tagBookmark.querySelector('.bmActionRemove').addEventListener('click',async (event)=>{
-                event.stopPropagation() ;
-                event.preventDefault() ;
-                await removeBookmark(tagBookmark.dataset.dataID) ;
-                tagBookmark.remove() ;
-            }) ;
-            tagBookmark.addEventListener('click',(event)=>{
-                window.open(bookmark.url,"_blank") ;
-
-            }) ;
-        }
-
-        // 高亮目录树中的节点
-        function highlightTreeNode(nodeId) {
-            // 清除所有高亮
-            document.querySelectorAll('.node-content').forEach(el => {
-                el.classList.remove('bg-blue-100', 'font-semibold');
-            });
-            
-            // 找到对应节点并高亮
-            const nodeElement = document.querySelector(`.tree-node[data-id="${nodeId}"]`);
-            if (nodeElement) {
-                const nodeContent = nodeElement.querySelector('.node-content');
-                nodeContent.classList.add('bg-blue-100', 'font-semibold');
-                
-                // 确保节点可见（展开父节点）
-                let parent = nodeElement.parentElement;
-                while (parent && parent.classList.contains('tree-children')) {
-                    const parentNode = parent.previousElementSibling;
-                    if (parentNode) {
-                        const toggleIcon = parentNode.querySelector('.toggle-icon');
-                        if (toggleIcon && !toggleIcon.classList.contains('invisible')) {
-                            const childrenContainer = parentNode.nextElementSibling;
-                            if (childrenContainer.style.display === 'none') {
-                                toggleIcon.click();
-                            }
-                        }
-                    }
-                    parent = parent.parentElement;
-                }
-                
-                // 滚动到节点位置
-                nodeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }
-
-        // 显示添加节点模态框
-        function showAddModal() {
-            /*
-            if (!selectedNode) {
-                alert('请先选择一个节点作为父节点');
-                return;
-            }
-            */
-            document.getElementById('add-node-modal').classList.remove('hidden');
-            document.getElementById('node-name').value = '';
-            document.getElementById('node-name').focus();
-        }
-
-        // 隐藏添加节点模态框
-        function hideAddModal() {
-            document.getElementById('add-node-modal').classList.add('hidden');
-        }
-
-        // 显示删除确认模态框
-        function showDeleteModal() {
-            if (!nodeToDelete) return;
-            
-            const hasChildren = nodeToDelete.children && nodeToDelete.children.length > 0;
-            
-            if (hasChildren) {
-                document.getElementById('delete-confirm-msg').textContent = 
-                    '该节点包含子节点，无法删除。请先删除所有子节点。';
-                document.getElementById('confirm-delete').disabled = true;
-                document.getElementById('confirm-delete').classList.add('opacity-50');
-            } else {
-                document.getElementById('delete-confirm-msg').textContent = 
-                    '确定要删除这个节点吗？此操作不可撤销。';
-                document.getElementById('confirm-delete').disabled = false;
-                document.getElementById('confirm-delete').classList.remove('opacity-50');
-            }
-            
-            document.getElementById('delete-node-modal').classList.remove('hidden');
-        }
-
-        // 隐藏删除确认模态框
-        function hideDeleteModal() {
-            document.getElementById('delete-node-modal').classList.add('hidden');
-            nodeToDelete = null;
-        }
-
-        // 添加新节点
-        function addNewNode() {
-            const nodeName = document.getElementById('node-name').value.trim();
-            if (!nodeName) {
-                alert('请输入节点名称');
-                return;
-            }
-            
-            let jsonFolder={
-                id:crypto.randomUUID(),
-                name:nodeName,
-                type:'folder',
-                children: []
-            } ;
-            if (!selectedNode) {
-                plusFolderatRoot(jsonFolder);
-            }else{
-                // 生成唯一ID
-                plusFolder2Folder(jsonFolder,selectedNode) ;
-            }
-            
-            // 重新渲染目录树
-            const treeContainer = document.getElementById('directory-tree');
-            treeContainer.innerHTML = '';
-            renderTree(gFolderTree, treeContainer);
-            
-            // 隐藏模态框
-            hideAddModal();
-            
-            // 更新内容显示
-            displayFolderContents(selectedNode);
-        }
-
-        // 删除节点
-        function deleteNode() {
-            if (!nodeToDelete) return;
-            
-            // 检查是否有子节点
-            const hasChildren = nodeToDelete.children && nodeToDelete.children.length > 0;
-            if (hasChildren) {
-                alert('无法删除包含子节点的节点');
-                hideDeleteModal();
-                return;
-            }
-            removeFolderFromForest(nodeToDelete.id);
-            
-            // 重新渲染目录树
-            const treeContainer = document.getElementById('directory-tree');
-            treeContainer.innerHTML = '';
-            renderTree(gFolderTree, treeContainer);
-            
-            // 隐藏模态框
-            hideDeleteModal();
-            
-            // 清除当前选中节点
-            selectedNode = null;
-            
-            
-            // 重置内容显示
-            document.getElementById('idCurrentFolderTitle').textContent = '内容展示区域';
-            document.getElementById('items-count').textContent = '';
-            document.getElementById('idFolderContents').innerHTML = "" ;
-        }
-
-        // 拖拽相关变量
-        let draggedItem = null;
-
-        // 拖拽事件处理函数
-        function handleDragStart(e) {
-            draggedItem = this;
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/plain', this.dataset.id);
-            this.classList.add('dragging');
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            return false;
-        }
-
-        function handleDragEnter(e) {
-            this.classList.add('drag-over');
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            this.classList.remove('drag-over');
-            
-            if (draggedItem !== this) {
-                // 检查是否是兄弟节点（简单实现，实际应用中需要更复杂的验证）
-                const parent = this.parentElement;
-                if (parent === draggedItem.parentElement) {
-                    // 获取所有兄弟节点
-                    const siblings = Array.from(parent.children);
-                    const thisIndex = siblings.indexOf(this);
-                    const draggedIndex = siblings.indexOf(draggedItem);
-                    
-                    if (draggedIndex < thisIndex) {
-                        parent.insertBefore(draggedItem, this.nextSibling);
-                    } else {
-                        parent.insertBefore(draggedItem, this);
-                    }
-                }
-            }
-            
-            return false;
-        }
-
-        function handleDragEnd(e) {
-            this.classList.remove('dragging');
-            document.querySelectorAll('.tree-node').forEach(node => {
-                node.classList.remove('drag-over');
-            });
-        }
-
-        // 调整侧边栏宽度功能
-        function initResizeHandler() {
-            const resizeHandle = document.getElementById('resize-handle');
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('main-content');
-            
-            let isResizing = false;
-            
-            resizeHandle.addEventListener('mousedown', (e) => {
-                isResizing = true;
-                resizeHandle.classList.add('active');
-                document.body.style.cursor = 'col-resize';
-                document.body.style.userSelect = 'none';
-                e.preventDefault();
-            });
-            
-            document.addEventListener('mousemove', (e) => {
-                if (!isResizing) return;
-                
-                const containerRect = sidebar.parentElement.getBoundingClientRect();
-                const widthPercentage = ((e.clientX - containerRect.left) / containerRect.width) * 100;
-                
-                // 设置最小和最大宽度限制
-                const newWidth = Math.max(20, Math.min(80, widthPercentage));
-                
-                sidebar.style.width = `${newWidth}%`;
-                mainContent.style.width = `${100 - newWidth}%`;
-            });
-            
-            document.addEventListener('mouseup', () => {
-                if (isResizing) {
-                    isResizing = false;
-                    resizeHandle.classList.remove('active');
-                    document.body.style.cursor = '';
-                    document.body.style.userSelect = '';
-                }
-            });
-        }
-
-        // 切换左侧导航栏展开/收起状态
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('main-content');
-            if (!sidebar) return;
-
-            const isCollapsed = sidebar.classList.toggle('collapsed');
-            if (isCollapsed) {
-                if (mainContent) mainContent.style.width = '100%';
-                localStorage.setItem('sidebarCollapsed', 'true');
-            } else {
-                sidebar.style.width = '';
-                if (mainContent) mainContent.style.width = '';
-                localStorage.setItem('sidebarCollapsed', 'false');
-            }
-        }
-
-
-        // 初始化应用
-        document.addEventListener('DOMContentLoaded', async () => {
-            const treeContainer = document.getElementById('directory-tree');
-            await asyncLoadAppData() ;
-            // 渲染目录树
-            renderTree(gFolderTree, treeContainer);
-            
-            // 初始化调整宽度功能
-            initResizeHandler();
-            
-            // 添加搜索功能
-            const searchInput = document.querySelector('input[type="text"]');
-            searchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                document.querySelectorAll('.node-content').forEach(node => {
-                    const nodeText = node.textContent.toLowerCase();
-                    const treeNode = node.closest('.tree-node');
-                    
-                    if (nodeText.includes(searchTerm)) {
-                        treeNode.style.display = 'block';
-                        // 展开父节点
-                        let parent = treeNode.parentElement;
-                        while (parent && parent.classList.contains('tree-children')) {
-                            const parentNode = parent.previousElementSibling;
-                            if (parentNode) {
-                                const toggleIcon = parentNode.querySelector('.toggle-icon');
-                                if (toggleIcon && !toggleIcon.classList.contains('invisible')) {
-                                    const childrenContainer = parentNode.nextElementSibling;
-                                    if (childrenContainer.style.display === 'none') {
-                                        toggleIcon.click();
-                                    }
-                                }
-                            }
-                            parent = parent.parentElement;
-                        }
-                    } else {
-                        treeNode.style.display = 'none';
-                    }
-                });
-            });
-            
-            // 添加节点按钮事件
-            document.getElementById('add-node-btn').addEventListener('click', showAddModal);
-            
-            // 模态框按钮事件
-            document.getElementById('cancel-add').addEventListener('click', hideAddModal);
-            document.getElementById('confirm-add').addEventListener('click', addNewNode);
-            document.getElementById('cancel-delete').addEventListener('click', hideDeleteModal);
-            document.getElementById('confirm-delete').addEventListener('click', deleteNode);
-            
-            // 按ESC键关闭模态框
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    hideAddModal();
-                    hideDeleteModal();
-                }
-            });
-
-            // 恢复侧边栏展开/收起状态
-            if (localStorage.getItem('sidebarCollapsed') === 'true') {
-                const sidebar = document.getElementById('sidebar');
-                const mainContent = document.getElementById('main-content');
-                if (sidebar) sidebar.classList.add('collapsed');
-                if (mainContent) mainContent.style.width = '100%';
-            }
-
-            document.getElementById('idBTNToggleSidebar').addEventListener('click', toggleSidebar);
-
-            displayDailyTools() ;
-
-            tippy('#idBTNToggleSidebar', {content: '展开/收起侧边栏!'});
-            tippy('#idBTNDisplayDailyTools', {content: '应用快门!'});
-            tippy('#idBTNSaveChange', {content: '保存数据!'});
-            tippy('#idBTNFreshData', {content: '下载数据!'});
-            tippy('#idBTNSetting', {content: '系统设置!'});
-
-            // 监听后台 Web Worker 的数据同步推送，有变动时更新 DOM
-            window.addEventListener('appDataUpdated', () => {
-                const treeContainer = document.getElementById('directory-tree');
-                if (treeContainer) {
-                    treeContainer.innerHTML = '';
-                    renderTree(gFolderTree, treeContainer);
-                }
-                const currentFolderTitle = document.getElementById('idCurrentFolderTitle');
-                if (currentFolderTitle && (currentFolderTitle.textContent === "智能工作台" || currentFolderTitle.textContent === "应用快门" || currentFolderTitle.textContent === "daily Toolbox")) {
-                    displayDailyTools();
-                } else if (typeof selectedNode !== 'undefined' && selectedNode) {
-                    displayFolderContents(selectedNode);
-                }
-            });
-
-        });
-    </script>
-    <script>
-        //const btnSaveChange = document.getElementById('idBTNSaveChange') ;
-        document.getElementById('idBTNSaveChange').addEventListener('click',async (event)=>{
-            await asyncSaveAppData() ;
-        }) ;
-
-        function openWidgetSettingsModal() {
-            const modalOverlay = document.createElement('div');
-            modalOverlay.className = "fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4";
-            
-            const allWidgets = window.gWidgetManager ? window.gWidgetManager.getAllWidgets() : [];
-            let widgetsListHtml = '';
-
-            allWidgets.forEach(w => {
-                const is4 = w.gridSize.includes('lg:col-span-4');
-                const is6 = w.gridSize.includes('lg:col-span-6');
-                const is8 = w.gridSize.includes('lg:col-span-8');
-                const is12 = !is4 && !is6 && !is8;
-
-                widgetsListHtml += `
-                    <div class="p-3.5 bg-gray-50 rounded-xl border border-gray-200/80 space-y-2">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">${w.icon}</span>
-                                <div>
-                                    <div class="font-bold text-gray-800 text-sm flex items-center gap-2">
-                                        ${w.name}
-                                    </div>
-                                    <div class="text-xs text-gray-400">${w.description}</div>
-                                </div>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only peer widget-toggle-chk" data-widget-id="${w.id}" ${w.enabled ? 'checked' : ''}>
-                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                            </label>
-                        </div>
-                        <div class="flex items-center justify-between pt-2 border-t border-dashed border-gray-200/80 text-xs text-gray-500">
-                            <span class="font-medium">🍱 Bento 占比大小:</span>
-                            <select class="widget-size-select border border-gray-300 rounded-lg px-2 py-1 bg-white outline-none font-bold text-gray-700 text-xs" data-widget-id="${w.id}">
-                                <option value="col-span-12 lg:col-span-4" ${is4 ? 'selected' : ''}>1/3 窄版 (4列)</option>
-                                <option value="col-span-12 lg:col-span-6" ${is6 ? 'selected' : ''}>1/2 中版 (6列)</option>
-                                <option value="col-span-12 lg:col-span-8" ${is8 ? 'selected' : ''}>2/3 宽版 (8列)</option>
-                                <option value="col-span-12" ${is12 ? 'selected' : ''}>100% 全宽 (12列)</option>
-                            </select>
-                        </div>
-                    </div>
-                `;
-            });
-
-            modalOverlay.innerHTML = `
-                <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-gray-100 animate-fade-in">
-                    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                        <div class="flex items-center gap-2">
-                            <span class="text-lg">🍱</span>
-                            <h3 class="font-extrabold text-gray-800 text-base">Bento 桌面组件管理</h3>
-                        </div>
-                        <button id="idBTNCloseWidgetSettings" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg transition-colors">
-                            <i class="fas fa-times text-base"></i>
-                        </button>
-                    </div>
-
-                    <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">BENTO WIDGETS 开关与布局尺寸配置</div>
-                        <div class="space-y-3">
-                            ${widgetsListHtml || '<div class="text-xs text-gray-400">暂无挂载组件</div>'}
-                        </div>
-
-                        <div class="pt-4 border-t border-gray-100">
-                            <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">系统更多配置</div>
-                            <div class="space-y-2">
-                                <label class="text-xs text-gray-600 font-medium">默认启动文件夹 ID：</label>
-                                <input type="text" id="idSettingDefaultFolder" placeholder="常用根目录..." class="w-full text-xs p-2.5 border border-gray-200 rounded-xl outline-none focus:border-indigo-400">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="px-6 py-3.5 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-2">
-                        <button id="idBTNSaveWidgetSettings" class="px-5 py-2 rounded-xl text-white font-bold text-xs shadow-md transition-all hover:shadow-lg" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
-                            保存设置并重构 Bento 桌面
-                        </button>
+                </div>
+                <div class="bookmark-description">${toolMemo || '点击直达应用'}</div>
+                <div class="bookmark-footer">
+                    <div class="bookmark-date">${jsonTool.hasOwnProperty("date") ? formatDateYYYYMMDD(jsonTool.date) : ''}</div>
+                    <div class="bookmark-tags">
+                        ${stringTags}
                     </div>
                 </div>
             `;
 
-            document.body.appendChild(modalOverlay);
+            // 删除应用按钮
+            tagTool.querySelector('.bmActionRemove').addEventListener('click', (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                if (confirm(`确定要移除应用 "${toolTitle}" 吗？`)) {
+                    removeDailyTool(tagTool.dataset.toolID);
+                    tagTool.remove();
+                    const itemsCount = document.getElementById('items-count');
+                    const remaining = tagContainer.querySelectorAll('.bookmark-card').length;
+                    if (itemsCount) itemsCount.textContent = `(${remaining} 个应用)`;
+                }
+            });
 
-            // 关闭按钮
-            modalOverlay.querySelector('#idBTNCloseWidgetSettings').onclick = () => {
-                document.body.removeChild(modalOverlay);
-            };
+            // 编辑应用信息
+            tagTool.querySelector(".btnMetaEditor").addEventListener("click", (event) => {
+                event.stopPropagation();
+                event.preventDefault();
 
-            // 保存设置按钮
-            modalOverlay.querySelector('#idBTNSaveWidgetSettings').onclick = () => {
-                modalOverlay.querySelectorAll('.widget-toggle-chk').forEach(chk => {
-                    const wId = chk.dataset.widgetId;
-                    if (window.gWidgetManager) {
-                        window.gWidgetManager.setWidgetEnabled(wId, chk.checked);
+                const callbackEditTool = (formDataTool) => {
+                    jsonTool.title = formDataTool.title || jsonTool.title;
+                    if (!jsonTool.data) jsonTool.data = {};
+                    jsonTool.data.url = formDataTool.url || toolUrl;
+                    jsonTool.data.memo = formDataTool.memo || '';
+                    jsonTool.updatedAt = Date.now();
+                    flagDailyToolChanged = true;
+                    persistLocalAndSync();
+                    displayDailyTools();
+                };
+
+                const formSchema = [
+                    { "name": "title", "type": "string", "placeholder": "应用名称", "value": toolTitle },
+                    { "name": "memo", "type": "string", "placeholder": "应用说明备注", "value": toolMemo },
+                    { "name": "url", "type": "string", "placeholder": "https://...", "value": toolUrl }
+                ];
+                const formCallbacks = {
+                    onConfirm: callbackEditTool,
+                    onCancel: () => {}
+                };
+                createFormModal('编辑应用信息', formSchema, formCallbacks);
+            });
+
+            // 点击卡片直接打开目标 URL
+            tagTool.addEventListener('click', () => {
+                if (toolUrl) {
+                    window.open(toolUrl, "_blank");
+                }
+            });
+
+            tagContainer.appendChild(tagTool);
+        }
+
+        /**
+         * 渲染 "+ 添加新应用" 虚线卡片
+         */
+        function _renderAddToolCard(tagContainer) {
+            let tagAddCard = document.createElement('div');
+            tagAddCard.classList.add('bookmark-card-add');
+            tagAddCard.innerHTML = `
+                <div class="w-10 h-10 rounded-full bg-gray-200/70 flex items-center justify-center mb-2">
+                    <i class="fas fa-plus text-lg text-gray-500"></i>
+                </div>
+                <span class="text-sm font-semibold text-gray-600">添加新应用</span>
+            `;
+            tagAddCard.addEventListener('click', (event) => {
+                event.stopPropagation();
+                openPlusDailyToolModal();
+            });
+            tagContainer.appendChild(tagAddCard);
+        }
+
+        /**
+         * 打开添加新应用弹窗
+         */
+        function openPlusDailyToolModal() {
+            const callbackPlusTool = (formDataTool) => {
+                if (!formDataTool.url || !formDataTool.url.trim()) {
+                    alert("请填写有效的应用 URL");
+                    return;
+                }
+                let jsonTool = {
+                    id: crypto.randomUUID(),
+                    type: "Gateway.Bookmark",
+                    title: formDataTool.title || '未命名应用',
+                    tabId: currentActiveAppTabId || 'default',
+                    data: {
+                        url: formDataTool.url.trim(),
+                        memo: formDataTool.memo || ''
                     }
-                });
-                modalOverlay.querySelectorAll('.widget-size-select').forEach(sel => {
-                    const wId = sel.dataset.widgetId;
-                    if (window.gWidgetManager) {
-                        window.gWidgetManager.setWidgetGridSize(wId, sel.value);
-                    }
-                });
-                document.body.removeChild(modalOverlay);
-                if (typeof displayDailyTools === 'function') {
+                };
+                const added = plusDailyTool(jsonTool);
+                if (added) {
                     displayDailyTools();
                 }
             };
+
+            const appSchema = [
+                { "name": "title", "type": "string", "placeholder": "应用名称" },
+                { "name": "memo", "type": "string", "placeholder": "应用说明备注" },
+                { "name": "url", "type": "string", "placeholder": "https://..." }
+            ];
+            const appCallbacks = {
+                onConfirm: callbackPlusTool,
+                onCancel: () => {}
+            };
+            createFormModal('添加新应用', appSchema, appCallbacks);
         }
 
-        // idBTNSetting 点击打开组件管理与系统设置
-        document.getElementById('idBTNSetting').addEventListener('click', (event) => {
-            openWidgetSettingsModal();
-        });
-
-        // 添加刷新按钮事件
-        document.querySelector('#idBTNFreshData').addEventListener('click', () => {
-            const treeContainer = document.getElementById('directory-tree');
-            treeContainer.innerHTML = '';
-            renderTree(gFolderTree, treeContainer);
-            
-            // 重置内容显示
-            document.getElementById('idCurrentFolderTitle').textContent = '内容展示区域';
-            document.getElementById('items-count').textContent = '';
-            document.getElementById('idFolderContents').innerHTML = ``;
-        });
-
-        document.querySelector("#idBTNDisplayDailyTools").addEventListener('click',(event)=>{
-            displayDailyTools() ;
-        }) ;
-
-        //idBTNDisplayTodos
-        document.querySelector("#idBTNDisplayTodos").addEventListener('click',(event)=>{
-            //displayDailyTools() ;
-            window.open("./todoAnywhere.html","_blank") ;
-        }) ;
-        //idBTNDisplayCalendar
-        document.querySelector("#idBTNDisplayCalendar").addEventListener('click',(event)=>{
-            //displayDailyTools() ;
-            alert('fdsgdgnfdgn')
-        }) ;
-
-        //idBTNPortfolioMan
-        document.querySelector("#idBTNPortfolioMan").addEventListener('click',(event)=>{
-            //displayDailyTools() ;
-            alert('idBTNPortfolioMan')
-        }) ;
-    </script>
-    <script>
-        function _renderDailyTool(jsonTool,tagContainer){
-            if (!jsonTool) return;
-            const toolUrl = (jsonTool.data && jsonTool.data.url) ? jsonTool.data.url : (jsonTool.url || '');
-            const toolMemo = (jsonTool.data && jsonTool.data.hasOwnProperty("memo")) ? jsonTool.data.memo : (jsonTool.memo || 'memo');
-            const toolTitle = jsonTool.title || '未命名';
-
-            let tagTool = document.createElement('div') ;
-            tagTool.classList.add('bookmark-card') ;
-            tagTool.dataset.toolID = jsonTool.id || '' ;
-            tagTool.dataset.url = toolUrl ;
-            tagContainer.appendChild(tagTool) ;
-
-            let stringBookmarks = '' ;
-            if(jsonTool.hasOwnProperty("tags") && Array.isArray(jsonTool.tags)){
-                for(let i=0;i<jsonTool.tags.length;i++){
-                    stringBookmarks = stringBookmarks + `<span>${jsonTool.tags[i]}</span>`
-                }
-            }else{
-                stringBookmarks = `<span>没有标签</span>` ;
-            }
-            const iconText = getIconText(toolUrl, "first-two");
-
-            tagTool.innerHTML = `
-                    <div class="bookmark-header">
-                        <div class="bookmark-favicon">${iconText}</div>
-                        <div class="bookmark-info">
-                            <div class="bookmark-title">${toolTitle}</div>
-                            <div class="bookmark-url">${toolUrl}</div>
-                        </div>
-                        <div class="bookmark-actions">
-                            <button><i class="fas fa-star"></i></button>
-                            <button class="btnMetaEditor"><i class="fas fa-ellipsis-v"></i></button>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="bmActionRemove" width="14" height="14" viewBox="0 0 16 16"><path fill="#000000" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1l-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg>
-                        </div>
-                    </div>
-                    <div class="bookmark-description">${toolMemo}</div>
-                    <div class="bookmark-footer">
-                        <div class="bookmark-date">${jsonTool.hasOwnProperty("date")?formatDateYYYYMMDD(jsonTool.date):"date TBD"}</div>
-                        <div class="bookmark-tags">
-                            ${stringBookmarks}
-                        </div>
-                    </div>
-            `;
-            
-            tagTool.querySelector('.bmActionRemove').addEventListener('click',async (event)=>{
-                event.stopPropagation() ;
-                event.preventDefault() ;
-                removeDailyTool(tagTool.dataset.toolID) ;
-                tagTool.remove() ;
-            }) ;
-            tagTool.querySelector(".btnMetaEditor").addEventListener("click",(event)=>{
-                //alert('fdsfds') ;
-                event.stopPropagation() ;
-                event.preventDefault() ;
-
-                let jsonTool = {
-                    id:crypto.randomUUID(),
-                    type:"Gateway.Bookmark",
-                    title:'TBD',
-                    data:{
-                        url:'',
-                        memo:''
-                    }
-                } ;
-
-
-                const callbackPlusTool = (formDataTool)=>{
-                    console.log(formDataTool) ;
-                    /*
-                    let tagToolsContainer = document.querySelector('#idFolderContents') ;
-                    let jsonTool = {
-                        id:crypto.randomUUID(),
-                        type:"Gateway.Bookmark",
-                        title:formDataTool.title,
-                        data:{
-                            url:formDataTool.url
-                        }
-                    } ;
-                    plusDailyTool(jsonTool) ;
-                    _renderDailyTool(jsonTool,tagToolsContainer) ;
-                    */
-                } ;
-
-                const bookmarkSchema = [
-                    { "name": "title", "type": "string", "placeholder": "书签标题" },
-                     { "name": "memo", "type": "string", "placeholder": "书签memo" },
-                    { "name": "url", "type": "string", "placeholder": "https://..." }
-                ];
-                const bookmarkCallbacks = {
-                    onConfirm: callbackPlusTool,
-                    onCancel: () => {console.log("用户取消了操作。");}
-                };
-                createFormModal('edit每日工具', bookmarkSchema, bookmarkCallbacks);
-            }) ;
-
-            tagTool.addEventListener('click',(event)=>{
-                window.open(jsonTool.data.url,"_blank") ;
-            }) ;
-        }
-
-        function openCreateAppTabModal(){
+        /**
+         * 打开新建应用 Tab 分类弹窗
+         */
+        function openCreateAppTabModal() {
             const schema = [
                 { "name": "tabName", "type": "string", "placeholder": "Tab 分类名称..." }
             ];
             const callbacks = {
-                onConfirm: (formData)=>{
+                onConfirm: (formData) => {
                     if (formData.tabName) {
                         const newTab = plusAppShutterTab(formData.tabName);
                         if (newTab) {
@@ -1738,10 +824,12 @@
 
         let draggedTabId = null;
 
+        /**
+         * 渲染应用分类 Tab 栏
+         */
         function renderAppShutterTabs() {
             const tabBar = document.getElementById('idAppShutterTabBar');
             if (!tabBar) return;
-            tabBar.classList.remove('noShow');
             tabBar.innerHTML = '';
 
             ensureDefaultAppShutterTabs();
@@ -1756,13 +844,14 @@
                 nameSpan.textContent = tab.name;
                 tabItem.appendChild(nameSpan);
 
-                if (!tab.isFixed && tab.id !== 'default' && tab.id !== 'kanban') {
+                // 自定义 Tab 允许删除
+                if (!tab.isFixed && tab.id !== 'default' && tab.id !== 'workbench' && tab.id !== 'kanban') {
                     const closeBtn = document.createElement('i');
                     closeBtn.className = 'fas fa-times text-xs opacity-60 hover:opacity-100 ml-1';
                     closeBtn.title = '删除此类目';
                     closeBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        if (confirm(`确定要删除分类 "${tab.name}" 吗？关联的卡片将转入常用应用分类。`)) {
+                        if (confirm(`确定要删除分类 "${tab.name}" 吗？关联的应用将转入常用应用分类。`)) {
                             removeAppShutterTab(tab.id);
                             displayDailyTools();
                         }
@@ -1838,100 +927,33 @@
             tabBar.appendChild(addTabBtn);
         }
 
-        function openPlusDailyToolModal(){
-            const callbackPlusTool = (formDataTool)=>{
-                if (!formDataTool.url || !formDataTool.url.trim()) {
-                    alert("请填写有效的 URL");
-                    return;
-                }
-                let jsonTool = {
-                    id:crypto.randomUUID(),
-                    type:"Gateway.Bookmark",
-                    title:formDataTool.title || '未命名',
-                    tabId: currentActiveAppTabId || 'default',
-                    data:{
-                        url:formDataTool.url.trim(),
-                        memo:formDataTool.memo || ''
-                    }
-                } ;
-                const added = plusDailyTool(jsonTool) ;
-                if (added) {
-                    displayDailyTools() ;
-                }
-            } ;
-
-            const bookmarkSchema = [
-                { "name": "title", "type": "string", "placeholder": "书签标题" },
-                { "name": "memo", "type": "string", "placeholder": "书签memo" },
-                { "name": "url", "type": "string", "placeholder": "https://..." }
-            ];
-            const bookmarkCallbacks = {
-                onConfirm: callbackPlusTool,
-                onCancel: () => {console.log("用户取消了操作。");}
-            };
-            createFormModal('新建应用卡片', bookmarkSchema, bookmarkCallbacks);
-        }
-
-        function _renderAddToolCard(tagContainer){
-            let tagAddCard = document.createElement('div') ;
-            tagAddCard.classList.add('bookmark-card-add') ;
-            tagAddCard.innerHTML = `
-                <div class="w-10 h-10 rounded-full bg-gray-200/70 flex items-center justify-center mb-2">
-                    <i class="fas fa-plus text-xl text-gray-500"></i>
-                </div>
-                <span class="text-sm font-medium text-gray-600">添加新应用</span>
-            ` ;
-            tagAddCard.addEventListener('click', (event)=>{
-                event.stopPropagation() ;
-                openPlusDailyToolModal() ;
-            }) ;
-            tagContainer.appendChild(tagAddCard) ;
-        }
-
-        let currentKanbanDate = new Date();
-        let kanbanViewYear = currentKanbanDate.getFullYear();
-        let kanbanViewMonth = currentKanbanDate.getMonth();
-
-        function formatChineseDate(date) {
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-            const weekDay = weekDays[date.getDay()];
-            return `${year}年${month}月${day}日 ${weekDay}`;
-        }
-
+        /**
+         * 渲染主工作台看板
+         */
         function renderKanbanView(container) {
             if (window.gWidgetManager) {
                 window.gWidgetManager.renderDashboard(container);
             }
         }
 
-        function displayDailyTools(){
-            let tagCurrentFolder = document.querySelector(".selectedFolder") ;
-            if(tagCurrentFolder!=null){
-                tagCurrentFolder.classList.remove("selectedFolder") ;
-                tagCurrentFolder.querySelector(".font-semibold").classList.remove("font-semibold") ;
-                selectedNode = null;
-            }
-
+        /**
+         * 渲染整个应用导航桌面
+         */
+        function displayDailyTools() {
             const folderContents = document.getElementById('idFolderContents');
             const currentFolder = document.getElementById('idCurrentFolderTitle');
-            let tagBTNPlusBookmark = document.getElementById("idBTNPlusBookmark") ;
-            tagBTNPlusBookmark.classList.add('noShow') ;
-            let tagBTNPlusDailyTool = document.getElementById("idBTNPlusDailyTool") ;
+            const itemsCount = document.getElementById('items-count');
 
-            // 1. 更新标题为 "智能工作台"
-            currentFolder.textContent = "智能工作台";
-            folderContents.innerHTML=``;
+            if (!folderContents) return;
+            folderContents.innerHTML = '';
 
-            // 2. 渲染多 Tab 标签栏
+            // 渲染多 Tab 标签栏
             renderAppShutterTabs();
 
-            // 3. 判断是否选中 "智能工作台" Tab
+            // 判断是否选中 "⚡ 智能工作台" Tab
             if (currentActiveAppTabId === 'workbench' || currentActiveAppTabId === 'kanban') {
-                tagBTNPlusDailyTool.classList.add('noShow');
-                document.getElementById('items-count').textContent = `(12列 × 15行 网格)`;
+                if (currentFolder) currentFolder.textContent = "⚡ 智能工作台";
+                if (itemsCount) itemsCount.textContent = `12列 × 15行 网格桌面`;
                 folderContents.className = "w-full min-w-0";
                 if (typeof window.initSmartWorkbench === 'function') {
                     window.initSmartWorkbench(folderContents);
@@ -1939,9 +961,11 @@
                     renderKanbanView(folderContents);
                 }
             } else {
-                tagBTNPlusDailyTool.classList.remove('noShow');
-
                 // 根据当前激活 Tab 过滤 App 卡片
+                const activeTab = gAppShutterTabs.find(t => t.id === currentActiveAppTabId);
+                const tabTitle = activeTab ? activeTab.name : '常用应用';
+                if (currentFolder) currentFolder.textContent = tabTitle;
+
                 const filteredTools = gDialyTools.filter(tool => {
                     if (currentActiveAppTabId === 'default') {
                         return !tool.tabId || tool.tabId === 'default';
@@ -1949,23 +973,167 @@
                     return tool.tabId === currentActiveAppTabId;
                 });
 
-                document.getElementById('items-count').textContent = `(${filteredTools.length} 个项目)`;
+                if (itemsCount) itemsCount.textContent = `${filteredTools.length} 个应用`;
+                folderContents.className = "bookmarks-grid";
 
-                folderContents.className = "bookmarks-grid grid-view";
-
-                for(let i=0;i<filteredTools.length;i++){
-                    _renderDailyTool(filteredTools[i],folderContents) ;
+                for (let i = 0; i < filteredTools.length; i++) {
+                    _renderDailyTool(filteredTools[i], folderContents);
                 }
 
-                // 在最末尾添加新增卡片
-                _renderAddToolCard(folderContents) ;
-
-                document.querySelector("#idBTNPlusDailyTool").onclick = (event)=>{
-                    openPlusDailyToolModal();
-                };
+                // 在末尾添加新增卡片
+                _renderAddToolCard(folderContents);
             }
         }
+
+        /**
+         * Bento 桌面组件设置弹窗
+         */
+        function openWidgetSettingsModal() {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = "fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4";
+            
+            const allWidgets = window.gWidgetManager ? window.gWidgetManager.getAllWidgets() : [];
+            let widgetsListHtml = '';
+
+            allWidgets.forEach(w => {
+                const is4 = w.gridSize.includes('lg:col-span-4');
+                const is6 = w.gridSize.includes('lg:col-span-6');
+                const is8 = w.gridSize.includes('lg:col-span-8');
+                const is12 = !is4 && !is6 && !is8;
+
+                widgetsListHtml += `
+                    <div class="p-3.5 bg-gray-50 rounded-xl border border-gray-200/80 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">${w.icon}</span>
+                                <div>
+                                    <div class="font-bold text-gray-800 text-sm flex items-center gap-2">
+                                        ${w.name}
+                                    </div>
+                                    <div class="text-xs text-gray-400">${w.description}</div>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer widget-toggle-chk" data-widget-id="${w.id}" ${w.enabled ? 'checked' : ''}>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-dashed border-gray-200/80 text-xs text-gray-500">
+                            <span class="font-medium">🍱 Bento 占比大小:</span>
+                            <select class="widget-size-select border border-gray-300 rounded-lg px-2 py-1 bg-white outline-none font-bold text-gray-700 text-xs" data-widget-id="${w.id}">
+                                <option value="col-span-12 lg:col-span-4" ${is4 ? 'selected' : ''}>1/3 窄版 (4列)</option>
+                                <option value="col-span-12 lg:col-span-6" ${is6 ? 'selected' : ''}>1/2 中版 (6列)</option>
+                                <option value="col-span-12 lg:col-span-8" ${is8 ? 'selected' : ''}>2/3 宽版 (8列)</option>
+                                <option value="col-span-12" ${is12 ? 'selected' : ''}>100% 全宽 (12列)</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            });
+
+            modalOverlay.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-gray-100 animate-fade-in">
+                    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">🍱</span>
+                            <h3 class="font-extrabold text-gray-800 text-base">Bento 桌面组件管理</h3>
+                        </div>
+                        <button id="idBTNCloseWidgetSettings" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg transition-colors">
+                            <i class="fas fa-times text-base"></i>
+                        </button>
+                    </div>
+
+                    <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">BENTO WIDGETS 开关与布局尺寸配置</div>
+                        <div class="space-y-3">
+                            ${widgetsListHtml || '<div class="text-xs text-gray-400">暂无挂载组件</div>'}
+                        </div>
+                    </div>
+
+                    <div class="px-6 py-3.5 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-2">
+                        <button id="idBTNSaveWidgetSettings" class="px-5 py-2 rounded-xl text-white font-bold text-xs shadow-md transition-all hover:shadow-lg" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+                            保存设置并重构桌面
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modalOverlay);
+
+            // 关闭按钮
+            modalOverlay.querySelector('#idBTNCloseWidgetSettings').onclick = () => {
+                document.body.removeChild(modalOverlay);
+            };
+
+            // 保存设置按钮
+            modalOverlay.querySelector('#idBTNSaveWidgetSettings').onclick = () => {
+                modalOverlay.querySelectorAll('.widget-toggle-chk').forEach(chk => {
+                    const wId = chk.dataset.widgetId;
+                    if (window.gWidgetManager) {
+                        window.gWidgetManager.setWidgetEnabled(wId, chk.checked);
+                    }
+                });
+                modalOverlay.querySelectorAll('.widget-size-select').forEach(sel => {
+                    const wId = sel.dataset.widgetId;
+                    if (window.gWidgetManager) {
+                        window.gWidgetManager.setWidgetGridSize(wId, sel.value);
+                    }
+                });
+                document.body.removeChild(modalOverlay);
+                displayDailyTools();
+            };
+        }
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 加载本地与云端数据
+            await asyncLoadAppData();
+
+            // 渲染应用桌面
+            displayDailyTools();
+
+            // 绑定顶部工具提示
+            tippy('#idBTNHome', { content: '返回智能工作台' });
+            tippy('#idBTNDisplayTodos', { content: '待办任务清单' });
+            tippy('#idBTNDisplayDailyTools', { content: '应用导航桌面' });
+            tippy('#idBTNSaveChange', { content: '保存并同步数据' });
+            tippy('#idBTNFreshData', { content: '刷新数据' });
+            tippy('#idBTNSetting', { content: '桌面组件设置' });
+
+            // 绑定顶部按钮点击事件
+            document.getElementById('idBTNHome').addEventListener('click', () => {
+                currentActiveAppTabId = 'workbench';
+                try { localStorage.setItem('currentActiveAppTabId', 'workbench'); } catch (e) {}
+                displayDailyTools();
+            });
+
+            document.getElementById('idBTNDisplayDailyTools').addEventListener('click', () => {
+                currentActiveAppTabId = 'workbench';
+                displayDailyTools();
+            });
+
+            document.getElementById('idBTNDisplayTodos').addEventListener('click', () => {
+                window.open("./todoAnywhere.html", "_blank");
+            });
+
+            document.getElementById('idBTNSaveChange').addEventListener('click', async () => {
+                await asyncSaveAppData();
+            });
+
+            document.getElementById('idBTNFreshData').addEventListener('click', async () => {
+                await asyncLoadAppData();
+                displayDailyTools();
+            });
+
+            document.getElementById('idBTNSetting').addEventListener('click', () => {
+                openWidgetSettingsModal();
+            });
+
+            // 监听后台 Web Worker 的数据同步推送，有变动时更新 UI
+            window.addEventListener('appDataUpdated', () => {
+                displayDailyTools();
+            });
+        });
     </script>
 </body>
 </html>
-
